@@ -15,3 +15,6 @@ class TestDistload(unittest.TestCase):
 class TestBeam(unittest.TestCase):
     def setUp(self):
         self.my_beam = Beam(10)
+
+    def test_beam_length_is_correctly_defined(self):
+        self.my_beam.length = 10

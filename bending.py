@@ -7,4 +7,5 @@ class Distload(np.poly1d):
 
 
 class Beam():
-    pass
+    def __init__(self, length):
+        self.length = length
