@@ -1,15 +1,25 @@
 import unittest
-from bending import Distload
+from bending import DistributedLoad
 from bending import Beam
 
 
-class TestDistload(unittest.TestCase):
+class TestDistributedLoad(unittest.TestCase):
     def setUp(self):
-        ppar = [5, 4, 3, -10]
-        self.q = Distload(ppar)
+        coeffs = [3]
+        a, b = 2, 6
+        self.my_distributed_load = DistributedLoad(coeffs, a, b)
 
-    def test_distload_polynomial_evaluates_to_right_value(self):
-        self.assertEqual(52, self.q(2))
+    def test_constant_distributed_load_is_correctly_defined(self):
+        self.assertEqual([3], self.my_distributed_load.poly.coeffs)
+        self.assertEqual(2, self.my_distributed_load.left)
+        self.assertEqual(6, self.my_distributed_load.right)
+
+    def test_constant_distributed_load_is_correctly_evaluated(self):
+        self.assertEqual(0, self.my_distributed_load.value_at(0))
+        self.assertEqual(3, self.my_distributed_load.value_at(2))
+        self.assertEqual(3, self.my_distributed_load.value_at(4))
+        self.assertEqual(3, self.my_distributed_load.value_at(6))
+        self.assertEqual(0, self.my_distributed_load.value_at(8))
 
 
 class TestBeam(unittest.TestCase):
