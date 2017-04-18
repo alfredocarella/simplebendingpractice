@@ -15,11 +15,9 @@ class TestDistributedLoad(unittest.TestCase):
         self.assertEqual(6, self.my_distributed_load.right)
 
     def test_constant_distributed_load_is_correctly_evaluated(self):
-        self.assertEqual(0, self.my_distributed_load.value_at(0))
-        self.assertEqual(3, self.my_distributed_load.value_at(2))
-        self.assertEqual(3, self.my_distributed_load.value_at(4))
-        self.assertEqual(3, self.my_distributed_load.value_at(6))
-        self.assertEqual(0, self.my_distributed_load.value_at(8))
+        values, coords = [0, 3, 3, 3, 0], [0, 2, 4, 6, 8]
+        for val, coord in zip(values, coords):
+            self.assertEqual(val, self.my_distributed_load.value_at(coord))
 
 
 class TestBeam(unittest.TestCase):
