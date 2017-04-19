@@ -36,6 +36,9 @@ class TestDistributedLoad(unittest.TestCase):
         assert_array_almost_equal(expected.vector2d, self.my_distributed_load.resultant.vector2d)
         self.assertAlmostEqual(expected.x_coord, self.my_distributed_load.resultant.x_coord)
 
+    def test_moment_produced_by_constant_distributed_load_is_correct(self):
+        self.assertEqual(48, self.my_distributed_load.moment)
+
 
 class TestPointLoad(unittest.TestCase):
     def setUp(self):
@@ -51,6 +54,9 @@ class TestPointLoad(unittest.TestCase):
     def test_norm_is_correctly_calculated(self):
         self.assertAlmostEqual(16609**(1/2), self.my_point_load.norm)
 
+    def test_point_load_moment_is_correctly_calculated(self):
+        self.assertEqual(896, self.my_point_load.moment)
+
 
 class TestPointTorque(unittest.TestCase):
     """
@@ -65,3 +71,9 @@ class TestPointTorque(unittest.TestCase):
     def test_point_torque_is_correctly_defined(self):
         self.assertEqual(231, self.my_point_torque.moment)
         self.assertEqual(3, self.my_point_torque.x_coord)
+
+    def test_point_torque_moment_is_correct(self):
+        self.assertEqual(231, self.my_point_torque.moment)
+
+    def test_resultant_of_point_moment_is_zero(self):
+        self.assertEqual(0, self.my_point_torque.resultant)
