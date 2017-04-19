@@ -10,10 +10,18 @@ from bending import PointTorque
 class TestBeam(unittest.TestCase):
     def setUp(self):
         self.my_beam = Beam(10)
-        # self.my_beam.new_load(DistributedLoad([3]))
+        self.assertEqual([], self.my_beam.load_inventory)
+        self.my_beam.add_load(DistributedLoad([7, 0], 2, 6))
+        self.my_beam.add_load(PointLoad([1, -45], 1))
+        self.my_beam.add_load(PointTorque(80, 8))
 
     def test_beam_length_is_correctly_defined(self):
         self.my_beam.length = 10
+
+    def test_loads_are_correctly_added_to_beam_inventory(self):
+        self.assertAlmostEqual(56, self.my_beam.load_inventory[0].resultant.norm)
+        self.assertAlmostEqual(2026**(1/2), self.my_beam.load_inventory[1].resultant.norm)
+        self.assertAlmostEqual(8, self.my_beam.load_inventory[2].x_coord)
 
 
 class TestEvenlyDistributedLoad(unittest.TestCase):

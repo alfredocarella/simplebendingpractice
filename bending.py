@@ -5,7 +5,10 @@ import numpy as np
 class Beam():
     def __init__(self, length):
         self.length = length
+        self.load_inventory = []
 
+    def add_load(self, new_load):
+        self.load_inventory.append(new_load)
 
 class DistributedLoad:
     def __init__(self, coeffs, x_left, x_right):
