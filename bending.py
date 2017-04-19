@@ -1,6 +1,11 @@
 import numpy as np
 
 
+class Beam():
+    def __init__(self, length):
+        self.length = length
+
+
 class DistributedLoad:
     def __init__(self, coeffs, left, right):
         self.poly = np.poly1d(coeffs)
@@ -14,6 +19,6 @@ class DistributedLoad:
             return 0
 
 
-class Beam():
-    def __init__(self, length):
-        self.length = length
+class PointLoad:
+    def __init__(self, vector2d, x_coord):
+        pass
