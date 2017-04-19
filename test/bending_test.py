@@ -21,7 +21,7 @@ class TestDistributedLoad(unittest.TestCase):
         self.my_distributed_load = DistributedLoad(coeffs, a, b)
 
     def test_constant_distributed_load_is_correctly_defined(self):
-        self.assertEqual([3], self.my_distributed_load.poly.coeffs)
+        self.assertEqual([3], self.my_distributed_load.y_load.coeffs)
         self.assertEqual(2, self.my_distributed_load.left)
         self.assertEqual(6, self.my_distributed_load.right)
 
@@ -38,8 +38,7 @@ class TestDistributedLoad(unittest.TestCase):
 
 class TestPointLoad(unittest.TestCase):
     def test_point_load_is_correctly_defined(self):
-        x_load = 15
-        y_load = 128
+        x_load, y_load = 15, 128
         x_coord = 7
         self.my_point_load = PointLoad([x_load, y_load], x_coord)
         self.assertEqual(7, self.my_point_load.x_coord)
