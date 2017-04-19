@@ -4,6 +4,7 @@ from numpy.testing import assert_array_almost_equal
 from bending import Beam
 from bending import DistributedLoad
 from bending import PointLoad
+from bending import PointTorque
 
 
 class TestBeam(unittest.TestCase):
@@ -37,12 +38,30 @@ class TestDistributedLoad(unittest.TestCase):
 
 
 class TestPointLoad(unittest.TestCase):
-    def test_point_load_is_correctly_defined(self):
+    def setUp(self):
         x_load, y_load = 15, 128
         x_coord = 7
         self.my_point_load = PointLoad([x_load, y_load], x_coord)
+
+    def test_point_load_is_correctly_defined(self):
         self.assertEqual(7, self.my_point_load.x_coord)
         self.assertEqual(15, self.my_point_load.x)
         self.assertEqual(128, self.my_point_load.y)
+
+    def test_norm_is_correctly_calculated(self):
         self.assertAlmostEqual(16609**(1/2), self.my_point_load.norm)
 
+
+class TestPointTorque(unittest.TestCase):
+    """
+    Torque applied at a point (counterclockwise positive). Consists of a 
+    scalar magnitude and an application point 'x_coord'.
+    """
+    def setUp(self):
+        magnitude = 231
+        x_coord = 3
+        self.my_point_torque = PointTorque(magnitude, x_coord)
+
+    def test_point_torque_is_correctly_defined(self):
+        self.assertEqual(231, self.my_point_torque.moment)
+        self.assertEqual(3, self.my_point_torque.x_coord)

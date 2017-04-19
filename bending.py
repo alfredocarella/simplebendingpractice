@@ -31,3 +31,9 @@ class PointLoad:
         self.x_coord = x_coord
         self.x, self.y = self.vector2d
         self.norm = math.sqrt(sum(comp ** 2 for comp in vector2d))
+
+
+class PointTorque:
+    def __init__(self, torque, x_coord):
+        self.moment = torque
+        self.x_coord = x_coord
