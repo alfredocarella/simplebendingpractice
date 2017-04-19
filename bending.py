@@ -10,6 +10,7 @@ class Beam():
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
 
+
 class DistributedLoad:
     def __init__(self, coeffs, x_left, x_right):
         self.y_load = np.poly1d(coeffs)

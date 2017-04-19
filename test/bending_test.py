@@ -23,6 +23,10 @@ class TestBeam(unittest.TestCase):
         self.assertAlmostEqual(2026**(1/2), self.my_beam.load_inventory[1].resultant.norm)
         self.assertAlmostEqual(8, self.my_beam.load_inventory[2].x_coord)
 
+        # TODO: Add Beam supports (coords, and then calculate reaction forces)
+        # TODO: Add functions for plotting M, V and N diagrams
+        # TODO: Integrate in order to calculate beam inclination and deflection
+
 
 class TestEvenlyDistributedLoad(unittest.TestCase):
     def setUp(self):
