@@ -10,12 +10,13 @@ from bending import PointTorque
 class TestBeam(unittest.TestCase):
     def setUp(self):
         self.my_beam = Beam(10)
+        # self.my_beam.new_load(DistributedLoad([3]))
 
     def test_beam_length_is_correctly_defined(self):
         self.my_beam.length = 10
 
 
-class TestDistributedLoad(unittest.TestCase):
+class TestEvenlyDistributedLoad(unittest.TestCase):
     def setUp(self):
         coeffs = [3]
         a, b = 2, 6
@@ -23,8 +24,8 @@ class TestDistributedLoad(unittest.TestCase):
 
     def test_constant_distributed_load_is_correctly_defined(self):
         self.assertEqual([3], self.my_distributed_load.y_load.coeffs)
-        self.assertEqual(2, self.my_distributed_load.left)
-        self.assertEqual(6, self.my_distributed_load.right)
+        self.assertEqual(2, self.my_distributed_load.x_left)
+        self.assertEqual(6, self.my_distributed_load.x_right)
 
     def test_constant_distributed_load_is_correctly_evaluated(self):
         values, coords = [0, 3, 3, 3, 0], [0, 2, 4, 6, 8]
@@ -38,6 +39,23 @@ class TestDistributedLoad(unittest.TestCase):
 
     def test_moment_produced_by_constant_distributed_load_is_correct(self):
         self.assertEqual(48, self.my_distributed_load.moment)
+
+
+class TestVariableDistributedLoad(unittest.TestCase):
+    def setUp(self):
+        coeffs = [5, -2, -1]
+        left, right = 1, 5
+        self.my_distributed_load = DistributedLoad(coeffs, left, right)
+
+    def test_variable_distributed_load_is_correctly_evaluated(self):
+        values, coords = [0, 2, 38, 0], [0, 2, 4, 6]
+        for val, coord in zip(values, coords):
+            self.assertEqual(val, self.my_distributed_load.value_at(coord))
+
+    def test_resultant_norm_of_variable_distributed_load_is_correct(self):
+        expected = PointLoad([0, 260/3], 267/65)
+        assert_array_almost_equal(expected.vector2d, self.my_distributed_load.resultant.vector2d)
+        self.assertAlmostEqual(expected.x_coord, self.my_distributed_load.resultant.x_coord)
 
 
 class TestPointLoad(unittest.TestCase):
