@@ -9,21 +9,29 @@ from bending import PointTorque
 
 class TestBeam(unittest.TestCase):
     def setUp(self):
-        self.my_beam = Beam(10)
+        self.my_beam = Beam(10, [0, 9])
         self.assertEqual([], self.my_beam.load_inventory)
-        self.my_beam.add_load(DistributedLoad([7, 0], 2, 6))
-        self.my_beam.add_load(PointLoad([1, -45], 1))
-        self.my_beam.add_load(PointTorque(80, 8))
 
     def test_beam_length_is_correctly_defined(self):
         self.my_beam.length = 10
 
-    def test_loads_are_correctly_added_to_beam_inventory(self):
+    def test_fixed_and_rolling_support_coordinates_are_correctly_defined(self):
+        self.assertEqual(0, self.my_beam.fixed_coord)
+        self.assertEqual(9, self.my_beam.rolling_coord)
+
+    def test_loads_are_correctly_added_to_load_inventory(self):
+        self.my_beam.add_load(DistributedLoad([7, 0], 2, 6))
+        self.my_beam.add_load(PointLoad([1, -45], 1))
+        self.my_beam.add_load(PointTorque(80, 8))
         self.assertAlmostEqual(56, self.my_beam.load_inventory[0].resultant.norm)
         self.assertAlmostEqual(2026**(1/2), self.my_beam.load_inventory[1].resultant.norm)
         self.assertAlmostEqual(8, self.my_beam.load_inventory[2].x_coord)
 
-        # TODO: Add Beam supports (coords, and then calculate reaction forces)
+    def test_reaction_forces_for_one_point_load_are_correct(self):
+        self.my_beam.add_load(PointLoad([1, -45], 1))
+        self.assertEqual(40, self.my_beam.fixed_load)
+        self.assertEqual(5, self.my_beam.rolling_load)
+        # TODO: Add Beam supports (coords, and then calculate reaction forces) <-- Done... test?
         # TODO: Add functions for plotting M, V and N diagrams
         # TODO: Integrate in order to calculate beam inclination and deflection
 
@@ -106,4 +114,4 @@ class TestPointTorque(unittest.TestCase):
         self.assertEqual(231, self.my_point_torque.moment)
 
     def test_resultant_of_point_moment_is_zero(self):
-        self.assertEqual(0, self.my_point_torque.resultant)
+        self.assertEqual(0, self.my_point_torque.resultant.norm)

@@ -2,14 +2,26 @@ import math
 import numpy as np
 
 
-class Beam():
-    def __init__(self, length):
+class Beam:
+    def __init__(self, length, fixed_and_rolling_support_coords):
         self.length = length
+        self.fixed_coord, self.rolling_coord = fixed_and_rolling_support_coords
         self.load_inventory = []
+        self.fixed_load, self.rolling_load = (0, 0)
 
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
+        self.update_reaction_forces()
 
+    def update_reaction_forces(self):
+        # self.fixed_load = sum(load.resultant.y for load in self.load_inventory)
+        d1, d2 = self.fixed_coord, self.rolling_coord
+        sum_loads = sum(load.resultant.y for load in self.load_inventory)
+        sum_moments = sum(load.moment for load in self.load_inventory)
+        A = np.array([[1, 1],
+                      [d1, d2]])
+        B = np.array([-1 * sum_loads, -1 * sum_moments])
+        self.fixed_load, self.rolling_load = np.linalg.inv(A).dot(B)
 
 class DistributedLoad:
     def __init__(self, coeffs, x_left, x_right):
@@ -43,5 +55,5 @@ class PointLoad:
 class PointTorque:
     def __init__(self, torque, x_coord):
         self.x_coord = x_coord
+        self.resultant = PointLoad([0, 0], x_coord)
         self.moment = torque
-        self.resultant = 0
