@@ -65,8 +65,7 @@ class TestEvenlyDistributedLoad(unittest.TestCase):
 
     def test_constant_distributed_load_is_correctly_evaluated(self):
         values, coords = [0, 3, 3, 3, 0], [0, 2, 4, 6, 8]
-        for val, coord in zip(values, coords):
-            self.assertEqual(val, self.my_distributed_load.value_at(coord))
+        assert_array_almost_equal(values, self.my_distributed_load.value_at(coords))
 
     def test_resultant_norm_of_constant_distributed_load_is_correct(self):
         expected = PointLoad([0, 12], 4)
@@ -85,8 +84,7 @@ class TestVariableDistributedLoad(unittest.TestCase):
 
     def test_variable_distributed_load_is_correctly_evaluated(self):
         values, coords = [0, 2, 38, 0], [0, 2, 4, 6]
-        for val, coord in zip(values, coords):
-            self.assertEqual(val, self.my_distributed_load.value_at(coord))
+        assert_array_almost_equal(values, self.my_distributed_load.value_at(coords))
 
     def test_resultant_norm_of_variable_distributed_load_is_correct(self):
         expected = PointLoad([0, 260/3], 267/65)

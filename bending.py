@@ -56,7 +56,7 @@ class DistributedLoad:
         self.moment = self.resultant.moment
 
     def value_at(self, x_range):
-        values = np.zeros(shape=x_range.shape)
+        values = np.zeros((len(x_range)))
         for idx, coord in enumerate(x_range):
             if self.x_left <= coord <= self.x_right:
                 values[idx] =self.y_load(coord - self.x_left)
