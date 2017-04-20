@@ -37,6 +37,15 @@ class TestBeam(unittest.TestCase):
         # TODO: Add functions for plotting M, V and N diagrams
         # TODO: Integrate in order to calculate beam inclination and deflection
 
+    def test_plotting(self):
+        self.my_beam.add_load(DistributedLoad([3, 0], 1, 10))
+        # self.my_beam.add_load(DistributedLoad([2, -8], 0, 4))
+        self.my_beam.add_load(PointLoad([1, -45], 1))
+        self.my_beam.add_load(PointTorque(-90, 8))
+        plot = self.my_beam.plot_shear_force_from_distributed_loads()
+        # plot = self.my_beam.plot_shear_force_from_point_loads()
+        plot.show()
+
     def check_reaction_forces(self, expected):
         fixed_load, rolling_load = expected
         self.assertAlmostEqual(fixed_load, self.my_beam.fixed_load)

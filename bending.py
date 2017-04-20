@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 import math
 import numpy as np
 
@@ -20,8 +22,25 @@ class Beam:
         sum_moments = sum(load.moment for load in self.load_inventory)
         A = np.array([[1, 1],
                       [d1, d2]])
-        B = np.array([-1 * sum_loads, -1 * sum_moments])
-        self.fixed_load, self.rolling_load = np.linalg.inv(A).dot(B)
+        b = np.array([-1 * sum_loads, -1 * sum_moments])
+        self.fixed_load, self.rolling_load = np.linalg.inv(A).dot(b)
+
+    def plot_shear_force_from_distributed_loads(self):
+        x_axis = np.linspace(0, self.length, 1000)
+        shear_force = np.zeros(shape=x_axis.shape)
+        fig, ax = plt.subplots()
+        for load in self.load_inventory:
+            if type(load).__name__ == "DistributedLoad":
+                shear_force += load.value_at(x_axis)
+        plt.plot(x_axis, shear_force, 'r', linewidth=2)
+        # a, b = load.x_left, load.x_right
+        # verts = [(a, 0)] + list(zip(x_axis, shear_force)) + [(b, 0)]
+        # poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
+        # ax.add_patch(poly)
+        return plt
+
+    def plot_shear_force_from_point_loads(self):
+        pass
 
 
 class DistributedLoad:
@@ -36,11 +55,12 @@ class DistributedLoad:
         self.resultant = PointLoad([0, y_force], x_coord)
         self.moment = self.resultant.moment
 
-    def value_at(self, coord):
-        if self.x_left <= coord <= self.x_right:
-            return self.y_load(coord - self.x_left)
-        else:
-            return 0
+    def value_at(self, x_range):
+        values = np.zeros(shape=x_range.shape)
+        for idx, coord in enumerate(x_range):
+            if self.x_left <= coord <= self.x_right:
+                values[idx] =self.y_load(coord - self.x_left)
+        return values
 
 
 class PointLoad:

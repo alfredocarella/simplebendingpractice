@@ -16,9 +16,10 @@ from matplotlib.patches import Polygon
 import scipy.integrate
 import matplotlib2tikz
 
+
 def func(x):
-    return (x - 3) * (x - 5) * (x - 7) + 85
-    # return (x - 5.5)
+    # return (x - 3) * (x - 5) * (x - 7) + 85
+    return x - 5.5
 
 
 a, b = 2, 9  # integral limits
@@ -51,5 +52,5 @@ ax.set_xticks((a, b))
 ax.set_xticklabels(('$a$', '$b$'))
 ax.set_yticks([])
 
-matplotlib2tikz.save('mytikz.tex')
+# matplotlib2tikz.save('mytikz.tex')
 plt.show()
