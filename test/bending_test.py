@@ -27,11 +27,16 @@ class TestBeam(unittest.TestCase):
         self.assertAlmostEqual(2026**(1/2), self.my_beam.load_inventory[1].resultant.norm)
         self.assertAlmostEqual(8, self.my_beam.load_inventory[2].x_coord)
 
-    def test_reaction_forces_for_one_point_load_are_correct(self):
+    def test_reaction_forces_are_correct(self):
         self.my_beam.add_load(PointLoad([1, -45], 1))
         self.assertEqual(40, self.my_beam.fixed_load)
         self.assertEqual(5, self.my_beam.rolling_load)
-        # TODO: Add Beam supports (coords, and then calculate reaction forces) <-- Done... test?
+        self.my_beam.add_load(PointTorque(-90, 8))
+        self.assertEqual(30, self.my_beam.fixed_load)
+        self.assertEqual(15, self.my_beam.rolling_load)
+        self.my_beam.add_load(DistributedLoad([3, 0], 0, 10))
+        self.assertEqual(-105, self.my_beam.fixed_load + self.my_beam.rolling_load)
+        self.assertAlmostEqual(-865/9, self.my_beam.rolling_load)
         # TODO: Add functions for plotting M, V and N diagrams
         # TODO: Integrate in order to calculate beam inclination and deflection
 
