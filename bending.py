@@ -23,6 +23,7 @@ class Beam:
         B = np.array([-1 * sum_loads, -1 * sum_moments])
         self.fixed_load, self.rolling_load = np.linalg.inv(A).dot(B)
 
+
 class DistributedLoad:
     def __init__(self, coeffs, x_left, x_right):
         self.y_load = np.poly1d(coeffs)

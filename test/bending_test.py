@@ -29,16 +29,18 @@ class TestBeam(unittest.TestCase):
 
     def test_reaction_forces_are_correct(self):
         self.my_beam.add_load(PointLoad([1, -45], 1))
-        self.assertEqual(40, self.my_beam.fixed_load)
-        self.assertEqual(5, self.my_beam.rolling_load)
+        self.check_reaction_forces([40, 5])
         self.my_beam.add_load(PointTorque(-90, 8))
-        self.assertEqual(30, self.my_beam.fixed_load)
-        self.assertEqual(15, self.my_beam.rolling_load)
+        self.check_reaction_forces([30, 15])
         self.my_beam.add_load(DistributedLoad([3, 0], 0, 10))
-        self.assertEqual(-105, self.my_beam.fixed_load + self.my_beam.rolling_load)
-        self.assertAlmostEqual(-865/9, self.my_beam.rolling_load)
+        self.check_reaction_forces([-80/9, -865/9])
         # TODO: Add functions for plotting M, V and N diagrams
         # TODO: Integrate in order to calculate beam inclination and deflection
+
+    def check_reaction_forces(self, expected):
+        fixed_load, rolling_load = expected
+        self.assertAlmostEqual(fixed_load, self.my_beam.fixed_load)
+        self.assertAlmostEqual(rolling_load, self.my_beam.rolling_load)
 
 
 class TestEvenlyDistributedLoad(unittest.TestCase):
