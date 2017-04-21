@@ -10,7 +10,7 @@ from bending import plot_numerical
 
 class TestBeam(unittest.TestCase):
     def setUp(self):
-        self.my_beam = Beam(10, [0, 9])
+        self.my_beam = Beam(10, [0, 9], plot_resolution=1000)
         self.assertEqual([], self.my_beam.load_inventory)
 
     def test_beam_length_is_correctly_defined(self):
@@ -35,25 +35,27 @@ class TestBeam(unittest.TestCase):
         self.check_reaction_forces([30, 15])
         self.my_beam.add_load(DistributedLoad([3, 0], 0, 10))
         self.check_reaction_forces([-80/9, -865/9])
-        # TODO: Add functions for plotting M, V and N diagrams
-        # TODO: Integrate in order to calculate beam inclination and deflection
 
     def test_numerical_sum_of_distributed_loads_is_correct(self):
         self.my_beam.add_load(DistributedLoad([2], 0, 6))
         self.my_beam.add_load(DistributedLoad([-1.2], 0, 10))
         self.assertEqual(0.8, self.my_beam.distributed_loads[1, 0])
         self.assertEqual(-1.2, self.my_beam.distributed_loads[1, -1])
-        plot = plot_numerical(self.my_beam.distributed_loads)
-        plot.show()
 
-    def test_plotting(self):
-        self.my_beam.add_load(DistributedLoad([3, 0], 1, 10))
-        self.my_beam.add_load(DistributedLoad([-2, 8], 0, 4))
-        self.my_beam.add_load(PointLoad([1, -45], 1))
-        self.my_beam.add_load(PointTorque(-90, 8))
-        # plot = self.my_beam.plot_shear_force_from_distributed_loads()
-        # plot = self.my_beam.plot_shear_force_from_point_loads()
-        # plot.show()
+    def test_shear_forces_are_correct(self):
+        self.my_beam.add_load(DistributedLoad([1], 0, 10))
+        self.assertEqual(-40/9, self.my_beam.shear_force[1, 0])
+        self.assertEqual(0, self.my_beam.shear_force[1, -1])
+
+    def test_bending_moment_is_zero_at_the_ends(self):
+        self.my_beam.add_load(DistributedLoad([1], 0, 10))
+        self.my_beam.add_load(PointTorque(-8, 5))
+        self.assertEqual(0, self.my_beam.bending_moment[1, 0])
+        plot = plot_numerical(self.my_beam.bending_moment)
+        plot.show()
+        self.assertAlmostEqual(0, self.my_beam.bending_moment[1, -1], places=1)
+        # TODO: Integrate in order to calculate beam inclination and deflection
+        # TODO: Use gaussian quadrature or even better, analytical integration
 
     def check_reaction_forces(self, expected):
         fixed_load, rolling_load = expected

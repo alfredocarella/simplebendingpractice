@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import math
 import numpy as np
+import scipy.integrate
 
 
 class Beam:
@@ -11,14 +12,19 @@ class Beam:
         self.load_inventory = []
         self.fixed_load, self.rolling_load = (0, 0)
         self.plot_resolution = plot_resolution
-        self.distributed_loads = np.zeros(shape=(2, self.plot_resolution))
-        self.distributed_loads[0] = np.linspace(0, self.length, self.plot_resolution)
+        self.x_axis = np.linspace(0, self.length, self.plot_resolution)
+        empty_vector = np.zeros(shape=(1, self.plot_resolution))
+        self.distributed_loads = np.vstack((self.x_axis, empty_vector))
+        self.shear_force = np.vstack((self.x_axis, empty_vector))
+        self.bending_moment = np.vstack((self.x_axis, empty_vector))
 
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
         self.update_reaction_forces()
         if type(new_load).__name__ == "DistributedLoad":
             self.update_distributed_loads()
+        self.update_shear_force()
+        self.update_bending_moment()
 
     def update_reaction_forces(self):
         d1, d2 = self.fixed_coord, self.rolling_coord
@@ -35,6 +41,26 @@ class Beam:
             if type(load).__name__ == "DistributedLoad":
                 new_distributed_loads += load.value_at(self.distributed_loads[0])
         self.distributed_loads[1] = new_distributed_loads
+
+    def update_shear_force(self):
+        x, y = self.distributed_loads
+        new_shear_force = np.concatenate(([0], scipy.integrate.cumtrapz(y, x)))
+        for idx, coord in enumerate(self.x_axis):
+            if self.fixed_coord <= coord:
+                new_shear_force[idx] += self.fixed_load
+            if self.rolling_coord <= coord:
+                new_shear_force[idx] += self.rolling_load
+        self.shear_force[1] = new_shear_force
+
+    def update_bending_moment(self):
+        x, y = self.shear_force
+        new_bending_moment = np.concatenate(([0], scipy.integrate.cumtrapz(y, x)))
+        for load in self.load_inventory:
+            if type(load).__name__ == "PointTorque":
+                for idx, coord in enumerate(self.x_axis):
+                    if load.x_coord <= coord:
+                        new_bending_moment[idx] -= load.moment
+        self.bending_moment[1] = new_bending_moment
 
 
 class DistributedLoad:
