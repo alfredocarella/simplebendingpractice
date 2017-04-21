@@ -5,18 +5,22 @@ import numpy as np
 
 
 class Beam:
-    def __init__(self, length, fixed_and_rolling_support_coords):
+    def __init__(self, length, fixed_and_rolling_support_coords, plot_resolution=1000):
         self.length = length
         self.fixed_coord, self.rolling_coord = fixed_and_rolling_support_coords
         self.load_inventory = []
         self.fixed_load, self.rolling_load = (0, 0)
+        self.plot_resolution = plot_resolution
+        self.distributed_loads = np.zeros(shape=(2, self.plot_resolution))
+        self.distributed_loads[0] = np.linspace(0, self.length, self.plot_resolution)
 
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
         self.update_reaction_forces()
+        if type(new_load).__name__ == "DistributedLoad":
+            self.update_distributed_loads()
 
     def update_reaction_forces(self):
-        # self.fixed_load = sum(load.resultant.y for load in self.load_inventory)
         d1, d2 = self.fixed_coord, self.rolling_coord
         sum_loads = sum(load.resultant.y for load in self.load_inventory)
         sum_moments = sum(load.moment for load in self.load_inventory)
@@ -25,22 +29,21 @@ class Beam:
         b = np.array([-1 * sum_loads, -1 * sum_moments])
         self.fixed_load, self.rolling_load = np.linalg.inv(A).dot(b)
 
-    def plot_shear_force_from_distributed_loads(self):
-        x_axis = np.linspace(0, self.length, 1000)
-        shear_force = np.zeros(shape=x_axis.shape)
-        fig, ax = plt.subplots()
+    def update_distributed_loads(self):
+        new_distributed_loads = np.zeros(shape=(1, self.plot_resolution))
         for load in self.load_inventory:
             if type(load).__name__ == "DistributedLoad":
-                shear_force += load.value_at(x_axis)
-        plt.plot(x_axis, shear_force, 'r', linewidth=2)
-        # a, b = load.x_left, load.x_right
-        # verts = [(a, 0)] + list(zip(x_axis, shear_force)) + [(b, 0)]
-        # poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
-        # ax.add_patch(poly)
-        return plt
+                new_distributed_loads += load.value_at(self.distributed_loads[0])
+        self.distributed_loads[1] = new_distributed_loads
 
-    def plot_shear_force_from_point_loads(self):
-        pass
+    def plot_numerical(self, xy_array):
+        fig, ax = plt.subplots()
+        plt.plot(xy_array[0], xy_array[1], 'r', linewidth=2)
+        a, b = xy_array[0, 0], xy_array[0, -1]
+        verts = [(a, 0)] + list(zip(xy_array[0], xy_array[1])) + [(b, 0)]
+        poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
+        ax.add_patch(poly)
+        return plt
 
 
 class DistributedLoad:
