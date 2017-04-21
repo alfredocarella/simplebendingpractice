@@ -54,6 +54,7 @@ class TestBeam(unittest.TestCase):
         plot = plot_numerical(self.my_beam.bending_moment)
         plot.show()
         self.assertAlmostEqual(0, self.my_beam.bending_moment[1, -1], places=1)
+        # TODO: Add support for horizontal (distributed- and point)loads
         # TODO: Integrate in order to calculate beam inclination and deflection
         # TODO: Use gaussian quadrature or even better, analytical integration
 
