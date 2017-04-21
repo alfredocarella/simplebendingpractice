@@ -5,6 +5,7 @@ from bending import Beam
 from bending import DistributedLoad
 from bending import PointLoad
 from bending import PointTorque
+from bending import plot_numerical
 
 
 class TestBeam(unittest.TestCase):
@@ -42,7 +43,7 @@ class TestBeam(unittest.TestCase):
         self.my_beam.add_load(DistributedLoad([-1.2], 0, 10))
         self.assertEqual(0.8, self.my_beam.distributed_loads[1, 0])
         self.assertEqual(-1.2, self.my_beam.distributed_loads[1, -1])
-        plot = self.my_beam.plot_numerical(self.my_beam.distributed_loads)
+        plot = plot_numerical(self.my_beam.distributed_loads)
         plot.show()
 
     def test_plotting(self):

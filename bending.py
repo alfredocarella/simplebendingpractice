@@ -36,15 +36,6 @@ class Beam:
                 new_distributed_loads += load.value_at(self.distributed_loads[0])
         self.distributed_loads[1] = new_distributed_loads
 
-    def plot_numerical(self, xy_array):
-        fig, ax = plt.subplots()
-        plt.plot(xy_array[0], xy_array[1], 'r', linewidth=2)
-        a, b = xy_array[0, 0], xy_array[0, -1]
-        verts = [(a, 0)] + list(zip(xy_array[0], xy_array[1])) + [(b, 0)]
-        poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
-        ax.add_patch(poly)
-        return plt
-
 
 class DistributedLoad:
     def __init__(self, coeffs, x_left, x_right):
@@ -81,3 +72,14 @@ class PointTorque:
         self.x_coord = x_coord
         self.resultant = PointLoad([0, 0], x_coord)
         self.moment = torque
+
+
+def plot_numerical(xy_array):
+    fig, ax = plt.subplots()
+    plt.plot(xy_array[0], xy_array[1], 'r', linewidth=2)
+    a, b = xy_array[0, 0], xy_array[0, -1]
+    verts = [(a, 0)] + list(zip(xy_array[0], xy_array[1])) + [(b, 0)]
+    poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
+    ax.add_patch(poly)
+    return plt
+
