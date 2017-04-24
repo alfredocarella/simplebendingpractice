@@ -10,7 +10,7 @@ from bending import plot_numerical
 
 class TestBeam(unittest.TestCase):
     def setUp(self):
-        self.my_beam = Beam(10, [0, 9], plot_resolution=1000)
+        self.my_beam = Beam(10, [0, 9])
         self.assertEqual([], self.my_beam.load_inventory)
 
     def test_beam_length_is_correctly_defined(self):
@@ -50,7 +50,8 @@ class TestBeam(unittest.TestCase):
     def test_normal_forces_are_correct(self):
         self.my_beam.add_load(DistributedLoad(([1], [1]), [0, 10]))
         self.assertEqual(-10, self.my_beam.normal_force[-1, 0])
-        self.assertAlmostEqual(-5, self.my_beam.normal_force[1, 500], places=1)
+        half_x = self.my_beam.plot_resolution // 2  # <- Integer division
+        self.assertAlmostEqual(-5, self.my_beam.normal_force[1, half_x], places=1)
         self.assertAlmostEqual(0, self.my_beam.normal_force[1, -1])
 
     def test_bending_moment_is_zero_at_the_ends(self):
