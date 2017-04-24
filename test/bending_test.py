@@ -49,10 +49,10 @@ class TestBeam(unittest.TestCase):
 
     def test_normal_forces_are_correct(self):
         self.my_beam.add_load(DistributedLoad(([1], [1]), [0, 10]))
-        self.assertEqual(-10, self.my_beam.normal_force[-1, 0])
+        self.assertAlmostEqual(10, self.my_beam.normal_force[1, 0])
         half_x = self.my_beam.plot_resolution // 2  # <- Integer division
-        self.assertAlmostEqual(-5, self.my_beam.normal_force[1, half_x], places=1)
-        self.assertAlmostEqual(0, self.my_beam.normal_force[1, -1])
+        self.assertAlmostEqual(5, round(self.my_beam.normal_force[1, half_x]))
+        self.assertAlmostEqual(0, self.my_beam.normal_force[1, -1], places=1)
 
     def test_bending_moment_is_zero_at_the_ends(self):
         self.my_beam.add_load(DistributedLoad(([0], [1]), [0, 10]))
@@ -64,8 +64,6 @@ class TestBeam(unittest.TestCase):
 
     def check_reaction_forces(self, expected):
         fixed_load, rolling_load = expected
-        print(self.my_beam.fixed_load)
-        print(fixed_load)
         assert_array_almost_equal(fixed_load, self.my_beam.fixed_load)
         self.assertAlmostEqual(rolling_load, self.my_beam.rolling_load)
 
@@ -143,3 +141,15 @@ class TestPointTorque(unittest.TestCase):
 
     def test_resultant_of_point_moment_is_zero(self):
         self.assertEqual(0, self.my_point_torque.resultant.norm)
+
+
+class TestPlotExampleProblem(unittest.TestCase):
+    def test_plot(self):
+        self.my_beam = Beam(15, [2, 9])
+        self.my_beam.add_load(PointLoad([300, -400], 4))
+        assert_array_almost_equal([-300, 400*5/7], self.my_beam.fixed_load)
+        self.assertAlmostEqual(400*2/7, self.my_beam.rolling_load)
+        # plot = self.my_beam.plot_case()
+        # plot.show()
+        self.my_beam.add_load(DistributedLoad([[10], [10]], [0, 15]))
+        self.my_beam.plot_case_this_is_exploratory_coding()

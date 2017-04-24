@@ -50,19 +50,35 @@ class Beam:
     def update_shear_force(self):
         x, fx, fy = self.distributed_loads
         new_shear_force = np.concatenate(([0], scipy.integrate.cumtrapz(fy, x)))
+
         for idx, coord in enumerate(self.x_axis):
             if self.fixed_coord <= coord:
                 new_shear_force[idx] += self.fixed_load[1]
             if self.rolling_coord <= coord:
                 new_shear_force[idx] += self.rolling_load
+
+        for load in self.load_inventory:
+            if type(load).__name__ == "PointLoad":
+                for idx, coord in enumerate(self.x_axis):
+                    if load.x_coord <= coord:
+                        new_shear_force[idx] += load.resultant.y
+
         self.shear_force[1] = new_shear_force
 
     def update_normal_force(self):
         x, fx, fy = self.distributed_loads
-        new_normal_force = np.concatenate(([0], scipy.integrate.cumtrapz(fx, x)))
+        new_normal_force = np.concatenate(([0], scipy.integrate.cumtrapz(-fx, x)))
+
         for idx, coord in enumerate(self.x_axis):
             if self.fixed_coord <= coord:
-                new_normal_force[idx] += self.fixed_load[0]
+                new_normal_force[idx] -= self.fixed_load[0]
+
+        for load in self.load_inventory:
+            if type(load).__name__ == "PointLoad":
+                for idx, coord in enumerate(self.x_axis):
+                    if load.x_coord <= coord:
+                        new_normal_force[idx] -= load.resultant.x
+
         self.normal_force[1] = new_normal_force
 
     def update_bending_moment(self):
@@ -74,6 +90,32 @@ class Beam:
                     if load.x_coord <= coord:
                         new_bending_moment[idx] -= load.moment
         self.bending_moment[1] = new_bending_moment
+
+    def plot_case_this_is_exploratory_coding(self):
+        fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True, sharey=False)
+        ax1.text(self.length/2, # x coordinate, 0 leftmost positioned, 1 rightmost
+         0.5, # y coordinate, 0 topmost positioned, 1 bottommost
+         "To do: Sketch with reaction forces", # the text which will be printed
+         horizontalalignment='center', # shortcut 'ha'
+         verticalalignment='center', # shortcut 'va'
+         fontsize=20, # can be named 'font' as well
+         alpha=.5 # float (0.0 transparent through 1.0 opaque)
+         )
+        # plot_numerical(ax1, self.normal_force, "Normal force diagram")
+        plot_numerical(ax2, self.normal_force, "Normal force diagram")
+        plot_numerical(ax3, self.shear_force, "Shear force diagram")
+        plot_numerical(ax4, self.bending_moment, "Bending moment diagram")
+        plt.show()
+
+
+def plot_numerical(ax, xy_array, title):
+    ax.plot(xy_array[0], xy_array[1], 'r', linewidth=2)
+    a, b = xy_array[0, 0], xy_array[0, -1]
+    verts = [(a, 0)] + list(zip(xy_array[0], xy_array[1])) + [(b, 0)]
+    poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
+    ax.add_patch(poly)
+    ax.set_title(title)
+    return plt
 
 
 class DistributedLoad:
@@ -120,13 +162,3 @@ class PointTorque:
         self.x_coord = x_coord
         self.resultant = PointLoad([0, 0], x_coord)
         self.moment = torque
-
-
-def plot_numerical(xy_array):
-    fig, ax = plt.subplots()
-    plt.plot(xy_array[0], xy_array[1], 'r', linewidth=2)
-    a, b = xy_array[0, 0], xy_array[0, -1]
-    verts = [(a, 0)] + list(zip(xy_array[0], xy_array[1])) + [(b, 0)]
-    poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
-    ax.add_patch(poly)
-    return plt
