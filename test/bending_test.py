@@ -123,10 +123,6 @@ class TestPointLoad(unittest.TestCase):
 
 
 class TestPointTorque(unittest.TestCase):
-    """
-    Torque applied at a point (counterclockwise positive). Consists of a 
-    scalar magnitude and an application point 'x_coord'.
-    """
     def setUp(self):
         magnitude = 231
         x_coord = 3

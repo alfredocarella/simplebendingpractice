@@ -84,6 +84,10 @@ class DistributedLoad:
 
 
 class PointLoad:
+    """
+    Point load 2D vector applied at a point (counterclockwise positive). 
+    Consists of a size 2 iterable and an application point 'x_coord'.
+    """
     def __init__(self, vector2d, x_coord):
         self.vector2d = np.array([*vector2d])
         self.x_coord = x_coord
@@ -94,6 +98,10 @@ class PointLoad:
 
 
 class PointTorque:
+    """
+    Torque applied at a point (counterclockwise positive). Consists of a 
+    scalar magnitude and an application point 'x_coord'.
+    """
     def __init__(self, torque, x_coord):
         self.x_coord = x_coord
         self.resultant = PointLoad([0, 0], x_coord)
