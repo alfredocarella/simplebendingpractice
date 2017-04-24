@@ -10,12 +10,13 @@ class Beam:
         self.length = length
         self.fixed_coord, self.rolling_coord = fixed_and_rolling_support_coords
         self.load_inventory = []
-        self.fixed_load, self.rolling_load = (0, 0)
+        self.fixed_load, self.rolling_load = ([0, 0], 0)
         self.plot_resolution = plot_resolution
         self.x_axis = np.linspace(0, self.length, self.plot_resolution)
         empty_vector = np.zeros(shape=(1, self.plot_resolution))
-        self.distributed_loads = np.vstack((self.x_axis, empty_vector))
+        self.distributed_loads = np.vstack((self.x_axis, empty_vector, empty_vector))
         self.shear_force = np.vstack((self.x_axis, empty_vector))
+        self.normal_force = np.vstack((self.x_axis, empty_vector))
         self.bending_moment = np.vstack((self.x_axis, empty_vector))
 
     def add_load(self, new_load):
@@ -24,33 +25,45 @@ class Beam:
         if type(new_load).__name__ == "DistributedLoad":
             self.update_distributed_loads()
         self.update_shear_force()
+        self.update_normal_force()
         self.update_bending_moment()
 
     def update_reaction_forces(self):
         d1, d2 = self.fixed_coord, self.rolling_coord
-        sum_loads = sum(load.resultant.y for load in self.load_inventory)
+        sum_loads_x = sum(load.resultant.x for load in self.load_inventory)
+        sum_loads_y = sum(load.resultant.y for load in self.load_inventory)
         sum_moments = sum(load.moment for load in self.load_inventory)
-        A = np.array([[1, 1],
-                      [d1, d2]])
-        b = np.array([-1 * sum_loads, -1 * sum_moments])
-        self.fixed_load, self.rolling_load = np.linalg.inv(A).dot(b)
+        a_matrix = np.array([[-1, 0, 0],
+                            [0, -1, -1],
+                            [0, -d1, -d2]])
+        b = np.array([sum_loads_x, sum_loads_y, sum_moments])
+        x = np.linalg.inv(a_matrix).dot(b)
+        self.fixed_load[0], self.fixed_load[1], self.rolling_load = x
 
     def update_distributed_loads(self):
-        new_distributed_loads = np.zeros(shape=(1, self.plot_resolution))
+        new_distributed_loads = np.zeros(shape=(2, self.plot_resolution))
         for load in self.load_inventory:
             if type(load).__name__ == "DistributedLoad":
                 new_distributed_loads += load.value_at(self.distributed_loads[0])
-        self.distributed_loads[1] = new_distributed_loads
+        self.distributed_loads[1:3, :] = new_distributed_loads
 
     def update_shear_force(self):
-        x, y = self.distributed_loads
-        new_shear_force = np.concatenate(([0], scipy.integrate.cumtrapz(y, x)))
+        x, fx, fy = self.distributed_loads
+        new_shear_force = np.concatenate(([0], scipy.integrate.cumtrapz(fy, x)))
         for idx, coord in enumerate(self.x_axis):
             if self.fixed_coord <= coord:
-                new_shear_force[idx] += self.fixed_load
+                new_shear_force[idx] += self.fixed_load[1]
             if self.rolling_coord <= coord:
                 new_shear_force[idx] += self.rolling_load
         self.shear_force[1] = new_shear_force
+
+    def update_normal_force(self):
+        x, fx, fy = self.distributed_loads
+        new_normal_force = np.concatenate(([0], scipy.integrate.cumtrapz(fx, x)))
+        for idx, coord in enumerate(self.x_axis):
+            if self.fixed_coord <= coord:
+                new_normal_force[idx] += self.fixed_load[0]
+        self.normal_force[1] = new_normal_force
 
     def update_bending_moment(self):
         x, y = self.shear_force
@@ -64,22 +77,23 @@ class Beam:
 
 
 class DistributedLoad:
-    def __init__(self, coeffs, x_left, x_right):
-        self.y_load = np.poly1d(coeffs)
-        self.x_left = x_left
-        self.x_right = x_right
-        load_integral = self.y_load.integ()
-        y_force = load_integral(self.x_right - self.x_left) - load_integral(0)
+    def __init__(self, coeffs, start_end):
+        self.x_load, self.y_load = np.poly1d(coeffs[0]), np.poly1d(coeffs[1])
+        self.x_left, self.x_right = start_end
+        span = self.x_right - self.x_left
+        load_integral = (self.x_load.integ(), self.y_load.integ())
+        x_force, y_force = (direction(span) - direction(0) for direction in load_integral)
         moment_integral = (self.y_load * np.poly1d([1, 0])).integ()
-        x_coord = (moment_integral(self.x_right - self.x_left) - moment_integral(0)) / y_force + self.x_left
-        self.resultant = PointLoad([0, y_force], x_coord)
+        x_coord_resultant = (moment_integral(span) - moment_integral(0)) / y_force + self.x_left
+        self.resultant = PointLoad([x_force, y_force], x_coord_resultant)
         self.moment = self.resultant.moment
 
     def value_at(self, x_range):
-        values = np.zeros((len(x_range)))
+        values = np.zeros((2, len(x_range)))
         for idx, coord in enumerate(x_range):
             if self.x_left <= coord <= self.x_right:
-                values[idx] =self.y_load(coord - self.x_left)
+                rel_coord = coord - self.x_left
+                values[:, idx] = (self.x_load(rel_coord), self.y_load(rel_coord))
         return values
 
 
@@ -116,4 +130,3 @@ def plot_numerical(xy_array):
     poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
     ax.add_patch(poly)
     return plt
-
