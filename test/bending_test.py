@@ -68,31 +68,7 @@ class TestBeam(unittest.TestCase):
         self.assertAlmostEqual(rolling_load, self.my_beam.rolling_load)
 
 
-class TestEvenlyDistributedLoad(unittest.TestCase):
-    def setUp(self):
-        coeffs = ([0], [3])
-        start_end = (2, 6)
-        self.my_distributed_load = DistributedLoad(coeffs, start_end)
-
-    def test_evenly_distributed_load_is_correctly_defined(self):
-        self.assertEqual([3], self.my_distributed_load.y_load.coeffs)
-        self.assertEqual(2, self.my_distributed_load.x_left)
-        self.assertEqual(6, self.my_distributed_load.x_right)
-
-    def test_evenly_distributed_load_is_correctly_evaluated(self):
-        values, coords = ([0, 0, 0, 0, 0], [0, 3, 3, 3, 0]), [0, 2, 4, 6, 8]
-        assert_array_almost_equal(values, self.my_distributed_load.value_at(coords))
-
-    def test_resultant_norm_of_evenly_distributed_load_is_correct(self):
-        expected = PointLoad([0, 12], 4)
-        assert_array_almost_equal(expected.vector2d, self.my_distributed_load.resultant.vector2d)
-        self.assertAlmostEqual(expected.x_coord, self.my_distributed_load.resultant.x_coord)
-
-    def test_moment_produced_by_evenly_distributed_load_is_correct(self):
-        self.assertEqual(48, self.my_distributed_load.moment)
-
-
-class TestVariableDistributedLoad(unittest.TestCase):
+class TestDistributedLoad(unittest.TestCase):
     def setUp(self):
         coeffs = [[1], [5, -2, -1]]
         start_end = (1, 5)
@@ -106,6 +82,9 @@ class TestVariableDistributedLoad(unittest.TestCase):
         expected = PointLoad([4, 260/3], 267/65)
         assert_array_almost_equal(expected.vector2d, self.my_distributed_load.resultant.vector2d)
         self.assertAlmostEqual(expected.x_coord, self.my_distributed_load.resultant.x_coord)
+
+    def test_moment_produced_by_evenly_distributed_load_is_correct(self):
+        self.assertEqual(356, self.my_distributed_load.moment)
 
 
 class TestPointLoad(unittest.TestCase):
