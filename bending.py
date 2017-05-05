@@ -3,6 +3,7 @@ from matplotlib.patches import Polygon
 import math
 import numpy as np
 import scipy.integrate
+import sympy
 
 
 class Beam:
@@ -101,7 +102,6 @@ class Beam:
          fontsize=20, # can be named 'font' as well
          alpha=.5 # float (0.0 transparent through 1.0 opaque)
          )
-        # plot_numerical(ax1, self.normal_force, "Normal force diagram")
         plot_numerical(ax2, self.normal_force, "Normal force diagram")
         plot_numerical(ax3, self.shear_force, "Shear force diagram")
         plot_numerical(ax4, self.bending_moment, "Bending moment diagram")
@@ -120,22 +120,31 @@ def plot_numerical(ax, xy_array, title):
 
 class DistributedLoad:
     def __init__(self, coeffs, start_end):
-        self.x_load, self.y_load = np.poly1d(coeffs[0]), np.poly1d(coeffs[1])
         self.x_left, self.x_right = start_end
-        span = self.x_right - self.x_left
-        load_integral = (self.x_load.integ(), self.y_load.integ())
-        x_force, y_force = (direction(span) - direction(0) for direction in load_integral)
-        moment_integral = (self.y_load * np.poly1d([1, 0])).integ()
-        x_coord_resultant = (moment_integral(span) - moment_integral(0)) / y_force + self.x_left
+        x = sympy.symbols('x')
+        x_expr = sum(n * ((x-self.x_left) ** p) for p, n in enumerate(coeffs[0][::-1]))
+        y_expr = sum(n * ((x-self.x_left) ** p) for p, n in enumerate(coeffs[1][::-1]))
+        self.x_load = sympy.Piecewise((0, x < self.x_left), (0, x > self.x_right), (x_expr, True))
+        self.y_load = sympy.Piecewise((0, x < self.x_left), (0, x > self.x_right), (y_expr, True))
+        x_force = sympy.integrate(self.x_load, (x, *start_end))
+        y_force = sympy.integrate(self.y_load, (x, *start_end))
+        x_coord_resultant = sympy.integrate(self.y_load * (x-self.x_left), (x, *start_end)) / y_force + self.x_left
         self.resultant = PointLoad([x_force, y_force], x_coord_resultant)
         self.moment = self.resultant.moment
+        self.y_load_old = sum(n * (x ** p) for p, n in enumerate(coeffs[1][::-1]))
 
     def value_at(self, x_range):
+        x = sympy.symbols('x')
         values = np.zeros((2, len(x_range)))
+        lam_x_load = sympy.lambdify(x, self.x_load, modules=['numpy'])
+        values[0, :] = lam_x_load(x_range)
+        # TODO: Find out why lines 146-147 break one of the tests, fix it and use them to replace lines 142-145
         for idx, coord in enumerate(x_range):
+            rel_coord = coord - self.x_left
             if self.x_left <= coord <= self.x_right:
-                rel_coord = coord - self.x_left
-                values[:, idx] = (self.x_load(rel_coord), self.y_load(rel_coord))
+                values[1, idx] = self.y_load_old.subs(x, rel_coord)
+        # lam_y_load = sympy.lambdify(x, self.y_load, modules=['numpy'])
+        # values[1, :] = lam_y_load(x_range)
         return values
 
 

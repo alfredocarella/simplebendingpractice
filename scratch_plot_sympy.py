@@ -16,7 +16,7 @@ def my_diracdelta(x_values, *args):
 
 
 x = symbols('x')
-f1 = x*x
+f1 = x**2
 f2 = integrate(f1)
 f3 = integrate(DiracDelta(x-0.5))
 f4 = DiracDelta(x-0.5)
@@ -38,3 +38,5 @@ plt.show()
 # print(DiracDelta(x-0))
 # print(integrate(DiracDelta(x-0)))
 print(integrate(DiracDelta(x-0) + x*x, (x, -1, 1)))
+
+print(lam_f1(4))
