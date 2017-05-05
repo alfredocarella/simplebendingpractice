@@ -128,7 +128,5 @@ class TestPlotExampleProblem(unittest.TestCase):
         self.my_beam.add_load(PointLoad([300, -400], 4))
         assert_array_almost_equal([-300, 400*5/7], self.my_beam.fixed_load)
         self.assertAlmostEqual(400*2/7, self.my_beam.rolling_load)
-        # plot = self.my_beam.plot_case()
-        # plot.show()
         self.my_beam.add_load(DistributedLoad([[10], [10]], [0, 15]))
         self.my_beam.plot_case_this_is_exploratory_coding()
