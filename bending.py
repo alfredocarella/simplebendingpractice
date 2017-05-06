@@ -137,13 +137,11 @@ class DistributedLoad:
         x = sympy.symbols('x')
         values = np.zeros((2, len(x_range)))
         lam_x_load = sympy.lambdify(x, self.x_load, modules=['numpy'])
+        lam_y_load = sympy.lambdify(x, self.y_load, modules=['numpy'])
         values[0, :] = lam_x_load(x_range)
-        # TODO: Find out why lines 146-147 break one of the tests, fix it and use them to replace lines 142-145
+        # TODO: Find out why line 145 breaks one of the tests, fix it and use it to replace lines 143-144
         for idx, coord in enumerate(x_range):
-            rel_coord = coord - self.x_left
-            if self.x_left <= coord <= self.x_right:
-                values[1, idx] = self.y_load_old.subs(x, rel_coord)
-        # lam_y_load = sympy.lambdify(x, self.y_load, modules=['numpy'])
+            values[1, idx] = lam_y_load(coord)
         # values[1, :] = lam_y_load(x_range)
         return values
 
