@@ -11,7 +11,7 @@ class Beam:
         self.length = length
         self.fixed_coord, self.rolling_coord = fixed_and_rolling_support_coords
         self.load_inventory = []
-        self.fixed_load, self.rolling_load = ([0, 0], 0)
+        self.fixed_load, self.rolling_load = ((0, 0), 0)
         self.plot_resolution = plot_resolution
         self.x_axis = np.linspace(0, self.length, self.plot_resolution)
         empty_vector = np.zeros(shape=(1, self.plot_resolution))
@@ -19,6 +19,7 @@ class Beam:
         self.shear_force = np.vstack((self.x_axis, empty_vector))
         self.normal_force = np.vstack((self.x_axis, empty_vector))
         self.bending_moment = np.vstack((self.x_axis, empty_vector))
+        self.distributed_loads_analytical = 0
 
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
@@ -38,8 +39,8 @@ class Beam:
                             [0, -1, -1],
                             [0, -d1, -d2]])
         b = np.array([sum_loads_x, sum_loads_y, sum_moments])
-        x = np.linalg.inv(a_matrix).dot(b)
-        self.fixed_load[0], self.fixed_load[1], self.rolling_load = x
+        x_vec = np.linalg.inv(a_matrix).dot(b)
+        self.fixed_load, self.rolling_load = x_vec[0:-1], x_vec[-1]
 
     def update_distributed_loads(self):
         new_distributed_loads = np.zeros(shape=(2, self.plot_resolution))
@@ -47,9 +48,11 @@ class Beam:
             if type(load).__name__ == "DistributedLoad":
                 new_distributed_loads += load.value_at(self.distributed_loads[0])
         self.distributed_loads[1:3, :] = new_distributed_loads
+        self.distributed_loads_analytical = new_distributed_loads
 
     def update_shear_force(self):
         x, fx, fy = self.distributed_loads
+        # TODO: Replace this line by analytical integration
         new_shear_force = np.concatenate(([0], scipy.integrate.cumtrapz(fy, x)))
 
         for idx, coord in enumerate(self.x_axis):
@@ -129,20 +132,16 @@ class DistributedLoad:
         x_force = sympy.integrate(self.x_load, (x, *start_end))
         y_force = sympy.integrate(self.y_load, (x, *start_end))
         x_coord_resultant = sympy.integrate(self.y_load * (x-self.x_left), (x, *start_end)) / y_force + self.x_left
-        self.resultant = PointLoad([x_force, y_force], x_coord_resultant)
+        self.resultant = PointLoad((x_force, y_force), x_coord_resultant)
         self.moment = self.resultant.moment
-        self.y_load_old = sum(n * (x ** p) for p, n in enumerate(coeffs[1][::-1]))
 
     def value_at(self, x_range):
         x = sympy.symbols('x')
         values = np.zeros((2, len(x_range)))
-        lam_x_load = sympy.lambdify(x, self.x_load, modules=['numpy'])
-        lam_y_load = sympy.lambdify(x, self.y_load, modules=['numpy'])
-        values[0, :] = lam_x_load(x_range)
-        # TODO: Find out why line 145 breaks one of the tests, fix it and use it to replace lines 143-144
+        lam_x_load = sympy.lambdify(x, self.x_load)
+        lam_y_load = sympy.lambdify(x, self.y_load)
         for idx, coord in enumerate(x_range):
-            values[1, idx] = lam_y_load(coord)
-        # values[1, :] = lam_y_load(x_range)
+            values[:, idx] = (lam_x_load(coord), lam_y_load(coord))
         return values
 
 
