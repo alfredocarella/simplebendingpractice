@@ -39,33 +39,33 @@ class TestBeam(unittest.TestCase):
     def test_numerical_sum_of_distributed_loads_is_correct(self):
         self.my_beam.add_load(DistributedLoad(((0,), (2,)), (0, 6)))
         self.my_beam.add_load(DistributedLoad(((0,), (-1.2,)), (0, 10)))
-        self.assertEqual(0.8, self.my_beam.distributed_loads[2, 0])
-        self.assertEqual(-1.2, self.my_beam.distributed_loads[2, -1])
+        self.assertEqual(0.8, self.my_beam.distributed_loads[1, 0])
+        self.assertEqual(-1.2, self.my_beam.distributed_loads[1, -1])
 
     def test_shear_forces_are_correct(self):
         self.my_beam.add_load(DistributedLoad(((0,), (1,)), (0, 10)))
-        self.assertEqual(-40/9, self.my_beam.shear_force[1, 0])
-        self.assertEqual(0, self.my_beam.shear_force[1, -1])
+        self.assertEqual(-40/9, self.my_beam.shear_force[0])
+        self.assertEqual(0, self.my_beam.shear_force[-1])
 
     def test_normal_forces_are_correct(self):
         self.my_beam.add_load(DistributedLoad(((1,), (1,)), (0, 10)))
-        self.assertAlmostEqual(10, self.my_beam.normal_force[1, 0])
+        self.assertAlmostEqual(10, self.my_beam.normal_force[0])
         half_x = self.my_beam.plot_resolution // 2  # <- Integer division
-        self.assertAlmostEqual(5, round(self.my_beam.normal_force[1, half_x]))
-        self.assertAlmostEqual(0, self.my_beam.normal_force[1, -1], places=1)
+        self.assertAlmostEqual(5, round(self.my_beam.normal_force[half_x]))
+        self.assertAlmostEqual(0, self.my_beam.normal_force[-1], places=1)
 
     def test_bending_moment_is_zero_at_the_ends(self):
         self.my_beam.add_load(DistributedLoad(((0,), (1,)), (0, 10)))
         self.my_beam.add_load(PointTorque(-8, 5))
-        self.assertEqual(0, self.my_beam.bending_moment[1, 0])
-        self.assertAlmostEqual(0, self.my_beam.bending_moment[1, -1], places=1)
+        self.assertEqual(0, self.my_beam.bending_moment[0])
+        self.assertAlmostEqual(0, self.my_beam.bending_moment[-1], places=1)
         # TODO: Integrate in order to calculate beam inclination and deflection
         # TODO: Use gaussian quadrature or even better, analytical integration
 
     def check_reaction_forces(self, expected):
         fixed_load, rolling_load = expected
-        assert_array_almost_equal(fixed_load, self.my_beam.fixed_load)
-        self.assertAlmostEqual(rolling_load, self.my_beam.rolling_load)
+        assert_array_almost_equal(fixed_load, self.my_beam.fixed_support)
+        self.assertAlmostEqual(rolling_load, self.my_beam.rolling_support)
 
 
 class TestDistributedLoad(unittest.TestCase):
@@ -126,7 +126,7 @@ class TestPlotExampleProblem(unittest.TestCase):
     def test_plot(self):
         self.my_beam = Beam(15, (2, 9))
         self.my_beam.add_load(PointLoad((300, -400), 4))
-        assert_array_almost_equal((-300, 400*5/7), self.my_beam.fixed_load)
-        self.assertAlmostEqual(400*2/7, self.my_beam.rolling_load)
+        assert_array_almost_equal((-300, 400*5/7), self.my_beam.fixed_support)
+        self.assertAlmostEqual(400 * 2 / 7, self.my_beam.rolling_support)
         self.my_beam.add_load(DistributedLoad(((10,), (10,)), (0, 15)))
         self.my_beam.plot_case_this_is_exploratory_coding()
