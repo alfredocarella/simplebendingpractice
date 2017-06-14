@@ -4,6 +4,7 @@ import math
 import numpy as np
 import scipy.integrate
 import sympy
+from sympy.functions.special.delta_functions import DiracDelta, Heaviside
 
 
 class Beam:
@@ -18,13 +19,13 @@ class Beam:
         self.shear_force = np.zeros(self.plot_resolution)
         self.normal_force = np.zeros(self.plot_resolution)
         self.bending_moment = np.zeros(self.plot_resolution)
-        self.distributed_loads_analytical = 0
+        self.distributed_loads_analytical = [0, 0]
 
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
         self.update_reaction_forces()
-        if type(new_load).__name__ == "DistributedLoad":
-            self.update_distributed_loads()
+        # if type(new_load).__name__ == "DistributedLoad":
+        self.update_distributed_loads()
         self.update_shear_force()
         self.update_normal_force()
         self.update_bending_moment()
@@ -48,14 +49,21 @@ class Beam:
                 new_distributed_loads += load.value_at(self.x_axis)
         self.distributed_loads = new_distributed_loads
 
-        self.distributed_loads_analytical = (0, 0)
+        x = sympy.symbols('x')
+        self.distributed_loads_analytical = [0, 0]
         for load in self.load_inventory:
             if type(load).__name__ == "DistributedLoad":
-                self.distributed_loads_analytical += (load.x_load, load.y_load)
+                self.distributed_loads_analytical[0] += load.x_load
+                self.distributed_loads_analytical[1] += load.y_load
+            if type(load).__name__ == "PointLoad":
+                self.distributed_loads_analytical[0] += load.vector2d[0] * DiracDelta(x-load.x_coord)
+                self.distributed_loads_analytical[1] += load.vector2d[1] * DiracDelta(x-load.x_coord)
+        self.distributed_loads_analytical[0] += self.fixed_support[0] * DiracDelta(x-self.fixed_coord)
+        self.distributed_loads_analytical[1] += self.fixed_support[1] * DiracDelta(x-self.fixed_coord)
+        self.distributed_loads_analytical[1] += self.rolling_support * DiracDelta(x-self.rolling_coord)
 
     def update_shear_force(self):
         fx, fy = self.distributed_loads
-        # TODO: Replace this line by analytical integration
         new_shear_force = np.concatenate(([0], scipy.integrate.cumtrapz(fy, self.x_axis)))
 
         for idx, coord in enumerate(self.x_axis):
@@ -71,6 +79,13 @@ class Beam:
                         new_shear_force[idx] += load.resultant.y
 
         self.shear_force = new_shear_force
+
+        x = sympy.symbols('x')
+        fx_analytical = self.distributed_loads_analytical[0]
+        fy_analytical = self.distributed_loads_analytical[1]
+        self.shear_force_analytical = [0, 0]
+        self.shear_force_analytical[0] += sympy.integrate(fx_analytical, x)
+        self.shear_force_analytical[1] += sympy.integrate(fy_analytical, x)
 
     def update_normal_force(self):
         fx, fy = self.distributed_loads
@@ -114,15 +129,12 @@ class Beam:
         plot_numerical(ax5, (self.x_axis, self.bending_moment), "Bending moment diagram")
         plt.show()
 
-        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, sharex='all', sharey='none')
         x = sympy.symbols('x')
-        lam_func = sympy.lambdify(x, self.distributed_loads_analytical[1])
-        print(self.distributed_loads_analytical[0])
-        y_range = self.x_axis * 0
-        for idx, coord in enumerate(self.x_axis):
-            y_range[idx] = lam_func(coord)
-        plot_numerical(ax2, (self.x_axis, y_range), "Distributed loads analytical")
-
+        my_modules = ['numpy', {'Heaviside': my_heaviside, 'DiracDelta': my_diracdelta}]
+        y_func = sympy.lambdify(x, self.shear_force_analytical[1], modules=my_modules)
+        x_vals = np.linspace(0, self.length, self.plot_resolution)
+        y_vals = y_func(x_vals)
+        plt.plot(x_vals, y_vals)
         plt.show()
 
 
@@ -151,8 +163,9 @@ class DistributedLoad:
 
     def value_at(self, x_range):
         x = sympy.symbols('x')
-        lam_x_load = sympy.lambdify(x, self.x_load)
-        lam_y_load = sympy.lambdify(x, self.y_load)
+        my_modules = ['numpy', {'Heaviside': my_heaviside, 'DiracDelta': my_diracdelta}]
+        lam_x_load = sympy.lambdify(x, self.x_load, modules=my_modules)
+        lam_y_load = sympy.lambdify(x, self.y_load, modules=my_modules)
         values = np.zeros((2, len(x_range)))
         for idx, coord in enumerate(x_range):
             values[:, idx] = (lam_x_load(coord), lam_y_load(coord))
@@ -184,3 +197,11 @@ class PointTorque:
         self.x_coord = x_coord
         self.resultant = PointLoad([0, 0], x_coord)
         self.moment = torque
+
+
+def my_heaviside(x_values):
+    return (x_values >= 0) * 1.0
+
+
+def my_diracdelta(x_values, *args):
+    return x_values * 0
