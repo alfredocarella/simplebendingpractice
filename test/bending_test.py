@@ -80,7 +80,8 @@ class TestDistributedLoad(unittest.TestCase):
 
     def test_resultant_norm_of_variable_distributed_load_is_correct(self):
         expected = PointLoad((4, 260/3), 267/65)
-        assert_array_almost_equal(expected.vector2d, self.my_distributed_load.resultant.vector2d)
+        self.assertAlmostEqual(expected.x, self.my_distributed_load.resultant.x)
+        self.assertAlmostEqual(expected.y, self.my_distributed_load.resultant.y)
         self.assertAlmostEqual(expected.x_coord, self.my_distributed_load.resultant.x_coord)
 
     def test_moment_produced_by_evenly_distributed_load_is_correct(self):

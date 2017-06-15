@@ -5,10 +5,11 @@ import numpy as np
 import scipy.integrate
 import sympy
 from sympy.functions.special.delta_functions import DiracDelta, Heaviside
+# from mpmath import meijerg
 
 
 class Beam:
-    def __init__(self, length, fixed_and_rolling_support_coords, plot_resolution=1000):
+    def __init__(self, length, fixed_and_rolling_support_coords, plot_resolution=500):
         self.length = length
         self.fixed_coord, self.rolling_coord = fixed_and_rolling_support_coords
         self.load_inventory = []
@@ -19,7 +20,10 @@ class Beam:
         self.shear_force = np.zeros(self.plot_resolution)
         self.normal_force = np.zeros(self.plot_resolution)
         self.bending_moment = np.zeros(self.plot_resolution)
+
         self.distributed_loads_analytical = [0, 0]
+        self.shear_force_analytical = [0, 0]
+        self.bending_moment_analytical = 0
 
     def add_load(self, new_load):
         self.load_inventory.append(new_load)
@@ -51,16 +55,13 @@ class Beam:
 
         x = sympy.symbols('x')
         self.distributed_loads_analytical = [0, 0]
-        for load in self.load_inventory:
-            if type(load).__name__ == "DistributedLoad":
-                self.distributed_loads_analytical[0] += load.x_load
-                self.distributed_loads_analytical[1] += load.y_load
-            if type(load).__name__ == "PointLoad":
-                self.distributed_loads_analytical[0] += load.vector2d[0] * DiracDelta(x-load.x_coord)
-                self.distributed_loads_analytical[1] += load.vector2d[1] * DiracDelta(x-load.x_coord)
         self.distributed_loads_analytical[0] += self.fixed_support[0] * DiracDelta(x-self.fixed_coord)
         self.distributed_loads_analytical[1] += self.fixed_support[1] * DiracDelta(x-self.fixed_coord)
         self.distributed_loads_analytical[1] += self.rolling_support * DiracDelta(x-self.rolling_coord)
+        for load in self.load_inventory:
+            # if type(load).__name__ in ["DistributedLoad", "PointLoad"]:
+            self.distributed_loads_analytical[0] += load.x_load
+            self.distributed_loads_analytical[1] += load.y_load
 
     def update_shear_force(self):
         fx, fy = self.distributed_loads
@@ -81,11 +82,9 @@ class Beam:
         self.shear_force = new_shear_force
 
         x = sympy.symbols('x')
-        fx_analytical = self.distributed_loads_analytical[0]
-        fy_analytical = self.distributed_loads_analytical[1]
         self.shear_force_analytical = [0, 0]
-        self.shear_force_analytical[0] += sympy.integrate(fx_analytical, x)
-        self.shear_force_analytical[1] += sympy.integrate(fy_analytical, x)
+        self.shear_force_analytical[0] += sympy.integrate(self.distributed_loads_analytical[0], x)
+        self.shear_force_analytical[1] += sympy.integrate(self.distributed_loads_analytical[1], x)
 
     def update_normal_force(self):
         fx, fy = self.distributed_loads
@@ -113,6 +112,10 @@ class Beam:
                         new_bending_moment[idx] -= load.moment
         self.bending_moment = new_bending_moment
 
+        x = sympy.symbols('x')
+        self.bending_moment_analytical = sympy.integrate(self.shear_force_analytical[1], x)
+
+
     def plot_case_this_is_exploratory_coding(self):
         fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, sharex='all', sharey='none')
         ax1.text(self.length / 2,  # x coordinate, 0 leftmost positioned, 1 rightmost
@@ -123,25 +126,33 @@ class Beam:
                  fontsize=20,  # can be named 'font' as well
                  alpha=.5  # float (0.0 transparent through 1.0 opaque)
                  )
-        plot_numerical(ax2, (self.x_axis, self.normal_force), "Normal force diagram")
-        plot_numerical(ax3, (self.x_axis, self.distributed_loads[1]), "Distributed loads diagram")
-        plot_numerical(ax4, (self.x_axis, self.shear_force), "Shear force diagram")
-        plot_numerical(ax5, (self.x_axis, self.bending_moment), "Bending moment diagram")
+        plot_numerical(ax2, self.x_axis, self.normal_force, "Normal force diagram")
+        plot_numerical(ax3, self.x_axis, self.distributed_loads[1], "Distributed loads diagram")
+        plot_numerical(ax4, self.x_axis, self.shear_force, "Shear force diagram")
+        plot_numerical(ax5, self.x_axis, self.bending_moment, "Bending moment diagram")
+        # plt.show()
+
+        fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, sharex='all', sharey='none')
+        plot_analytical(ax3, self.x_axis, self.distributed_loads_analytical[1], "Distributed loads diagram")
+        plot_analytical(ax4, self.x_axis, self.shear_force_analytical[1], "Shear force diagram")
+        # plot_analytical(ax5, self.x_axis, self.bending_moment_analytical, "Bending moment diagram")
+        print(self.bending_moment_analytical)
         plt.show()
 
-        x = sympy.symbols('x')
-        my_modules = ['numpy', {'Heaviside': my_heaviside, 'DiracDelta': my_diracdelta}]
-        y_func = sympy.lambdify(x, self.shear_force_analytical[1], modules=my_modules)
-        x_vals = np.linspace(0, self.length, self.plot_resolution)
-        y_vals = y_func(x_vals)
-        plt.plot(x_vals, y_vals)
-        plt.show()
+
+def plot_analytical(ax, x_vec, sym_func, title):
+    x = sympy.symbols('x')
+    # my_mods = ['numpy', {'Heaviside': my_heaviside, 'DiracDelta': my_diracdelta, 'meijerg': meijerg}]
+    my_mods = ['numpy', {'Heaviside': my_heaviside, 'DiracDelta': my_diracdelta}]
+    lambda_function = sympy.lambdify(x, sym_func, modules=my_mods)
+    y_vec = lambda_function(x_vec)
+    return plot_numerical(ax, x_vec, y_vec, title)
 
 
-def plot_numerical(ax, xy_array, title):
-    ax.plot(xy_array[0], xy_array[1], 'r', linewidth=2)
-    a, b = xy_array[0][0], xy_array[0][-1]
-    verts = [(a, 0)] + list(zip(xy_array[0], xy_array[1])) + [(b, 0)]
+def plot_numerical(ax, x_vec, y_vec, title):
+    ax.plot(x_vec, y_vec, 'r', linewidth=2)
+    a, b = x_vec[0], x_vec[-1]
+    verts = [(a, 0)] + list(zip(x_vec, y_vec)) + [(b, 0)]
     poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
     ax.add_patch(poly)
     ax.set_title(title)
@@ -179,12 +190,14 @@ class PointLoad:
     """
 
     def __init__(self, vector2d, x_coord):
-        self.vector2d = np.array([*vector2d])
+        x = sympy.symbols('x')
         self.x_coord = x_coord
-        self.x, self.y = self.vector2d
-        self.norm = math.sqrt(sum(dim ** 2 for dim in vector2d))
+        self.x, self.y = vector2d
+        self.norm = math.sqrt(sum(dim ** 2 for dim in [self.x, self.y]))
         self.resultant = self
         self.moment = self.y * x_coord
+        self.x_load = self.x * DiracDelta(x-self.x_coord)
+        self.y_load = self.y * DiracDelta(x-self.x_coord)
 
 
 class PointTorque:
@@ -194,9 +207,12 @@ class PointTorque:
     """
 
     def __init__(self, torque, x_coord):
+        x = sympy.symbols('x')
         self.x_coord = x_coord
         self.resultant = PointLoad([0, 0], x_coord)
         self.moment = torque
+        self.x_load = 0 * DiracDelta(x-self.x_coord)
+        self.y_load = self.moment * DiracDelta(x-self.x_coord, 1)
 
 
 def my_heaviside(x_values):
