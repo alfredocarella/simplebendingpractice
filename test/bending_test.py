@@ -1,6 +1,4 @@
 import unittest
-import matplotlib.pyplot as plt
-import numpy as np
 
 from bending import Beam
 from bending import DistributedLoad
@@ -68,22 +66,19 @@ class TestBeam(unittest.TestCase):
         self.assertEqual(-10, self.my_beam.normal_and_shear_force[0].subs("x", 0))
         self.assertEqual(-5, self.my_beam.normal_and_shear_force[0].subs("x", 5))
         self.assertEqual(0, self.my_beam.normal_and_shear_force[0].subs("x", 10))
-        # self.my_beam.plot()
 
+
+class TestSimpleBendingProblem(unittest.TestCase):
     def test_point_load_case_solved_correctly(self):
-        self.my_beam = Beam(9, (2, 7))
-        self.my_beam.add_load(DistributedLoad(1, -20, (0, 2)))
-        self.my_beam.add_load(DistributedLoad(0, -10, (3, 9)))
-        self.my_beam.add_load(PointLoad((0, -20), 3))
-        self.my_beam.plot(1000)
-        print(self.my_beam.normal_and_shear_force[1].subs("x", 2), " should be 36")
-        print(self.my_beam.bending_moment.subs("x", 7), " should be -20")
+        self.my_beam = Beam(9, (2.0001, 7))
+        self.my_beam.add_load(DistributedLoad(0.0, -20, (0, 2)))
+        self.my_beam.add_load(DistributedLoad(0.0, -10, (3, 9)))
+        self.my_beam.add_load(PointLoad((1.0, -20), 3))
+        # Source: "Mathalino" [This case fails sometimes, but not always. Why?]
+        self.assertAlmostEqual(36, self.my_beam.normal_and_shear_force[1].subs("x", 2.1), places=2)
+        self.assertAlmostEqual(-20, self.my_beam.bending_moment.subs("x", 7), places=2)
 
-        # # Mathalino
-        # self.my_beam = Beam(9, (2, 7))
-        # self.my_beam.add_load(DistributedLoad(0, -20, (0, 2)))
-        # self.my_beam.add_load(DistributedLoad(0, -10, (3, 9)))
-        # self.my_beam.add_load(PointLoad((0, -20), 3))
-        # self.my_beam.plot()
+        self.my_beam.plot()
+
 
 

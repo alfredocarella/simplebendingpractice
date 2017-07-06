@@ -41,7 +41,6 @@ class Beam:
         self.distributed_loads = [sympify(0), sympify(0)]
         for load in self.load_inventory:
             if type(load).__name__ == "DistributedLoad":
-                # self.distributed_loads[0] += sympy.Piecewise((load.x_load, load.span[0] <= x <= load.span[1]), (0, True))
                 self.distributed_loads[0] += load.x_load
                 self.distributed_loads[1] += load.y_load
 
@@ -73,16 +72,25 @@ class Beam:
             if type(load).__name__ == "PointTorque":
                 self.bending_moment += sympy.Piecewise((0, x < load.x_coord), (0, x > self.length), (load.moment, True))
 
-    def plot(self, num_points=100):
-        fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, sharex='all', sharey='none')
+    def plot(self, num_points=None):
+        if num_points is None:
+            num_points = 1000 - 1000 % self.length + 1
         x_axis = np.linspace(0, self.length, num_points)
-        plot_analytical(ax1, x_axis, self.distributed_loads[0], "Distributed loads (x)")
-        plot_analytical(ax2, x_axis, self.distributed_loads[1], "Distributed loads (y)")
-        plot_analytical(ax3, x_axis, self.normal_and_shear_force[0], "Normal force (x)")
-        plot_analytical(ax4, x_axis, self.normal_and_shear_force[1], "Shear force (y)")
-        # plot_analytical(ax5, x_axis, beam.normal_and_shear_force[0], "Normal force (x)")
-        plot_analytical(ax6, x_axis, self.bending_moment, "Bending moment (y)")
-        plt.show()
+        try:
+            fig, ax = plt.subplots(1, 1, sharex='all', sharey='none')
+            plot_analytical(ax, x_axis, self.normal_and_shear_force[0], filename="01_normal", maxmin_hline=True, x_units="m", y_units='kN', ylabel="Normalkraft", facecolor="b")
+        except:
+            print("OBS! Normalkraftdiagram IKKE generert!")
+        try:
+            fig, ax = plt.subplots(1, 1, sharex='all', sharey='none')
+            plot_analytical(ax, x_axis, self.normal_and_shear_force[1], filename="02_shear", maxmin_hline=True, x_units="m", y_units='kN', ylabel="Skjærkraft", facecolor="r")
+        except:
+            print("OBS! Skjærkraftdiagram IKKE generert!")
+        try:
+            fig, ax = plt.subplots(1, 1, sharex='all', sharey='none')
+            plot_analytical(ax, x_axis, self.bending_moment, filename="03_bending", maxmin_hline=True, x_units="m", y_units='kN \cdot m', ylabel="Bøyemoment", facecolor="y")
+        except:
+            print("OBS! Bøyemomentdiagram IKKE generert!")
 
 
 class DistributedLoad:
@@ -95,7 +103,6 @@ class DistributedLoad:
         self.y_load = sympy.Piecewise((0, x < span[0]), (0, x > span[1]), (y_func, True))
         x_resultant = sympy.integrate(self.x_load, (x, *span))
         y_resultant = sympy.integrate(self.y_load, (x, *span))
-        # coord_resultant = sympy.integrate(self.y_load * (x - span[0]), (x, *span)) / y_resultant + span[0]
         coord_resultant = sympy.integrate(self.y_load * x, (x, *span)) / y_resultant
         self.resultant = PointLoad((x_resultant, y_resultant), coord_resultant)
         self.moment = self.resultant.moment
@@ -129,26 +136,37 @@ class PointTorque:
         self.moment = torque
 
 
-def plot_analytical(ax, x_vec, sym_func, title):
+def plot_analytical(ax, x_vec, sym_func, title="", filename="foo", maxmin_hline=False, x_units="m", y_units='kN \cdot m', ylabel="Bøyemoment", facecolor=None):
     x = sympy.symbols('x')
     lambda_function = sympy.lambdify(x, sym_func)
     y_vec = lambda_function(x_vec)
-    return plot_numerical(ax, x_vec, y_vec, title)
+    return plot_numerical(ax, x_vec, y_vec, title, filename, maxmin_hline, x_units, y_units, ylabel, facecolor)
 
 
-def plot_numerical(ax, x_vec, y_vec, title):
-    ax.plot(x_vec, y_vec, 'r', linewidth=2)
+def plot_numerical(ax, x_vec, y_vec, title="", filename="foo", maxmin_hline=False, x_units="m", y_units='kN \cdot m', ylabel="Bøyemoment", facecolor=None):
+    ax.plot(x_vec, y_vec, '0.5', linewidth=2)
     a, b = x_vec[0], x_vec[-1]
     verts = [(a, 0)] + list(zip(x_vec, y_vec)) + [(b, 0)]
-    poly = Polygon(verts, facecolor='0.9', edgecolor='0.5')
+    if not facecolor:
+        facecolor = '0.9'
+    poly = Polygon(verts, facecolor=facecolor, edgecolor='0.5', alpha=0.7)
     ax.add_patch(poly)
-    ax.set_title(title)
+    if title:
+        ax.set_title(title)
+    ax.set_xlim([x_vec.min(), x_vec.max()])
+    if maxmin_hline:
+        ax.axhline(y=max(y_vec), linestyle='--', color="g")
+        max_idx = y_vec.argmax()
+        ax.set_xlabel('Bjelkeakse $[{}]$'.format(x_units))
+        ax.set_ylabel("{} $[{}]$".format(ylabel, y_units))
+        plt.annotate('${:0.2f}'.format(y_vec[max_idx]).rstrip('0').rstrip('.') + " {}$".format(y_units),
+                     xy=(x_vec[max_idx], y_vec[max_idx]), xytext=(8, 0), xycoords=('data', 'data'),
+                     textcoords='offset points', size=12)
+        ax.axhline(y=min(y_vec), linestyle='--', color="g")
+        min_idx = y_vec.argmin()
+        plt.annotate('${:0.2f}'.format(y_vec[min_idx]).rstrip('0').rstrip('.') + " {}$".format(y_units),
+                     xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
+                     textcoords='offset points', size=12)
+
+        plt.savefig('{}.pdf'.format(filename), bbox_inches='tight', rasterized=True)
     return plt
-
-
-def my_heaviside(x_values):
-    return (x_values >= 0) * 1.0
-
-
-def my_diracdelta(x_values, *args):
-    return x_values * 0
