@@ -1,9 +1,9 @@
 import unittest
 
-from bending import Beam
-from bending import DistributedLoad
-from bending import PointLoad
-from bending import PointTorque
+from bending_old import Beam
+from bending_old import DistributedLoad
+from bending_old import PointLoad
+from bending_old import PointTorque
 
 
 class TestBeam(unittest.TestCase):
@@ -33,7 +33,7 @@ class TestBeam(unittest.TestCase):
         self.assertEqual(56, resultant.fy)
         self.assertTupleEqual((0, 14), self.my_beam.load_inventory[1].value_at(4))
 
-        self.my_beam.add_load(PointTorque(80, 8))
+        self.my_beam.add_load(PointTorque(-90, 8))
         self.assertEqual(8, self.my_beam.load_inventory[2].x_coord)
 
     def test_reaction_forces_are_correct(self):
@@ -70,15 +70,17 @@ class TestBeam(unittest.TestCase):
 
 class TestSimpleBendingProblem(unittest.TestCase):
     def test_point_load_case_solved_correctly(self):
-        self.my_beam = Beam(9, (2.0001, 7))
+        self.my_beam = Beam(9, (2, 7))
         self.my_beam.add_load(DistributedLoad(0.0, -20, (0, 2)))
         self.my_beam.add_load(DistributedLoad(0.0, -10, (3, 9)))
         self.my_beam.add_load(PointLoad((1.0, -20), 3))
-        # Source: "Mathalino" [This case fails sometimes, but not always. Why?]
-        self.assertAlmostEqual(36, self.my_beam.normal_and_shear_force[1].subs("x", 2.1), places=2)
-        self.assertAlmostEqual(-20, self.my_beam.bending_moment.subs("x", 7), places=2)
-
-        self.my_beam.plot()
+        self.assertAlmostEqual(36, self.my_beam.normal_and_shear_force[1].subs("x", 2.0))
+        # Source: "Mathalino" [This case fails consistently]
+        # https://www.mathalino.com/reviewer/mechanics-and-strength-of-materials/solution-to-problem-448-relationship-between-load-shear
+        print(self.my_beam.bending_moment.subs("x", 7.0))
+        self.assertEqual(-20, self.my_beam.bending_moment.subs("x", 7.0))
+        #
+        # self.my_beam.plot()
 
 
 
