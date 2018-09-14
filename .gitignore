@@ -1,5 +1,8 @@
 .idea
 .coverage
-__pycache__/
-test/__pycache__/
-mytikz.tex
+.ipynb_checkpoints
+
+*__pycache__
+
+*.pdf
+*.swp
