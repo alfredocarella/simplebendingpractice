@@ -1,8 +1,11 @@
 .idea
 .coverage
 .ipynb_checkpoints
+.pytest_cache
 
 *__pycache__
 
 *.pdf
 *.swp
+
+ipynb_renumber.py
