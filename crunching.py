@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import numpy as np
-from sympy import integrate, Piecewise, symbols, lambdify
+import sympy
+from sympy import integrate, Piecewise, lambdify
 
 
 def get_reaction_forces(x_coords:tuple, resultant_force:tuple, resultant_moment:float):
@@ -26,7 +27,7 @@ def get_reaction_forces(x_coords:tuple, resultant_force:tuple, resultant_moment:
 
 
 def plot_analytical(ax, x_vec, sym_func, title="", filename="foo", maxmin_hline=False, x_units="m", y_units='kN \cdot m', ylabel="Bøyemoment", facecolor='0.9'):
-    x = symbols('x')
+    x = sympy.symbols('x')
     lambda_function = lambdify(x, sym_func, "numpy")
     x_vec = np.asarray(x_vec)
     y_vec = lambda_function(x_vec)
@@ -60,3 +61,30 @@ def plot_analytical(ax, x_vec, sym_func, title="", filename="foo", maxmin_hline=
     ax.set_ylabel("{} $[{}]$".format(ylabel, y_units))
 #        plt.savefig('{}.pdf'.format(filename), bbox_inches='tight', rasterized=True)
     return plt
+
+
+def create_distributed_load(expr, interval=None, shift=False):
+    """
+    Dear future me: please write a good docstring as soon as this function is working
+    :param expr:
+    :param interval:
+    :param shift:
+    :return:
+    """
+    x = sympy.symbols("x")
+    x0, x1 = interval
+    return Piecewise((0, x < x0), (0, x > x1), (expr, True))
+
+
+def create_point_load(value, coord):
+    """
+    Dear future me: please write a good docstring as soon as this function is working
+    :param expr:
+    :param interval:
+    :param shift:
+    :return:
+    """
+    x = sympy.symbols("x")
+    return Piecewise((0, x < coord), (value, True))
+
+
