@@ -8,6 +8,10 @@ from sympy import integrate
 # plt.rc('text', usetex=True)  # This makes the text prettier... and SLOWER
 
 
+DistributedLoad = namedtuple("DistributedLoad", "expr, span")  # ,shift")
+PointLoad = namedtuple("PointLoad", "force, coord")
+
+
 def calculate_diagrams(beam_span, fixed_support, rolling_support, loads):
     """
     TODO: Write a decent docstring
@@ -74,10 +78,6 @@ def plot_and_save(x0, x1, dist_forces, shear_forces, bending_moments):
                      'color': "y"}
     plot_analytical(ax3, x_axis, sum(bending_moments), **plot03_params)
     plt.savefig(fname="output/test01.pdf")
-
-
-DistributedLoad = namedtuple("DistributedLoad", "expr, span")  # ,shift")
-PointLoad = namedtuple("PointLoad", "force, coord")
 
 
 def get_reaction_forces(x_coords: tuple, resultant_force: tuple, resultant_moment: float):
@@ -209,3 +209,18 @@ def point(loads:list):
     for f in loads:
         if isinstance(f, PointLoad):
             yield f
+
+
+# Here I am beginning with the object oriented version
+class Beam():
+    def __init__(self, span: tuple=(0, 10)):
+        self._x0, self._x1 = span
+        self._fixed_support = 2
+        self._rolling_support = 8
+
+    def fixed_support(self, fixed_coord: float):
+        self._fixed_support = fixed_coord
+
+    def rolling_support(self, rolling_coord: float):
+        self._rolling_support = rolling_coord
+

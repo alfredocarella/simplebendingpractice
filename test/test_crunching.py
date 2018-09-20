@@ -41,15 +41,23 @@ def test_calculate_diagrams():
     np.testing.assert_allclose(shear_calc, shear_expected)
 
     bending_calc = sympy.lambdify(x, sum(bending_moments), "numpy")(x_vec)
-    print(bending_calc)
     bending_expected = [0, -2.5, -10, -22.5, -40, -22, -4, 2.75, 7, 8.75, 8, 4.75, -1, -9.25, -20, -11.25, -5, -1.25, 0]
     np.testing.assert_allclose(bending_calc, bending_expected)
 
 
-def test_Beam_is_correctly_created():
-    beam_span = [0, 9]
-    my_beam = crunching.Beam(beam_span)
-    assert my_beam.x0 == 0
-    assert my_beam.x1 == 9
+def test_beam_is_correctly_created():
+    span = [0, 9]
+    my_beam = crunching.Beam(span)
+    assert my_beam._x0 == 0
+    assert my_beam._x1 == 9
+
+
+def test_beam_supports_are_correctly_added():
+    span = (0, 9)
+    my_beam = crunching.Beam(span)
+    my_beam.rolling_support(7)
+
+    assert my_beam._fixed_support == 2
+    assert my_beam._rolling_support == 7
 
 
