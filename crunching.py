@@ -26,22 +26,34 @@ def plot_and_save(x0, x1, dist_forces, shear_forces, bending_moments):
     fig = plt.figure(figsize=(6, 10))
     fig.subplots_adjust(hspace=0.4)
     x_axis = np.linspace(x0, x1, (x1 - x0) * 1000 + 1)
-    ax1 = fig.add_subplot(4, 1, 2)
-    plot01_params = {'ylabel': "Distributed loads", 'yunits': r'kN / m',
+
+    # TODO: Take care of beam plotting
+    ax1 = fig.add_subplot(4, 1, 1)
+    ax1.text(0.6, 0.5, "A plot of the loaded beam is coming.\nGive me one more day!", size=12, rotation=20.,
+             ha="center", va="center",
+             bbox=dict(boxstyle="round",
+                       ec=(1., 0.5, 0.5),
+                       fc=(1., 0.8, 0.8),
+                       )
+             )
+    ax1.set_title("Easy examples for beam loading diagrams.")
+
+    ax2 = fig.add_subplot(4, 1, 2)
+    plot02_params = {'ylabel': "Distributed loads", 'yunits': r'kN / m',
                      # 'xlabel':"Beam axis", 'xunits':"m",
-                     'color': "b",
-                     'title': r"LATEX TEST $- \frac{2 \sqrt{11}}{5} + \frac{23}{5}$"}
-    plot_analytical(ax1, x_axis, sum(dist_forces), **plot01_params)
-    ax2 = fig.add_subplot(4, 1, 3)
-    plot02_params = {'ylabel': "Shear force", 'yunits': r'kN',
+                     # 'title': r"LATEX TEST $- \frac{2 \sqrt{11}}{5} + \frac{23}{5}$",
+                     'color': "b"}
+    plot_analytical(ax2, x_axis, sum(dist_forces), **plot02_params)
+    ax3 = fig.add_subplot(4, 1, 3)
+    plot03_params = {'ylabel': "Shear force", 'yunits': r'kN',
                      # 'xlabel':"Beam axis", 'xunits':"m",
                      'color': "r"}
-    plot_analytical(ax2, x_axis, sum(shear_forces), **plot02_params)
-    ax3 = fig.add_subplot(4, 1, 4)
-    plot03_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
+    plot_analytical(ax3, x_axis, sum(shear_forces), **plot03_params)
+    ax4 = fig.add_subplot(4, 1, 4)
+    plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
                      'xlabel': "Beam axis", 'xunits': "m",
                      'color': "y"}
-    plot_analytical(ax3, x_axis, sum(bending_moments), **plot03_params)
+    plot_analytical(ax4, x_axis, sum(bending_moments), **plot04_params)
     plt.savefig(fname="output/test01.pdf")
 
 
@@ -212,7 +224,7 @@ def point(loads:list):
 
 
 # Here I am beginning with the object oriented version
-class Beam():
+class Beam:
     def __init__(self, span: tuple=(0, 10)):
         self._x0, self._x1 = span
         self._fixed_support = 2
