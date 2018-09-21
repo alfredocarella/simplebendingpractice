@@ -27,7 +27,7 @@ def calculate_diagrams(beam_span, fixed_support, rolling_support, loads):
     xA, xB = fixed_support, rolling_support
 
     F_Rx = 0
-    dist_forces = [create_distributed_load(*f) for f in distributed(loads)]
+    dist_forces = [create_distributed_force(*f) for f in distributed(loads)]
     F_Ry = sum(integrate(load, (x, x0, x1)) for load in dist_forces) + \
            sum(f.force for f in point(loads))
     M_R = sum(integrate(load * x, (x, x0, x1)) for load in dist_forces) + \
@@ -156,7 +156,7 @@ def plot_analytical(ax:plt.axes, x_vec, sym_func, title:str="", maxmin_hline:boo
     return ax
 
 
-def create_distributed_load(expr: str, interval: tuple=None, shift: bool=True):
+def create_distributed_force(expr: str, interval: tuple=None, shift: bool=True):
     """
     Create a sympy.Piecewise object representing the provided distributed load.
 
@@ -217,10 +217,78 @@ class Beam():
         self._x0, self._x1 = span
         self._fixed_support = 2
         self._rolling_support = 8
+        self._loads = []
+        self._distributed_forces = []
+        self._shear_forces = []
+        self._bending_moments = []
 
-    def fixed_support(self, fixed_coord: float):
-        self._fixed_support = fixed_coord
+    def fixed_support(self, x_coord: float):
+        if self._x0 <= x_coord <= self._x1:
+            self._fixed_support = x_coord
+        else:
+            raise ValueError("The fixed support must be located within the beam span.")
 
-    def rolling_support(self, rolling_coord: float):
-        self._rolling_support = rolling_coord
+    def rolling_support(self, x_coord: float):
+        if self._x0 <= x_coord <= self._x1:
+            self._rolling_support = x_coord
+        else:
+            raise ValueError("The rolling support must be located within the beam span.")
 
+    def point_load(self, force: float, coord: float):
+        self._loads.append(PointLoad(force, coord))
+
+    def distributed_load(self, expr: str, span: tuple):
+        self._loads.append(DistributedLoad(expr, span))
+
+    def add_loads(self, loads: list):
+        for load in loads:
+            if isinstance(load, (DistributedLoad, PointLoad)):
+                self._loads.append(load)
+            else:
+                raise TypeError("The provided loads must be of type DistributedLoad or PointLoad")
+
+    def calculate_loads(self):
+        x = sympy.symbols("x")
+        x0, x1 = self._x0, self._x1
+        xA, xB = self._fixed_support, self._rolling_support
+
+        F_Rx = 0
+        dist_loads = [create_distributed_force(*f) for f in self.filter_distributed_loads()]  # create_distributed_load
+        F_Ry = sum(integrate(load, (x, x0, x1)) for load in dist_loads) + \
+               sum(f.force for f in point(self._loads))
+        M_R = sum(integrate(load * x, (x, x0, x1)) for load in dist_loads) + \
+              sum(f.force * f.coord for f in self.filter_point_loads())
+
+        support_coords = xA, xB
+        resultant_force = F_Rx, F_Ry
+        F_Ax, F_Ay, F_By = get_reaction_forces(support_coords, resultant_force, M_R)  # get_reaction_forces
+
+        shear_forces = [integrate(load, (x, x0, x)) for load in dist_loads]
+        shear_forces.extend(shear_from_pointload(*f) for f in point(self._loads))  # shear_from_pointload
+        shear_forces.append(shear_from_pointload(F_Ay, xA))
+        shear_forces.append(shear_from_pointload(F_By, xB))
+
+        bending_moments = [integrate(load, (x, x0, x)) for load in shear_forces]
+
+        self._distributed_forces = dist_loads
+        self._shear_forces = shear_forces
+        self._bending_moments = bending_moments
+
+    def filter_point_loads(self):
+        for f in self._loads:
+            if isinstance(f, PointLoad):
+                yield f
+
+    def filter_distributed_loads(self):
+        for f in self._loads:
+            if isinstance(f, DistributedLoad):
+                yield f
+
+    def get_distributed_load(self):
+        return sum(self._distributed_forces)
+
+    def get_shear_force(self):
+        return sum(self._shear_forces)
+
+    def get_bending_moment(self):
+        return sum(self._bending_moments)
