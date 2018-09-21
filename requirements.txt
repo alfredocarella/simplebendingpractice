@@ -1,0 +1,2 @@
+matplotlib
+sympy==1.1
