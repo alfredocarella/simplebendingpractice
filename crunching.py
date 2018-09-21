@@ -12,41 +12,6 @@ DistributedLoad = namedtuple("DistributedLoad", "expr, span")  # ,shift")
 PointLoad = namedtuple("PointLoad", "force, coord")
 
 
-def calculate_diagrams(beam_span, fixed_support, rolling_support, loads):
-    """
-    TODO: Write a decent docstring
-
-    :param beam_span:
-    :param fixed_support:
-    :param rolling_support:
-    :param loads:
-    :return:
-    """
-    x = sympy.symbols("x")
-    x0, x1 = beam_span
-    xA, xB = fixed_support, rolling_support
-
-    F_Rx = 0
-    dist_forces = [create_distributed_force(*f) for f in distributed(loads)]
-    F_Ry = sum(integrate(load, (x, x0, x1)) for load in dist_forces) + \
-           sum(f.force for f in point(loads))
-    M_R = sum(integrate(load * x, (x, x0, x1)) for load in dist_forces) + \
-          sum(f.force * f.coord for f in point(loads))
-
-    support_coords = xA, xB
-    resultant_force = F_Rx, F_Ry
-    F_Ax, F_Ay, F_By = get_reaction_forces(support_coords, resultant_force, M_R)
-
-    shear_forces = [integrate(load, (x, x0, x)) for load in dist_forces]
-    shear_forces.extend(shear_from_pointload(*f) for f in point(loads))
-    shear_forces.append(shear_from_pointload(F_Ay, xA))
-    shear_forces.append(shear_from_pointload(F_By, xB))
-
-    bending_moments = [integrate(load, (x, x0, x)) for load in shear_forces]
-
-    return x0, x1, dist_forces, shear_forces, bending_moments
-
-
 def plot_and_save(x0, x1, dist_forces, shear_forces, bending_moments):
     """
     TODO: Write a decent docstring
@@ -78,27 +43,6 @@ def plot_and_save(x0, x1, dist_forces, shear_forces, bending_moments):
                      'color': "y"}
     plot_analytical(ax3, x_axis, sum(bending_moments), **plot03_params)
     plt.savefig(fname="output/test01.pdf")
-
-
-def get_reaction_forces(x_coords: tuple, resultant_force: tuple, resultant_moment: float):
-    """
-    Calculates the reaction forces for a beam with two supports, given the resulting force applied to the beam.
-    The first and second coordinates correspond to a fixed and rolling support respectively.
-
-    :param x_coords: tuple or list with the x-coordinates for each of the two beam supports
-    :param resultant_force: tuple with the vector components (Fx, Fy) of the total applied force
-    :param resultant_moment: sum of all moments applied to the beam
-    :return: F_Ax, F_Ay, F_By: reaction force components for fixed (x,y) and rolling (y) supports
-    """
-    xA, xB = x_coords
-    F_Rx, F_Ry = resultant_force
-    M_R = resultant_moment
-    A = np.array([[-1, 0, 0],
-                  [0, -1, -xA],
-                  [0, -1, -xB]]).T
-    b = np.array([F_Rx, F_Ry, M_R])
-    F_Ax, F_Ay, F_By = np.linalg.inv(A).dot(b)
-    return F_Ax, F_Ay, F_By
 
 
 def plot_analytical(ax:plt.axes, x_vec, sym_func, title:str="", maxmin_hline:bool=True, xunits:str="", yunits:str="", xlabel:str="", ylabel:str="", color=None):
@@ -154,6 +98,62 @@ def plot_analytical(ax:plt.axes, x_vec, sym_func, title:str="", maxmin_hline:boo
         ax.set_ylabel("{} $[{}]$".format(ylabel, yunits))
 
     return ax
+
+
+def calculate_diagrams(beam_span, fixed_support, rolling_support, loads):
+    """
+    TODO: Write a decent docstring
+
+    :param beam_span:
+    :param fixed_support:
+    :param rolling_support:
+    :param loads:
+    :return:
+    """
+    x = sympy.symbols("x")
+    x0, x1 = beam_span
+    xA, xB = fixed_support, rolling_support
+
+    F_Rx = 0
+    dist_forces = [create_distributed_force(*f) for f in distributed(loads)]
+    F_Ry = sum(integrate(load, (x, x0, x1)) for load in dist_forces) + \
+           sum(f.force for f in point(loads))
+    M_R = sum(integrate(load * x, (x, x0, x1)) for load in dist_forces) + \
+          sum(f.force * f.coord for f in point(loads))
+
+    support_coords = xA, xB
+    resultant_force = F_Rx, F_Ry
+    F_Ax, F_Ay, F_By = get_reaction_forces(support_coords, resultant_force, M_R)
+
+    shear_forces = [integrate(load, (x, x0, x)) for load in dist_forces]
+    shear_forces.extend(shear_from_pointload(*f) for f in point(loads))
+    shear_forces.append(shear_from_pointload(F_Ay, xA))
+    shear_forces.append(shear_from_pointload(F_By, xB))
+
+    bending_moments = [integrate(load, (x, x0, x)) for load in shear_forces]
+
+    return x0, x1, dist_forces, shear_forces, bending_moments
+
+
+def get_reaction_forces(x_coords: tuple, resultant_force: tuple, resultant_moment: float):
+    """
+    Calculates the reaction forces for a beam with two supports, given the resulting force applied to the beam.
+    The first and second coordinates correspond to a fixed and rolling support respectively.
+
+    :param x_coords: tuple or list with the x-coordinates for each of the two beam supports
+    :param resultant_force: tuple with the vector components (Fx, Fy) of the total applied force
+    :param resultant_moment: sum of all moments applied to the beam
+    :return: F_Ax, F_Ay, F_By: reaction force components for fixed (x,y) and rolling (y) supports
+    """
+    xA, xB = x_coords
+    F_Rx, F_Ry = resultant_force
+    M_R = resultant_moment
+    A = np.array([[-1, 0, 0],
+                  [0, -1, -xA],
+                  [0, -1, -xB]]).T
+    b = np.array([F_Rx, F_Ry, M_R])
+    F_Ax, F_Ay, F_By = np.linalg.inv(A).dot(b)
+    return F_Ax, F_Ay, F_By
 
 
 def create_distributed_force(expr: str, interval: tuple=None, shift: bool=True):
@@ -240,39 +240,59 @@ class Beam():
     def distributed_load(self, expr: str, span: tuple):
         self._loads.append(DistributedLoad(expr, span))
 
-    def add_loads(self, loads: list):
+    def add_loads(self, loads: tuple):
         for load in loads:
             if isinstance(load, (DistributedLoad, PointLoad)):
                 self._loads.append(load)
             else:
                 raise TypeError("The provided loads must be of type DistributedLoad or PointLoad")
 
-    def calculate_loads(self):
+    def get_reaction_forces(self):
         x = sympy.symbols("x")
         x0, x1 = self._x0, self._x1
         xA, xB = self._fixed_support, self._rolling_support
-
         F_Rx = 0
-        dist_loads = [create_distributed_force(*f) for f in self.filter_distributed_loads()]  # create_distributed_load
-        F_Ry = sum(integrate(load, (x, x0, x1)) for load in dist_loads) + \
-               sum(f.force for f in point(self._loads))
-        M_R = sum(integrate(load * x, (x, x0, x1)) for load in dist_loads) + \
+        F_Ry = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces) + \
+               sum(f.force for f in self.filter_point_loads())
+        M_R = sum(integrate(load * x, (x, x0, x1)) for load in self._distributed_forces) + \
               sum(f.force * f.coord for f in self.filter_point_loads())
+        A = np.array([[-1, 0, 0],
+                      [0, -1, -xA],
+                      [0, -1, -xB]]).T
+        b = np.array([F_Rx, F_Ry, M_R])
+        F_Ax, F_Ay, F_By = np.linalg.inv(A).dot(b)
+        return F_Ax, F_Ay, F_By
 
-        support_coords = xA, xB
-        resultant_force = F_Rx, F_Ry
-        F_Ax, F_Ay, F_By = get_reaction_forces(support_coords, resultant_force, M_R)  # get_reaction_forces
+    def calculate_loads(self):
+        x = sympy.symbols("x")
+        x0 = self._x0
 
-        shear_forces = [integrate(load, (x, x0, x)) for load in dist_loads]
-        shear_forces.extend(shear_from_pointload(*f) for f in point(self._loads))  # shear_from_pointload
-        shear_forces.append(shear_from_pointload(F_Ay, xA))
-        shear_forces.append(shear_from_pointload(F_By, xB))
+        self._distributed_forces = [self.create_distributed_force(f) for f in self.filter_distributed_loads()]
 
-        bending_moments = [integrate(load, (x, x0, x)) for load in shear_forces]
+        f_ax, f_ay, f_by = self.get_reaction_forces()
+        fixed_support_load = PointLoad(f_ay, self._fixed_support)
+        rolling_support_load = PointLoad(f_by, self._rolling_support)
 
-        self._distributed_forces = dist_loads
-        self._shear_forces = shear_forces
-        self._bending_moments = bending_moments
+        self._shear_forces = [integrate(load, (x, x0, x)) for load in self._distributed_forces]
+        self._shear_forces.extend(self.shear_from_pointload(f) for f in self.filter_point_loads())
+        self._shear_forces.append(self.shear_from_pointload(fixed_support_load))
+        self._shear_forces.append(self.shear_from_pointload(rolling_support_load))
+
+        self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
+
+    def create_distributed_force(self, load: DistributedLoad, shift: bool=True):
+        expr, interval = load
+        x = sympy.symbols("x")
+        x0, x1 = interval
+        expr = sympy.sympify(expr)
+        if shift:
+            expr.subs(x, x - x0)
+        return sympy.Piecewise((0, x < x0), (0, x > x1), (expr, True))
+
+    def shear_from_pointload(self, load: PointLoad):
+        value, coord = load
+        x = sympy.symbols("x")
+        return sympy.Piecewise((0, x < coord), (value, True))
 
     def filter_point_loads(self):
         for f in self._loads:

@@ -7,11 +7,6 @@ import crunching  # calculate_reaction_forces, plot_analytical
 from contextlib import contextmanager
 
 
-# import matplotlib.pyplot as plt
-# from sympy import integrate, Piecewise, symbols, lambdify
-# plt.rc('text', usetex=True)
-
-
 def test_get_reaction_forces():
     x_coords = (2, 7)
     FRx, FRy, M_R = -20, -150, -505
@@ -90,9 +85,9 @@ def test_beam_loads_are_added_from_list():
     span = (0, 9)
     my_beam = crunching.Beam(span)
 
-    loads = [crunching.DistributedLoad("-10", (3, 9)),
+    loads = (crunching.DistributedLoad("-10", (3, 9)),
              crunching.PointLoad(-20, 3),
-             crunching.DistributedLoad(-20, (0, 2))]
+             crunching.DistributedLoad(-20, (0, 2)))
 
     my_beam.add_loads(loads)
     assert my_beam._loads[0] == crunching.DistributedLoad("-10", (3, 9))
