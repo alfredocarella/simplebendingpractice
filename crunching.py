@@ -376,6 +376,7 @@ class Beam:
         x = sympy.symbols('x')
         x_vec = np.linspace(self._x0, self._x1, (self._x1 - self._x0) * 1000 + 1)
         y_vec = sympy.lambdify(x, sym_func, "numpy")(x_vec)
+        y_vec *= np.ones(x_vec.shape)
         ax.plot(x_vec, y_vec, '0.5', linewidth=2)
 
         if color:
