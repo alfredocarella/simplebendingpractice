@@ -3,6 +3,7 @@ from contextlib import contextmanager
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import numpy as np
+import os
 import sympy
 from sympy import integrate
 
@@ -339,6 +340,8 @@ class Beam:
 
         # TODO: Take care of beam plotting
         ax1 = fig.add_subplot(4, 1, 1)
+        ax1.set_title("Easy examples for beam loading diagrams.")
+
         ax1.text(0.6, 0.5, "A plot of the loaded beam is coming.\nGive me one more day!", size=12, rotation=20.,
                  ha="center", va="center",
                  bbox=dict(boxstyle="round",
@@ -346,7 +349,6 @@ class Beam:
                            fc=(1., 0.8, 0.8),
                            )
                  )
-        ax1.set_title("Easy examples for beam loading diagrams.")
 
         ax2 = fig.add_subplot(4, 1, 2)
         plot02_params = {'ylabel': "Distributed loads", 'yunits': r'kN / m',
@@ -364,6 +366,9 @@ class Beam:
                          'xlabel': "Beam axis", 'xunits': "m",
                          'color': "y"}
         self.plot_analytical(ax4, self.get_bending_moment(), **plot04_params)
+
+        if not os.path.isdir("output"):
+            os.makedirs("output")
         plt.savefig(fname="output/test01.pdf")
 
     def plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
