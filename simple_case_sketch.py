@@ -1,19 +1,22 @@
-from crunching import DistributedLoad, PointLoad, calculate_diagrams, plot_and_save
+from crunching import DistributedLoad, PointLoad, graphic_output
 
-# User input
-beam_span = (0, 9)
-fixed_support = 2
-rolling_support = 7
+with graphic_output() as (beam, x):
+    beam.length(9)           # Beam length
+    beam.fixed_support(2)    # x-coordinate of the fixed support
+    beam.rolling_support(7)  # x-coordinate of the rolling support
 
-loads = [PointLoad(-20, 3),
-         DistributedLoad(-20, (0, 2)),
-         DistributedLoad("-10", (3, 9))]
+    # # SYNTAX A:
+    # # Add a point load (20kN pointing downward, at x=3m)
+    # beam.point_load(-20, 3)
+    # # Distributed load (20kN/m pointing downward, between x=0m and x=2m)
+    # beam.distributed_load(-20, (0, 2))
+    # # Distributed load (10kN/m pointing downward, between x=3m and x=9m)
+    # beam.distributed_load(-10, (3, 9))
 
+    # SYNTAX B:
+    loads = [PointLoad(-20, 3),
+             DistributedLoad(-20, (0, 2)),
+             DistributedLoad(-10, (3, 9))]
 
-# Calculate reaction forces at supports
-my_plots = calculate_diagrams(beam_span, fixed_support, rolling_support, loads)
-
-
-# Plotting
-plot_and_save(*my_plots)
+    beam.add_loads(loads)
 

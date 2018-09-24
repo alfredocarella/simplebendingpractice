@@ -118,7 +118,7 @@ def defined_canonical_beam(span=(0, 9), fixed=2, rolling=7):
 def test_beam_distributed_loads_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
         the_beam.calculate_loads()
-        distributed_load_sample = sympy.lambdify(x, the_beam.get_distributed_load(), "numpy")(x_vec)
+        distributed_load_sample = sympy.lambdify(x, the_beam.get_distributed_force(), "numpy")(x_vec)
         expected = [-20] * 5 + [0] + [-10] * 13
         np.testing.assert_allclose(distributed_load_sample, expected)
 

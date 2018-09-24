@@ -1,4 +1,5 @@
 from collections import namedtuple
+from contextlib import contextmanager
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import numpy as np
@@ -234,6 +235,13 @@ class Beam:
         self._shear_forces = []
         self._bending_moments = []
 
+    def length(self, length: float):
+        if length > 0:
+            self._x0 = 0
+            self._x1 = length
+        else:
+            raise ValueError("The beam length must be positive.")
+
     def fixed_support(self, x_coord: float):
         if self._x0 <= x_coord <= self._x1:
             self._fixed_support = x_coord
@@ -252,7 +260,7 @@ class Beam:
     def distributed_load(self, expr: str, span: tuple):
         self._loads.append(DistributedLoad(expr, span))
 
-    def add_loads(self, loads: tuple):
+    def add_loads(self, loads: list):
         for load in loads:
             if isinstance(load, (DistributedLoad, PointLoad)):
                 self._loads.append(load)
@@ -316,7 +324,7 @@ class Beam:
             if isinstance(f, DistributedLoad):
                 yield f
 
-    def get_distributed_load(self):
+    def get_distributed_force(self):
         return sum(self._distributed_forces)
 
     def get_shear_force(self):
@@ -324,3 +332,89 @@ class Beam:
 
     def get_bending_moment(self):
         return sum(self._bending_moments)
+
+    def plot_and_save(self):
+        fig = plt.figure(figsize=(6, 10))
+        fig.subplots_adjust(hspace=0.4)
+
+        # TODO: Take care of beam plotting
+        ax1 = fig.add_subplot(4, 1, 1)
+        ax1.text(0.6, 0.5, "A plot of the loaded beam is coming.\nGive me one more day!", size=12, rotation=20.,
+                 ha="center", va="center",
+                 bbox=dict(boxstyle="round",
+                           ec=(1., 0.5, 0.5),
+                           fc=(1., 0.8, 0.8),
+                           )
+                 )
+        ax1.set_title("Easy examples for beam loading diagrams.")
+
+        ax2 = fig.add_subplot(4, 1, 2)
+        plot02_params = {'ylabel': "Distributed loads", 'yunits': r'kN / m',
+                         # 'xlabel':"Beam axis", 'xunits':"m",
+                         # 'title': r"LATEX TEST $- \frac{2 \sqrt{11}}{5} + \frac{23}{5}$",
+                         'color': "b"}
+        self.plot_analytical(ax2, self.get_distributed_force(), **plot02_params)
+        ax3 = fig.add_subplot(4, 1, 3)
+        plot03_params = {'ylabel': "Shear force", 'yunits': r'kN',
+                         # 'xlabel':"Beam axis", 'xunits':"m",
+                         'color': "r"}
+        self.plot_analytical(ax3, self.get_shear_force(), **plot03_params)
+        ax4 = fig.add_subplot(4, 1, 4)
+        plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
+                         'xlabel': "Beam axis", 'xunits': "m",
+                         'color': "y"}
+        self.plot_analytical(ax4, self.get_bending_moment(), **plot04_params)
+        plt.savefig(fname="output/test01.pdf")
+
+    def plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
+                        yunits: str = "", xlabel: str = "", ylabel: str = "", color=None):
+        x = sympy.symbols('x')
+        x_vec = np.linspace(self._x0, self._x1, (self._x1 - self._x0) * 1000 + 1)
+        y_vec = sympy.lambdify(x, sym_func, "numpy")(x_vec)
+        ax.plot(x_vec, y_vec, '0.5', linewidth=2)
+
+        if color:
+            a, b = x_vec[0], x_vec[-1]
+            verts = [(a, 0)] + list(zip(x_vec, y_vec)) + [(b, 0)]
+            poly = Polygon(verts, facecolor=color, edgecolor='0.5', alpha=0.5)
+            ax.add_patch(poly)
+
+        if maxmin_hline:
+            ax.axhline(y=max(y_vec), linestyle='--', color="g", alpha=0.5)
+            max_idx = y_vec.argmax()
+            ax.axhline(y=min(y_vec), linestyle='--', color="g", alpha=0.5)
+            min_idx = y_vec.argmin()
+            plt.annotate('${:0.1f}'.format(y_vec[max_idx]).rstrip('0').rstrip('.') + " {}$".format(yunits),
+                         xy=(x_vec[max_idx], y_vec[max_idx]), xytext=(8, 0), xycoords=('data', 'data'),
+                         textcoords='offset points', size=12)
+            plt.annotate('${:0.1f}'.format(y_vec[min_idx]).rstrip('0').rstrip('.') + " {}$".format(yunits),
+                         xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
+                         textcoords='offset points', size=12)
+
+        ax.set_xlim([x_vec.min(), x_vec.max()])
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+
+        if title:
+            ax.set_title(title)
+
+        if xlabel or xunits:
+            ax.set_xlabel('{} $[{}]$'.format(xlabel, xunits))
+
+        if ylabel or yunits:
+            ax.set_ylabel("{} $[{}]$".format(ylabel, yunits))
+
+        return ax
+
+
+@contextmanager
+def graphic_output():
+    my_beam = Beam()
+    x = sympy.symbols("x")
+
+    try:
+        yield my_beam, x
+        my_beam.calculate_loads()
+        my_beam.plot_and_save()
+    finally:
+        pass
