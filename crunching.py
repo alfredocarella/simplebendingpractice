@@ -243,7 +243,7 @@ class Beam:
             self._x0 = 0
             self._x1 = length
         else:
-            raise ValueError("The beam length must be positive.")
+            raise ValueError("The provided length must be positive.")
 
     def fixed_support(self, x_coord: float):
         if self._x0 <= x_coord <= self._x1:
@@ -449,7 +449,7 @@ class Beam:
 
 
 @contextmanager
-def graphic_output():
+def graphics_output():
     my_beam = Beam()
     x = sympy.symbols("x")
 
