@@ -1,7 +1,7 @@
 from collections import namedtuple
 from contextlib import contextmanager
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
+from matplotlib.patches import Polygon, Rectangle
 import numpy as np
 import os
 import sympy
@@ -235,6 +235,8 @@ class Beam:
         self._distributed_forces = []
         self._shear_forces = []
         self._bending_moments = []
+        self.fixed_support_load = 0
+        self.rolling_support_load = 0
 
     def length(self, length: float):
         if length > 0:
@@ -291,13 +293,13 @@ class Beam:
         self._distributed_forces = [self.create_distributed_force(f) for f in self.filter_distributed_loads()]
 
         f_ax, f_ay, f_by = self.get_reaction_forces()
-        fixed_support_load = PointLoad(f_ay, self._fixed_support)
-        rolling_support_load = PointLoad(f_by, self._rolling_support)
+        self.fixed_support_load = PointLoad(f_ay, self._fixed_support)
+        self.rolling_support_load = PointLoad(f_by, self._rolling_support)
 
         self._shear_forces = [integrate(load, (x, x0, x)) for load in self._distributed_forces]
         self._shear_forces.extend(self.shear_from_pointload(f) for f in self.filter_point_loads())
-        self._shear_forces.append(self.shear_from_pointload(fixed_support_load))
-        self._shear_forces.append(self.shear_from_pointload(rolling_support_load))
+        self._shear_forces.append(self.shear_from_pointload(self.fixed_support_load))
+        self._shear_forces.append(self.shear_from_pointload(self.rolling_support_load))
 
         self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
 
@@ -339,45 +341,78 @@ class Beam:
         fig.subplots_adjust(hspace=0.4)
 
         # TODO: Take care of beam plotting
-        ax1 = fig.add_subplot(4, 1, 1)
-        ax1.set_title("Easy examples for beam loading diagrams.")
+        ax1 = fig.add_subplot(3, 1, 1)
+        ax1.set_title("Loaded beam example")
 
-        ax1.text(0.6, 0.5, "A plot of the loaded beam is coming.\nGive me one more day!", size=12, rotation=20.,
-                 ha="center", va="center",
-                 bbox=dict(boxstyle="round",
-                           ec=(1., 0.5, 0.5),
-                           fc=(1., 0.8, 0.8),
-                           )
-                 )
-
-        ax2 = fig.add_subplot(4, 1, 2)
-        plot02_params = {'ylabel': "Distributed loads", 'yunits': r'kN / m',
+        plot01_params = {'ylabel': "Beam loads", 'yunits': r'kN / m',
                          # 'xlabel':"Beam axis", 'xunits':"m",
-                         # 'title': r"LATEX TEST $- \frac{2 \sqrt{11}}{5} + \frac{23}{5}$",
-                         'color': "b"}
-        self.plot_analytical(ax2, self.get_distributed_force(), **plot02_params)
-        ax3 = fig.add_subplot(4, 1, 3)
-        plot03_params = {'ylabel': "Shear force", 'yunits': r'kN',
+                         'color': "b",
+                         'inverted': True}
+        self.plot_analytical(ax1, self.get_distributed_force(), **plot01_params)
+        self.draw_beam_schematic(ax1)
+
+        ax2 = fig.add_subplot(3, 1, 2)
+        plot02_params = {'ylabel': "Shear force", 'yunits': r'kN',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "r"}
-        self.plot_analytical(ax3, self.get_shear_force(), **plot03_params)
-        ax4 = fig.add_subplot(4, 1, 4)
-        plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
+        self.plot_analytical(ax2, self.get_shear_force(), **plot02_params)
+
+        ax3 = fig.add_subplot(3, 1, 3)
+        plot03_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
                          'xlabel': "Beam axis", 'xunits': "m",
                          'color': "y"}
-        self.plot_analytical(ax4, self.get_bending_moment(), **plot04_params)
+        self.plot_analytical(ax3, self.get_bending_moment(), **plot03_params)
 
         if not os.path.isdir("output"):
             os.makedirs("output")
         plt.savefig(fname="output/test01.pdf")
 
+    def draw_beam_schematic(self, ax):
+        # Adjust y-axis
+        ymin, ymax = -5, 5
+        ylim = (min(ax.get_ylim()[0], ymin), max(ax.get_ylim()[1], ymax))
+        ax.set_ylim(ylim)
+        yspan = ylim[1] - ylim[0]
+
+        # Draw beam body
+        beam_left, beam_right = self._x0, self._x1
+        beam_length = beam_right - beam_left
+        beam_height = yspan * 0.03
+        beam_bottom = -1 * beam_height / 2
+        beam_top = beam_bottom + beam_height
+        beam_body = Rectangle(
+            (beam_left, beam_bottom), beam_length, beam_height, fill=True,
+            facecolor="black", clip_on=False
+        )
+        ax.add_patch(beam_body)
+
+        # Draw arrows at point loads
+        for load in (*self.filter_point_loads(),
+                     self.fixed_support_load,
+                     self.rolling_support_load):
+            if load[0] < 0:
+                y0, y1 = beam_top, beam_top + yspan * 0.17
+            else:
+                y0, y1 = beam_bottom, beam_bottom - yspan * 0.17
+            ax.annotate("",
+                        xy=(load[1], y0), xycoords='data',
+                        xytext=(load[1], y1), textcoords='data',
+                        arrowprops=dict(arrowstyle="simple", color="blue"),
+                        )
+
+        ax.spines['left'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+
     def plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
-                        yunits: str = "", xlabel: str = "", ylabel: str = "", color=None):
+                        yunits: str = "", xlabel: str = "", ylabel: str = "", color=None, inverted=False):
         x = sympy.symbols('x')
         x_vec = np.linspace(self._x0, self._x1, (self._x1 - self._x0) * 1000 + 1)
         y_vec = sympy.lambdify(x, sym_func, "numpy")(x_vec)
         y_vec *= np.ones(x_vec.shape)
-        ax.plot(x_vec, y_vec, '0.5', linewidth=2)
+
+        if inverted:
+            y_vec *= -1
 
         if color:
             a, b = x_vec[0], x_vec[-1]
@@ -390,10 +425,10 @@ class Beam:
             max_idx = y_vec.argmax()
             ax.axhline(y=min(y_vec), linestyle='--', color="g", alpha=0.5)
             min_idx = y_vec.argmin()
-            plt.annotate('${:0.1f}'.format(y_vec[max_idx]).rstrip('0').rstrip('.') + " {}$".format(yunits),
+            plt.annotate('${:0.1f}'.format(y_vec[max_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
                          xy=(x_vec[max_idx], y_vec[max_idx]), xytext=(8, 0), xycoords=('data', 'data'),
                          textcoords='offset points', size=12)
-            plt.annotate('${:0.1f}'.format(y_vec[min_idx]).rstrip('0').rstrip('.') + " {}$".format(yunits),
+            plt.annotate('${:0.1f}'.format(y_vec[min_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
                          xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
                          textcoords='offset points', size=12)
 
