@@ -1,2 +1,8 @@
-matplotlib
-sympy==1.1
+matplotlib  # for plotting
+numpy  # for numerical calculations
+numpydoc  # numpy-style docstrings for sphinx
+pytest  # for testing
+pytest-cov  # for calculating coverage
+sphinx  # generating documentation
+sphinx_rtd_theme  # docs theme
+sympy==1.1  # for analytical integration
