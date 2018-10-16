@@ -1,4 +1,4 @@
-from crunching import DistributedLoad, PointLoad, graphics_output
+from beambending.beam import graphics_output
 
 with graphics_output() as (beam, x):
     beam.length(9)           # Beam length
