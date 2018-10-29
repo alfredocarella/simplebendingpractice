@@ -10,3 +10,4 @@
 *.swp
 
 ipynb_renumber.py
+docs/build
