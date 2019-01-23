@@ -59,6 +59,15 @@ class Beam:
                 raise TypeError("The provided loads must be of type DistributedLoad or PointLoad")
 
     def get_reaction_forces(self):
+        """
+        Calculates the reaction forces for a beam with two supports, given the resulting force applied to the beam.
+        The first and second coordinates correspond to a fixed and rolling support respectively.
+
+        :param x_coords: tuple or list with the x-coordinates for each of the two beam supports
+        :param resultant_force: tuple with the vector components (Fx, Fy) of the total applied force
+        :param resultant_moment: sum of all moments applied to the beam
+        :return: F_Ax, F_Ay, F_By: reaction force components for fixed (x,y) and rolling (y) supports
+        """
         x = sympy.symbols("x")
         x0, x1 = self._x0, self._x1
         xA, xB = self._fixed_support, self._rolling_support
@@ -92,6 +101,17 @@ class Beam:
         self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
 
     def create_distributed_force(self, load: DistributedLoad, shift: bool=True):
+        """
+        Create a sympy.Piecewise object representing the provided distributed load.
+
+        :param expr: string with a valid sympy expression.
+        :param interval: tuple (x0, x1) containing the extremes of the interval on
+        which the load is applied.
+        :param shift: when set to False, the x-coordinate in the expression is
+        referred to the left end of the beam, instead of the left end of the
+        provided interval.
+        :return: sympy.Piecewise object with the value of the distributed load.
+        """
         expr, interval = load
         x = sympy.symbols("x")
         x0, x1 = interval
@@ -101,6 +121,15 @@ class Beam:
         return sympy.Piecewise((0, x < x0), (0, x > x1), (expr, True))
 
     def shear_from_pointload(self, load: PointLoad):
+        """
+        Create a sympy.Piecewise object representing the shear force caused by a
+        point load.
+
+        :param value: float or string with the numerical value of the point load.
+        :param coord: x-coordinate on which the point load is applied.
+        :return: sympy.Piecewise object with the value of the shear force produced
+        by the provided point load.
+        """
         value, coord = load
         x = sympy.symbols("x")
         return sympy.Piecewise((0, x < coord), (value, True))
@@ -125,6 +154,16 @@ class Beam:
         return sum(self._bending_moments)
 
     def plot_and_save(self):
+        """
+        TODO: Write a decent docstring
+
+        :param x0:
+        :param x1:
+        :param dist_forces:
+        :param shear_forces:
+        :param bending_moments:
+        :return:
+        """
         fig = plt.figure(figsize=(6, 10))
         fig.subplots_adjust(hspace=0.4)
 
@@ -194,6 +233,21 @@ class Beam:
 
     def plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
                         yunits: str = "", xlabel: str = "", ylabel: str = "", color=None, inverted=False):
+        """
+        Dear future me: please write a good docstring as soon as this function is working
+
+        :param ax: a matplotlib.Axes object where the data is to be plotted.
+        :param x_vec: array-like, support where the provided symbolic function will be plotted
+        :param sym_func: symbolic function using the variable x
+        :param title: title to show above the plot, optional
+        :param maxmin_hline: when set to False, the extreme values of the function are not displayed
+        :param xunits: str, physical unit to be used for the x-axis. Example: "m"
+        :param yunits: str, physical unit to be used for the y-axis. Example: "m"
+        :param xlabel: str, physical variable displayed on the x-axis. Example: "Length"
+        :param ylabel: str, physical variable displayed on the y-axis. Example: "Shear force"
+        :param color: color to be used for the shaded area of the plot. No shading if not provided
+        :return: a matplotlib.Axes object representing the plotted data.
+        """
         x = sympy.symbols('x')
         x_vec = np.linspace(self._x0, self._x1, (self._x1 - self._x0) * 1000 + 1)
         y_vec = sympy.lambdify(x, sym_func, "numpy")(x_vec)
