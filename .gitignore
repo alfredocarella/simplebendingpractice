@@ -2,6 +2,7 @@
 .coverage
 .ipynb_checkpoints
 .pytest_cache
+.vscode
 
 *__pycache__
 
