@@ -15,16 +15,16 @@ PointLoad = namedtuple("PointLoad", "force, coord")
 
 
 class Beam:
-    def __init__(self, span: tuple=(0, 10)):
-        self._x0, self._x1 = span
+    def __init__(self, span: float):
+        self._x0 = 0
+        self._x1 = span
         self._fixed_support = 2
         self._rolling_support = 8
+
         self._loads = []
         self._distributed_forces = []
         self._shear_forces = []
         self._bending_moments = []
-        self.fixed_support_load = 0
-        self.rolling_support_load = 0
 
     def length(self, length: float):
         if length > 0:
@@ -197,9 +197,13 @@ class Beam:
         ax.add_patch(beam_body)
 
         # Draw arrows at point loads
+        _f_ax, f_ay, f_by = self.get_reaction_forces()
+        fixed_support_load = PointLoad(f_ay, self._fixed_support)
+        rolling_support_load = PointLoad(f_by, self._rolling_support)
+
         for load in (*self._point_loads(),
-                     self.fixed_support_load,
-                     self.rolling_support_load):
+                     fixed_support_load,
+                     rolling_support_load):
             if load[0] < 0:
                 y0, y1 = beam_top, beam_top + yspan * 0.17
             else:
@@ -221,13 +225,13 @@ class Beam:
         self._distributed_forces = [self._create_distributed_force(f) for f in self._distributed_loads()]
 
         _f_ax, f_ay, f_by = self.get_reaction_forces()
-        self.fixed_support_load = PointLoad(f_ay, self._fixed_support)
-        self.rolling_support_load = PointLoad(f_by, self._rolling_support)
+        fixed_support_load = PointLoad(f_ay, self._fixed_support)
+        rolling_support_load = PointLoad(f_by, self._rolling_support)
 
         self._shear_forces = [integrate(load, (x, x0, x)) for load in self._distributed_forces]
         self._shear_forces.extend(self._shear_from_pointload(f) for f in self._point_loads())
-        self._shear_forces.append(self._shear_from_pointload(self.fixed_support_load))
-        self._shear_forces.append(self._shear_from_pointload(self.rolling_support_load))
+        self._shear_forces.append(self._shear_from_pointload(fixed_support_load))
+        self._shear_forces.append(self._shear_from_pointload(rolling_support_load))
 
         self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
 
@@ -278,7 +282,7 @@ class Beam:
 
 @contextmanager
 def graphics_output():
-    my_beam = Beam()
+    my_beam = Beam(10)
     x = sympy.symbols("x")
 
     try:

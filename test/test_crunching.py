@@ -8,14 +8,14 @@ from contextlib import contextmanager
 
 
 def test_beam_is_correctly_created():
-    span = (0, 9)
+    span = 9
     my_beam = beam.Beam(span)
     assert my_beam._x0 == 0
     assert my_beam._x1 == 9
 
 
 def test_beam_supports_are_correctly_added():
-    span = (0, 9)
+    span = 9
     my_beam = beam.Beam(span)
     my_beam.rolling_support(7)
 
@@ -24,7 +24,7 @@ def test_beam_supports_are_correctly_added():
 
 
 def test_beam_supports_must_be_within_span():
-    span = (0, 9)
+    span = 9
     my_beam = beam.Beam(span)
 
     with pytest.raises(ValueError):
@@ -35,7 +35,7 @@ def test_beam_supports_must_be_within_span():
 
 
 def test_beam_loads_are_correctly_added():
-    span = (0, 9)
+    span = 9
     my_beam = beam.Beam(span)
 
     loads = [beam.DistributedLoad(-20, (0, 2)),
@@ -50,7 +50,7 @@ def test_beam_loads_are_correctly_added():
 
 
 def test_beam_loads_are_added_from_list():
-    span = (0, 9)
+    span = 9
     my_beam = beam.Beam(span)
 
     loads = (beam.DistributedLoad("-10", (3, 9)),
@@ -67,7 +67,7 @@ def test_beam_loads_are_added_from_list():
 
 
 @contextmanager
-def defined_canonical_beam(span=(0, 9), fixed=2, rolling=7):
+def defined_canonical_beam(span=9, fixed=2, rolling=7):
     my_beam = beam.Beam(span)
     my_beam.fixed_support(fixed)
     my_beam.rolling_support(rolling)
