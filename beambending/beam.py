@@ -45,12 +45,6 @@ class Beam:
         else:
             raise ValueError("The rolling support must be located within the beam span.")
 
-    def point_load(self, force: float, coord: float):
-        self._loads.append(PointLoad(force, coord))
-
-    def distributed_load(self, expr: str, span: tuple):
-        self._loads.append(DistributedLoad(expr, span))
-
     def add_loads(self, loads: list):
         for load in loads:
             if isinstance(load, (DistributedLoad, PointLoad)):

@@ -38,9 +38,12 @@ def test_beam_loads_are_correctly_added():
     span = (0, 9)
     my_beam = beam.Beam(span)
 
-    my_beam.distributed_load(-20, (0, 2))
-    my_beam.point_load(-20, 3)
-    my_beam.distributed_load("-10", (3, 9))
+    loads = [beam.DistributedLoad(-20, (0, 2)),
+             beam.PointLoad(-20, 3),
+             beam.DistributedLoad("-10", (3, 9))
+            ]
+    my_beam.add_loads(loads)
+
     assert my_beam._loads[0] == beam.DistributedLoad(-20, (0, 2))
     assert my_beam._loads[1] == beam.PointLoad(-20, 3)
     assert my_beam._loads[2] == beam.DistributedLoad("-10", (3, 9))
@@ -53,8 +56,8 @@ def test_beam_loads_are_added_from_list():
     loads = (beam.DistributedLoad("-10", (3, 9)),
              beam.PointLoad(-20, 3),
              beam.DistributedLoad(-20, (0, 2)))
-
     my_beam.add_loads(loads)
+
     assert my_beam._loads[0] == beam.DistributedLoad("-10", (3, 9))
     assert my_beam._loads[1] == beam.PointLoad(-20, 3)
     assert my_beam._loads[2] == beam.DistributedLoad(-20, (0, 2))

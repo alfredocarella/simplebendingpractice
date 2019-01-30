@@ -1,22 +1,13 @@
-from beambending.beam import graphics_output
+from beambending.beam import graphics_output, PointLoad, DistributedLoad
 
 with graphics_output() as (beam, x):
     beam.length(9)           # Beam length
     beam.fixed_support(2)    # x-coordinate of the fixed support
     beam.rolling_support(7)  # x-coordinate of the rolling support
 
-    # SYNTAX A:
-    # Add a point load (20kN pointing downward, at x=3m)
-    beam.point_load(-20, 3)
-    # Distributed load (20kN/m pointing downward, between x=0m and x=2m)
-    beam.distributed_load(-20, (0, 2))
-    # Distributed load (10kN/m pointing downward, between x=3m and x=9m)
-    beam.distributed_load(-10, (3, 9))
-
-    # SYNTAX B:
-    # loads = [PointLoad(-20, 3),
-    #          DistributedLoad(-20, (0, 2)),
-    #          DistributedLoad(-10, (3, 9))]
-    #
-    # beam.add_loads(loads)
+    loads = [PointLoad(-20, 3),  # Point load (20kN downwards, at x=3m)
+             DistributedLoad(-20, (0, 2)),  # 20kN/m downwards, for 0m <= x <= 2m
+             DistributedLoad(-10, (3, 9))]  # 10kN/m downwards, for 3m <= x <= 9m
+    
+    beam.add_loads(loads)
 
