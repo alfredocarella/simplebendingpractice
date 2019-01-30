@@ -82,7 +82,6 @@ def defined_canonical_beam(span=(0, 9), fixed=2, rolling=7):
 
 def test_beam_distributed_loads_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
-        the_beam.calculate_loads()
         distributed_load_sample = sympy.lambdify(x, the_beam.get_distributed_force(), "numpy")(x_vec)
         expected = [-20] * 5 + [0] + [-10] * 13
         np.testing.assert_allclose(distributed_load_sample, expected)
@@ -90,7 +89,6 @@ def test_beam_distributed_loads_are_correct():
 
 def test_beam_shear_forces_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
-        the_beam.calculate_loads()
         shear_force_sample = sympy.lambdify(x, the_beam.get_shear_force(), "numpy")(x_vec)
         expected = [0, -10, -20, -30, 36, 36, 16, 11, 6, 1, -4, -9, -14, -19, 20, 15, 10, 5, 0]
         np.testing.assert_allclose(shear_force_sample, expected)
@@ -98,7 +96,6 @@ def test_beam_shear_forces_are_correct():
 
 def test_beam_bending_moments_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
-        the_beam.calculate_loads()
         bending_moment_sample = sympy.lambdify(x, the_beam.get_bending_moment(), "numpy")(x_vec)
         expected = [0, -2.5, -10, -22.5, -40, -22, -4, 2.75, 7, 8.75, 8, 4.75, -1, -9.25, -20, -11.25, -5, -1.25, 0]
         np.testing.assert_allclose(bending_moment_sample, expected)

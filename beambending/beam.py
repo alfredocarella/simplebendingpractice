@@ -57,6 +57,7 @@ class Beam:
                 self._loads.append(load)
             else:
                 raise TypeError("The provided loads must be of type DistributedLoad or PointLoad")
+        self._update_loads()
 
     def get_reaction_forces(self):
         """
@@ -83,7 +84,7 @@ class Beam:
         F_Ax, F_Ay, F_By = np.linalg.inv(A).dot(b)
         return F_Ax, F_Ay, F_By
 
-    def calculate_loads(self):
+    def _update_loads(self):
         x = sympy.symbols("x")
         x0 = self._x0
 
@@ -297,7 +298,6 @@ def graphics_output():
 
     try:
         yield my_beam, x
-        my_beam.calculate_loads()
         my_beam.plot_and_save()
     finally:
         pass
