@@ -26,19 +26,33 @@ class Beam:
         self._shear_forces = []
         self._bending_moments = []
 
+    @property
+    def length(self):
+        return self._x1 - self._x0
+        
+    @length.setter
     def length(self, length: float):
         if length > 0:
-            self._x0 = 0
-            self._x1 = length
+            self._x1 = self._x0 + length
         else:
             raise ValueError("The provided length must be positive.")
 
+    @property
+    def fixed_support(self):
+        return self._fixed_support
+
+    @fixed_support.setter
     def fixed_support(self, x_coord: float):
         if self._x0 <= x_coord <= self._x1:
             self._fixed_support = x_coord
         else:
             raise ValueError("The fixed support must be located within the beam span.")
 
+    @property
+    def rolling_support(self):
+        return self._rolling_support
+
+    @rolling_support.setter
     def rolling_support(self, x_coord: float):
         if self._x0 <= x_coord <= self._x1:
             self._rolling_support = x_coord
