@@ -7,7 +7,7 @@ import os
 import sympy
 from sympy import integrate
 
-# plt.rc('text', usetex=True)  # This makes the text prettier... and SLOWER
+# plt.rc('text', usetex=True)  # This makes the text prettier... but WAY SLOWER
 
 
 DistributedLoad = namedtuple("DistributedLoad", "expr, span")  # ,shift")
@@ -92,7 +92,7 @@ class Beam:
         F_Ax, F_Ay, F_By = np.linalg.inv(A).dot(b)
         return F_Ax, F_Ay, F_By
 
-    def plot_and_save(self):
+    def plot(self):
         """
         TODO: Write a decent docstring
 
@@ -129,9 +129,7 @@ class Beam:
                          'color': "y"}
         self._plot_analytical(ax3, sum(self._bending_moments), **plot03_params)
 
-        if not os.path.isdir("output"):
-            os.makedirs("output")
-        plt.savefig(fname="output/test01.pdf")
+        return fig
 
     def _plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
                         yunits: str = "", xlabel: str = "", ylabel: str = "", color=None, inverted=False):
@@ -151,7 +149,7 @@ class Beam:
         :return: a matplotlib.Axes object representing the plotted data.
         """
         x = sympy.symbols('x')
-        x_vec = np.linspace(self._x0, self._x1, (self._x1 - self._x0) * 1000 + 1)
+        x_vec = np.linspace(self._x0, self._x1, min(int((self.length) * 1000 + 1), 1e4))
         y_vec = sympy.lambdify(x, sym_func, "numpy")(x_vec)
         y_vec *= np.ones(x_vec.shape)
 
@@ -292,15 +290,3 @@ class Beam:
         for f in self._loads:
             if isinstance(f, DistributedLoad):
                 yield f
-
-
-@contextmanager
-def graphics_output():
-    my_beam = Beam(10)
-    x = sympy.symbols("x")
-
-    try:
-        yield my_beam, x
-        my_beam.plot_and_save()
-    finally:
-        pass
