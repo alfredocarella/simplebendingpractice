@@ -1,3 +1,15 @@
+"""Main module containing the main class Beam, and auxiliary classes PointLoad 
+and DistributedLoad.
+
+>>> my_beam = Beam(9)
+>>> my_beam.fixed_support = 2    # x-coordinate of the fixed support
+>>> my_beam.rolling_support = 7  # x-coordinate of the rolling support
+>>> my_beam.add_loads([PointLoad(-20, 3)])  # 20kN downwards, at x=3m
+>>> print("(F_Ax, F_Ay, F_By) =", my_beam.get_reaction_forces())
+(F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)
+
+"""
+
 from collections import namedtuple
 from contextlib import contextmanager
 import matplotlib.pyplot as plt
@@ -7,15 +19,36 @@ import os
 import sympy
 from sympy import integrate
 
-# plt.rc('text', usetex=True)  # This makes the text prettier... but WAY SLOWER
+# plt.rc('text', usetex=True)  # This makes the plot text prettier... but SLOWER
 
 
-DistributedLoad = namedtuple("DistributedLoad", "expr, span")  # ,shift")
 PointLoad = namedtuple("PointLoad", "force, coord")
+PointLoad.__doc__ = """Value and application point for the load."""
+DistributedLoad = namedtuple("DistributedLoad", "expr, span")
+DistributedLoad.__doc__ = """Functional form and application interval for the load."""
 
 
 class Beam:
-    def __init__(self, span: float):
+    """
+    Represents a one-dimensional beam that can take axial and tangential loads.
+    
+    A Beam object accepts:
+    
+    * point loads parallel (axial) or perpendicular (shearing) to the beam axis, and
+    * distributed loads (axial or shearing) with arbitrary load distributions.
+
+    """
+    
+    def __init__(self, span: float=10):
+        """Initializes a Beam object of a given length.
+
+        Parameters
+        ----------
+        span : float or int
+            Length of the beam span. Must be positive, and the fixed and rolling
+            supports can only be placed within this span. The default value is 10.
+
+        """
         self._x0 = 0
         self._x1 = span
         self._fixed_support = 2
@@ -28,6 +61,7 @@ class Beam:
 
     @property
     def length(self):
+        """float or int: Length of the beam. Must be positive."""
         return self._x1 - self._x0
         
     @length.setter
@@ -39,6 +73,8 @@ class Beam:
 
     @property
     def fixed_support(self):
+        """float or int: x-coordinate of the beam's fixed support. Must be 
+        within the beam span."""
         return self._fixed_support
 
     @fixed_support.setter
@@ -50,6 +86,8 @@ class Beam:
 
     @property
     def rolling_support(self):
+        """float or int: x-coordinate of the beam's rolling support. Must be 
+        within the beam span."""
         return self._rolling_support
 
     @rolling_support.setter
@@ -60,6 +98,20 @@ class Beam:
             raise ValueError("The rolling support must be located within the beam span.")
 
     def add_loads(self, loads: list):
+        """Apply an arbitrary list of (point- or distributed) loads to the beam.
+
+        Note
+        ----
+        Do not include the `self` parameter in the ``Parameters`` section.
+
+        Parameters
+        ----------
+        loads : iterable
+            An iterable containing DistributedLoad or PointLoad objects to
+            be applied to the Beam object. Note that the load application point
+            (or segment) must be within the Beam span.
+
+        """
         for load in loads:
             if isinstance(load, (DistributedLoad, PointLoad)):
                 self._loads.append(load)
@@ -69,13 +121,18 @@ class Beam:
 
     def get_reaction_forces(self):
         """
-        Calculates the reaction forces for a beam with two supports, given the resulting force applied to the beam.
-        The first and second coordinates correspond to a fixed and rolling support respectively.
+        Calculates the reaction forces at the supports, given the applied loads.
+        
+        The first and second values correspond to the horizontal and vertical 
+        forces of the fixed support. The third one is the vertical force at the
+        rolling support.
 
-        :param x_coords: tuple or list with the x-coordinates for each of the two beam supports
-        :param resultant_force: tuple with the vector components (Fx, Fy) of the total applied force
-        :param resultant_moment: sum of all moments applied to the beam
-        :return: F_Ax, F_Ay, F_By: reaction force components for fixed (x,y) and rolling (y) supports
+        Returns
+        -------
+        F_Ax, F_Ay, F_By: (float, float, float)
+            reaction force components for fixed (x,y) and rolling (y) supports 
+            respectively.
+
         """
         x = sympy.symbols("x")
         x0, x1 = self._x0, self._x1
@@ -93,15 +150,14 @@ class Beam:
         return F_Ax, F_Ay, F_By
 
     def plot(self):
-        """
-        TODO: Write a decent docstring
+        """Plots the loaded beam, with shear force and bending moment diagrams.
 
-        :param x0:
-        :param x1:
-        :param dist_forces:
-        :param shear_forces:
-        :param bending_moments:
-        :return:
+        Returns
+        -------
+        figure : `~matplotlib.figure.Figure`
+            Returns a handle to a figure with the 3 subplots: Beam schematic, 
+            shear force diagram, and bending moment diagram.
+
         """
         fig = plt.figure(figsize=(6, 10))
         fig.subplots_adjust(hspace=0.4)
@@ -134,7 +190,7 @@ class Beam:
     def _plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
                         yunits: str = "", xlabel: str = "", ylabel: str = "", color=None, inverted=False):
         """
-        Dear future me: please write a good docstring as soon as this function is working
+        Auxiliary function for plotting a sympy.Piecewise analytical function.
 
         :param ax: a matplotlib.Axes object where the data is to be plotted.
         :param x_vec: array-like, support where the provided symbolic function will be plotted
@@ -147,6 +203,7 @@ class Beam:
         :param ylabel: str, physical variable displayed on the y-axis. Example: "Shear force"
         :param color: color to be used for the shaded area of the plot. No shading if not provided
         :return: a matplotlib.Axes object representing the plotted data.
+
         """
         x = sympy.symbols('x')
         x_vec = np.linspace(self._x0, self._x1, min(int((self.length) * 1000 + 1), 1e4))
@@ -190,6 +247,8 @@ class Beam:
         return ax
 
     def _draw_beam_schematic(self, ax):
+        """Auxiliary function for plotting the beam object and its applied loads.
+        """
         # Adjust y-axis
         ymin, ymax = -5, 5
         ylim = (min(ax.get_ylim()[0], ymin), max(ax.get_ylim()[1], ymax))
