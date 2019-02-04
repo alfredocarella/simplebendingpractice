@@ -12,9 +12,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.abspath('.'), '..', '..', 'beambending'))
 
 
 # -- Project information -----------------------------------------------------
@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'numpydoc'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -179,3 +180,4 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+numpydoc_show_class_members = False
