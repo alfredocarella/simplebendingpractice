@@ -1,12 +1,16 @@
 """Main module containing the main class Beam, and auxiliary classes PointLoad 
 and DistributedLoad.
 
+Example
+-------
 >>> my_beam = Beam(9)
 >>> my_beam.fixed_support = 2    # x-coordinate of the fixed support
 >>> my_beam.rolling_support = 7  # x-coordinate of the rolling support
 >>> my_beam.add_loads([PointLoad(-20, 3)])  # 20kN downwards, at x=3m
 >>> print("(F_Ax, F_Ay, F_By) =", my_beam.get_reaction_forces())
 (F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)
+>>> my_beam.plot()
+<Figure size 600x1000 with 3 Axes>
 
 """
 
@@ -22,20 +26,32 @@ from sympy import integrate
 # plt.rc('text', usetex=True)  # This makes the plot text prettier... but SLOWER
 
 
-PointLoad = namedtuple("PointLoad", "force, coord")
-PointLoad.__doc__ = """Value and application point for the load."""
-DistributedLoad = namedtuple("DistributedLoad", "expr, span")
-DistributedLoad.__doc__ = """Functional form and application interval for the load."""
+class PointLoad(namedtuple("PointLoad", "force, coord")):
+    """Point load described by a tuple of floats: (force, coord).
+
+    Examples
+    --------
+    >>> external_force = PointLoad(-30, 3)  # 30kN downwards at x=3m
+    """
+
+
+class DistributedLoad(namedtuple("DistributedLoad", "expr, span")):
+    """Distributed load, described by its functional form and application interval.
+
+    Examples
+    --------
+    >>> snow_load = DistributedLoad("10*x+5", (0, 2))  # Linearly growing load for 0<x<2
+    """
 
 
 class Beam:
     """
     Represents a one-dimensional beam that can take axial and tangential loads.
     
-    A Beam object accepts:
+    A Beam object can accept as inputs:
     
-    * point loads parallel (axial) or perpendicular (shearing) to the beam axis, and
-    * distributed loads (axial or shearing) with arbitrary load distributions.
+    * PointLoad objects, and
+    * DistributedLoad objects.
 
     """
     
@@ -99,10 +115,6 @@ class Beam:
 
     def add_loads(self, loads: list):
         """Apply an arbitrary list of (point- or distributed) loads to the beam.
-
-        Note
-        ----
-        Do not include the `self` parameter in the ``Parameters`` section.
 
         Parameters
         ----------
