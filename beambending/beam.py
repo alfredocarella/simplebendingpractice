@@ -176,7 +176,7 @@ class Beam:
 
         # TODO: Take care of beam plotting
         ax1 = fig.add_subplot(3, 1, 1)
-        ax1.set_title("Loaded beam example")
+        ax1.set_title("Loaded beam diagram")
 
         plot01_params = {'ylabel': "Beam loads", 'yunits': r'kN / m',
                          # 'xlabel':"Beam axis", 'xunits':"m",
