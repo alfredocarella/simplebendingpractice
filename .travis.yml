@@ -24,7 +24,7 @@ script:
   # test examples
   - pytest examples/
   # run tests
-  - pytest --cov=mypack tests/
+  - pytest --cov=beambending tests/
   # use sphinx to build docs
   - cd docs/
   - make html
