@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>beam &mdash; beambending 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> beambending
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Beambending Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/example_1.html">Beam with one point load and two distributed loads</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">beambending</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>beam</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for beam</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Main module containing the main class Beam, and auxiliary classes PointLoad </span>
+<span class="sd">and DistributedLoad.</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+<span class="sd">&gt;&gt;&gt; my_beam = Beam(9)</span>
+<span class="sd">&gt;&gt;&gt; my_beam.fixed_support = 2    # x-coordinate of the fixed support</span>
+<span class="sd">&gt;&gt;&gt; my_beam.rolling_support = 7  # x-coordinate of the rolling support</span>
+<span class="sd">&gt;&gt;&gt; my_beam.add_loads([PointLoad(-20, 3)])  # 20kN downwards, at x=3m</span>
+<span class="sd">&gt;&gt;&gt; print(&quot;(F_Ax, F_Ay, F_By) =&quot;, my_beam.get_reaction_forces())</span>
+<span class="sd">(F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)</span>
+<span class="sd">&gt;&gt;&gt; my_beam.plot()</span>
+<span class="sd">&lt;Figure size 600x1000 with 3 Axes&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="k">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Rectangle</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sympy</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">integrate</span>
+
+<span class="c1"># plt.rc(&#39;text&#39;, usetex=True)  # This makes the plot text prettier... but SLOWER</span>
+
+
+<div class="viewcode-block" id="PointLoad"><a class="viewcode-back" href="../documentation.html#beam.PointLoad">[docs]</a><span class="k">class</span> <span class="nc">PointLoad</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;PointLoad&quot;</span><span class="p">,</span> <span class="s2">&quot;force, coord&quot;</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Point load described by a tuple of floats: (force, coord).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; external_force = PointLoad(-30, 3)  # 30kN downwards at x=3m</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="DistributedLoad"><a class="viewcode-back" href="../documentation.html#beam.DistributedLoad">[docs]</a><span class="k">class</span> <span class="nc">DistributedLoad</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;DistributedLoad&quot;</span><span class="p">,</span> <span class="s2">&quot;expr, span&quot;</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Distributed load, described by its functional form and application interval.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; snow_load = DistributedLoad(&quot;10*x+5&quot;, (0, 2))  # Linearly growing load for 0&lt;x&lt;2</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Beam"><a class="viewcode-back" href="../documentation.html#beam.Beam">[docs]</a><span class="k">class</span> <span class="nc">Beam</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a one-dimensional beam that can take axial and tangential loads.</span>
+<span class="sd">    </span>
+<span class="sd">    A Beam object can accept as inputs:</span>
+<span class="sd">    </span>
+<span class="sd">    * PointLoad objects, and</span>
+<span class="sd">    * DistributedLoad objects.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">span</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes a Beam object of a given length.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        span : float or int</span>
+<span class="sd">            Length of the beam span. Must be positive, and the fixed and rolling</span>
+<span class="sd">            supports can only be placed within this span. The default value is 10.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span> <span class="o">=</span> <span class="n">span</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span> <span class="o">=</span> <span class="mi">8</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loads</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bending_moments</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;float or int: Length of the beam. Must be positive.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span>
+        
+    <span class="nd">@length</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">+</span> <span class="n">length</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The provided length must be positive.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fixed_support</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;float or int: x-coordinate of the beam&#39;s fixed support. Must be </span>
+<span class="sd">        within the beam span.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span>
+
+    <span class="nd">@fixed_support</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">fixed_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_coord</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">&lt;=</span> <span class="n">x_coord</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span> <span class="o">=</span> <span class="n">x_coord</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The fixed support must be located within the beam span.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rolling_support</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;float or int: x-coordinate of the beam&#39;s rolling support. Must be </span>
+<span class="sd">        within the beam span.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span>
+
+    <span class="nd">@rolling_support</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rolling_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_coord</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">&lt;=</span> <span class="n">x_coord</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span> <span class="o">=</span> <span class="n">x_coord</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The rolling support must be located within the beam span.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loads</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply an arbitrary list of (point- or distributed) loads to the beam.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        loads : iterable</span>
+<span class="sd">            An iterable containing DistributedLoad or PointLoad objects to</span>
+<span class="sd">            be applied to the Beam object. Note that the load application point</span>
+<span class="sd">            (or segment) must be within the Beam span.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">loads</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">DistributedLoad</span><span class="p">,</span> <span class="n">PointLoad</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_loads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">load</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;The provided loads must be of type DistributedLoad or PointLoad&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_loads</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_reaction_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the reaction forces at the supports, given the applied loads.</span>
+<span class="sd">        </span>
+<span class="sd">        The first and second values correspond to the horizontal and vertical </span>
+<span class="sd">        forces of the fixed support. The third one is the vertical force at the</span>
+<span class="sd">        rolling support.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        F_Ax, F_Ay, F_By: (float, float, float)</span>
+<span class="sd">            reaction force components for fixed (x,y) and rolling (y) supports </span>
+<span class="sd">            respectively.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span>
+        <span class="n">xA</span><span class="p">,</span> <span class="n">xB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span>
+        <span class="n">F_Rx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">F_Ry</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces</span><span class="p">)</span> <span class="o">+</span> \
+               <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">force</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads</span><span class="p">())</span>
+        <span class="n">M_R</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces</span><span class="p">)</span> <span class="o">+</span> \
+              <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">force</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">coord</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads</span><span class="p">())</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                      <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">xA</span><span class="p">],</span>
+                      <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">xB</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">F_Rx</span><span class="p">,</span> <span class="n">F_Ry</span><span class="p">,</span> <span class="n">M_R</span><span class="p">])</span>
+        <span class="n">F_Ax</span><span class="p">,</span> <span class="n">F_Ay</span><span class="p">,</span> <span class="n">F_By</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F_Ax</span><span class="p">,</span> <span class="n">F_Ay</span><span class="p">,</span> <span class="n">F_By</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plots the loaded beam, with shear force and bending moment diagrams.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        figure : `~matplotlib.figure.Figure`</span>
+<span class="sd">            Returns a handle to a figure with the 3 subplots: Beam schematic, </span>
+<span class="sd">            shear force diagram, and bending moment diagram.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+        <span class="c1"># TODO: Take care of beam plotting</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Loaded beam diagram&quot;</span><span class="p">)</span>
+
+        <span class="n">plot01_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Beam loads&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN / m&#39;</span><span class="p">,</span>
+                         <span class="c1"># &#39;xlabel&#39;:&quot;Beam axis&quot;, &#39;xunits&#39;:&quot;m&quot;,</span>
+                         <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+                         <span class="s1">&#39;inverted&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces</span><span class="p">),</span> <span class="o">**</span><span class="n">plot01_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_beam_schematic</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
+
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">plot02_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Shear force&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN&#39;</span><span class="p">,</span>
+                         <span class="c1"># &#39;xlabel&#39;:&quot;Beam axis&quot;, &#39;xunits&#39;:&quot;m&quot;,</span>
+                         <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="p">),</span> <span class="o">**</span><span class="n">plot02_params</span><span class="p">)</span>
+
+        <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">plot03_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Bending moment&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN \cdot m&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Beam axis&quot;</span><span class="p">,</span> <span class="s1">&#39;xunits&#39;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+                         <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bending_moments</span><span class="p">),</span> <span class="o">**</span><span class="n">plot03_params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fig</span>
+
+    <span class="k">def</span> <span class="nf">_plot_analytical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">sym_func</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">maxmin_hline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">xunits</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">yunits</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inverted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Auxiliary function for plotting a sympy.Piecewise analytical function.</span>
+
+<span class="sd">        :param ax: a matplotlib.Axes object where the data is to be plotted.</span>
+<span class="sd">        :param x_vec: array-like, support where the provided symbolic function will be plotted</span>
+<span class="sd">        :param sym_func: symbolic function using the variable x</span>
+<span class="sd">        :param title: title to show above the plot, optional</span>
+<span class="sd">        :param maxmin_hline: when set to False, the extreme values of the function are not displayed</span>
+<span class="sd">        :param xunits: str, physical unit to be used for the x-axis. Example: &quot;m&quot;</span>
+<span class="sd">        :param yunits: str, physical unit to be used for the y-axis. Example: &quot;m&quot;</span>
+<span class="sd">        :param xlabel: str, physical variable displayed on the x-axis. Example: &quot;Length&quot;</span>
+<span class="sd">        :param ylabel: str, physical variable displayed on the y-axis. Example: &quot;Shear force&quot;</span>
+<span class="sd">        :param color: color to be used for the shaded area of the plot. No shading if not provided</span>
+<span class="sd">        :return: a matplotlib.Axes object representing the plotted data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="n">x_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">1e4</span><span class="p">))</span>
+        <span class="n">y_vec</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sym_func</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">)(</span><span class="n">x_vec</span><span class="p">)</span>
+        <span class="n">y_vec</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x_vec</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">inverted</span><span class="p">:</span>
+            <span class="n">y_vec</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">color</span><span class="p">:</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">x_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_vec</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">verts</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">x_vec</span><span class="p">,</span> <span class="n">y_vec</span><span class="p">))</span> <span class="o">+</span> <span class="p">[(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+            <span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">maxmin_hline</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">y_vec</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">max_idx</span> <span class="o">=</span> <span class="n">y_vec</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">y_vec</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">min_idx</span> <span class="o">=</span> <span class="n">y_vec</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">inverted</span><span class="p">))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yunits</span><span class="p">),</span>
+                         <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">],</span> <span class="n">y_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
+                         <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">inverted</span><span class="p">))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yunits</span><span class="p">),</span>
+                         <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">],</span> <span class="n">y_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
+                         <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">x_vec</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_vec</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">or</span> <span class="n">xunits</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> $[</span><span class="si">{}</span><span class="s1">]$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">xunits</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">or</span> <span class="n">yunits</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> $[</span><span class="si">{}</span><span class="s2">]$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">yunits</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">ax</span>
+
+    <span class="k">def</span> <span class="nf">_draw_beam_schematic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Auxiliary function for plotting the beam object and its applied loads.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Adjust y-axis</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ymin</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ymax</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+        <span class="n">yspan</span> <span class="o">=</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Draw beam body</span>
+        <span class="n">beam_left</span><span class="p">,</span> <span class="n">beam_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span>
+        <span class="n">beam_length</span> <span class="o">=</span> <span class="n">beam_right</span> <span class="o">-</span> <span class="n">beam_left</span>
+        <span class="n">beam_height</span> <span class="o">=</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.03</span>
+        <span class="n">beam_bottom</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">beam_height</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">beam_top</span> <span class="o">=</span> <span class="n">beam_bottom</span> <span class="o">+</span> <span class="n">beam_height</span>
+        <span class="n">beam_body</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">beam_left</span><span class="p">,</span> <span class="n">beam_bottom</span><span class="p">),</span> <span class="n">beam_length</span><span class="p">,</span> <span class="n">beam_height</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">beam_body</span><span class="p">)</span>
+
+        <span class="c1"># Draw arrows at point loads</span>
+        <span class="n">_f_ax</span><span class="p">,</span> <span class="n">f_ay</span><span class="p">,</span> <span class="n">f_by</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reaction_forces</span><span class="p">()</span>
+        <span class="n">fixed_support_load</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="n">f_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">)</span>
+        <span class="n">rolling_support_load</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="n">f_by</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_point_loads</span><span class="p">(),</span>
+                     <span class="n">fixed_support_load</span><span class="p">,</span>
+                     <span class="n">rolling_support_load</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">beam_top</span><span class="p">,</span> <span class="n">beam_top</span> <span class="o">+</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.17</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">beam_bottom</span><span class="p">,</span> <span class="n">beam_bottom</span> <span class="o">-</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.17</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y1</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                        <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;simple&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">),</span>
+                        <span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_distributed_force</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_loads</span><span class="p">()]</span>
+
+        <span class="n">_f_ax</span><span class="p">,</span> <span class="n">f_ay</span><span class="p">,</span> <span class="n">f_by</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reaction_forces</span><span class="p">()</span>
+        <span class="n">fixed_support_load</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="n">f_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">)</span>
+        <span class="n">rolling_support_load</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="n">f_by</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span> <span class="o">=</span> <span class="p">[</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shear_from_pointload</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shear_from_pointload</span><span class="p">(</span><span class="n">fixed_support_load</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shear_from_pointload</span><span class="p">(</span><span class="n">rolling_support_load</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bending_moments</span> <span class="o">=</span> <span class="p">[</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_create_distributed_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">DistributedLoad</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a sympy.Piecewise object representing the provided distributed load.</span>
+
+<span class="sd">        :param expr: string with a valid sympy expression.</span>
+<span class="sd">        :param interval: tuple (x0, x1) containing the extremes of the interval on</span>
+<span class="sd">        which the load is applied.</span>
+<span class="sd">        :param shift: when set to False, the x-coordinate in the expression is</span>
+<span class="sd">        referred to the left end of the beam, instead of the left end of the</span>
+<span class="sd">        provided interval.</span>
+<span class="sd">        :return: sympy.Piecewise object with the value of the distributed load.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">expr</span><span class="p">,</span> <span class="n">interval</span> <span class="o">=</span> <span class="n">load</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">interval</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">shift</span><span class="p">:</span>
+            <span class="n">expr</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">x1</span><span class="p">),</span> <span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_shear_from_pointload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">PointLoad</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a sympy.Piecewise object representing the shear force caused by a</span>
+<span class="sd">        point load.</span>
+
+<span class="sd">        :param value: float or string with the numerical value of the point load.</span>
+<span class="sd">        :param coord: x-coordinate on which the point load is applied.</span>
+<span class="sd">        :return: sympy.Piecewise object with the value of the shear force produced</span>
+<span class="sd">        by the provided point load.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span><span class="p">,</span> <span class="n">coord</span> <span class="o">=</span> <span class="n">load</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">coord</span><span class="p">),</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_point_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loads</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">PointLoad</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">f</span>
+
+    <span class="k">def</span> <span class="nf">_distributed_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loads</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">DistributedLoad</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">f</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Alfredo Carella
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
