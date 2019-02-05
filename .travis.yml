@@ -10,6 +10,7 @@ branches:
   - test_ci
 
 install:
+  - pip install -r requirements.txt
   - pip install .
 
 # set up the display port to generate figures
@@ -24,7 +25,7 @@ script:
   # test examples
   - pytest examples/
   # run tests
-  - pytest --cov=beambending tests/
+  - pytest --cov=beambending test/
   # use sphinx to build docs
   - cd docs/
   - make html
