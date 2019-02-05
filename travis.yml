@@ -1,0 +1,44 @@
+# ref: https://docs.travis-ci.com/user/languages/python/
+language: python
+python:
+  - "3.6"
+
+# ref: https://docs.travis-ci.com/user/customizing-the-build/#building-specific-branches
+branches:
+  only:
+  - master
+  - test_ci
+
+install:
+  - pip install .
+
+# set up the display port to generate figures
+# ref: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
+# command to test examples and then run tests
+script:
+  # test examples
+  - pytest examples/
+  # run tests
+  - pytest --cov=mypack tests/
+  # use sphinx to build docs
+  - cd docs/
+  - make html
+  # tell GitHub not to use jekyll
+  - touch build/html/.nojekyll
+
+# Tell Travis CI to copy the documentation to the gh-pages branch of
+# your GitHub repository.
+#     https://amarder.github.io/using-travis-ci-to-build-sphinx-docs/
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  keep-history: true
+  on:
+    branch: master
+  local_dir: docs/build/html/
