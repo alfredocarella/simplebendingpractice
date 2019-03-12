@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Beam diagrams &mdash; beambending 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Beam with one point load and two distributed loads" href="examples/example_1.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> beambending
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Theory</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Beam diagrams</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#background-knowledge">Background knowledge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#internal-forces">Internal forces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#normal-force-n-x">Normal force [N(x)]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shear-force-v-x-and-moment-m-x">Shear force [V(x)] and moment [M(X)]</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Shear force [V(x)] and moment [M(X)]</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/example_1.html">Beam with one point load and two distributed loads</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Beambending Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">beambending</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Beam diagrams</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/beam_diagrams.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="beam-diagrams">
+<h1>Beam diagrams<a class="headerlink" href="#beam-diagrams" title="Permalink to this headline">¶</a></h1>
+<p>In this page we will go through introductory bending theory, as typically covered in an introductory statics course.
+We will start by a quick overview of the required knowledge, and then derive our analysis from basic principles.</p>
+<div class="section" id="background-knowledge">
+<h2>Background knowledge<a class="headerlink" href="#background-knowledge" title="Permalink to this headline">¶</a></h2>
+<p>We have already established that for a body to be at rest, the <strong>vector sum</strong> of all forces <span class="math notranslate nohighlight">\(\mathbf{F_i}\)</span> and moments <span class="math notranslate nohighlight">\(\mathbf{M_i}\)</span> acting on it must be zero.</p>
+<div class="math notranslate nohighlight" id="equation-static">
+<span class="eqno">(1)<a class="headerlink" href="#equation-static" title="Permalink to this equation">¶</a></span>\[\sum \mathbf{F_i} = 0; \ \ \ \ \ \sum \mathbf{M_i} = 0\]</div>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="_images/placeholder_01.png"><img alt="rigid body with forces applied on it (resultant zero)" src="_images/placeholder_01.png" style="width: 270.0px; height: 150.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)</span></p>
+</div>
+<p>Furthermore, for a system to be at rest, the above condition must be satisfied for each of the subsystems into which our system is divided.
+This is exemplified in the figure below, where according to the action-reaction principle <span class="math notranslate nohighlight">\(\mathbf{F_{1C}} = \mathbf{-F_{2C}}\)</span>.</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="_images/placeholder_02.png"><img alt="system where all of the rigid bodies have a zero resultant applied to them" src="_images/placeholder_02.png" style="width: 513.0px; height: 156.5px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> For a system to be in equilibrium, each of its subsystems <strong>must</strong> be in equilibrium.</span></p>
+</div>
+<p>So far, we have only considered subsystems consisting of one or more rigid bodies that compose the system.
+This means that, so far, each rigid body belonged to <em>exactly one</em> subsystem.
+However, Eq. <a class="reference internal" href="#equation-static">(1)</a> is even more general than that, since it applies to any arbitrary subset of a body.
+In the next section, we are going to extract some insights from this.</p>
+</div>
+<div class="section" id="internal-forces">
+<h2>Internal forces<a class="headerlink" href="#internal-forces" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>To state it explicitly once more, the calculation of internal forces for mechanical systems at rest will be based on:</dt>
+<dd><ol class="first last arabic simple">
+<li>The necessary and sufficient conditions for static equilibrium of a system, namely <a class="reference internal" href="#equation-static">(1)</a></li>
+<li>The fact that any arbitrary part of a system is on itself a new system.</li>
+</ol>
+</dd>
+</dl>
+<p>So… what if we chose some of the imaginary boundaries that split our system so that they <em>cut through</em> a body?
+Let’s consider a system consisting of a single beam, as depicted below, and analyze what happens internally to this body.</p>
+<div class="section" id="normal-force-n-x">
+<h3>Normal force [N(x)]<a class="headerlink" href="#normal-force-n-x" title="Permalink to this headline">¶</a></h3>
+<p>We reserve the name of <em>normal forces</em> for those who are perpendicular to a given plane of interest.
+In the context of beams (i.e. slender components), we subdivide a body into subsystems by drawing planes perpendicular to its main axis, as shown in the figure below.
+Normal forces are hence perpendicular to these planes, i.e. parallel to the beam’s main axis.</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="_images/placeholder_03.png"><img alt="Beam on two supports" src="_images/placeholder_03.png" style="width: 506.0px; height: 157.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> The beam is held in place by a rolling support at <em>A</em> and a fixed support at <em>B</em>.
+A tensile force <span class="math notranslate nohighlight">\(F_{1} = 5kN\)</span> is applied to the right end of the beam.</span></p>
+</div>
+<p>Let’s find the reaction forces first, so we can proceed with our analysis.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\sum{F_x} = 0 \implies F_{Bx} + F_{1} = 0 \implies \underline{F_{Bx} = -5kN}\\
+\left.
+  \begin{array}{ll}
+    \sum{M_A} = 0\\
+    \sum{F_z} = 0
+  \end{array}
+\right\} \implies \underline{F_A = F_{Bz}} = 0\end{split}\]</div>
+<p>With the information about the reaction forces at supports <em>A</em> and <em>B</em>, let’s see what happens to the subsystem between section 2-2 (located between support <em>B</em> and the right end of the beam) and section 3-3 (exactly at the right end of the beam, where the load <span class="math notranslate nohighlight">\(\mathbf{F_1}\)</span> is applied).</p>
+<div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="_images/placeholder_04.png"><img alt="Subsystem between sections 2-2 and 3-3" src="_images/placeholder_04.png" style="width: 208.0px; height: 128.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Subsystem between sections 2-2 and 3-3, to the right of support <em>B</em>.
+Note that the weight of the beam is always neglected.</span></p>
+</div>
+<p>Let’s apply the equilibrium equations to this subsystem.
+Since we only have <em>colinear</em> forces (we neglect the height of the beam) along the x-axis, we only write the sum of forces in this direction and assume zero moment.
+The other equilibrium equations are identically zero, and don’t add any new information.</p>
+<div class="math notranslate nohighlight">
+\[\sum{F_x} = 0 \implies N - F_{1} = 0 \implies \underline{N|_{2-3} = 5kN}\]</div>
+<p>Here we have found the internal normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> to be equal to -5kN.
+The positive sign corresponds to our choice of the orientation of <span class="math notranslate nohighlight">\(\mathbf{N}\)</span>.
+It is customary to define <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> as positive when pointing outwards.
+It follows from this that tensile forces are positive and compression forces negative.
+The result would be the same for any choice of the line 2-2 between the support <em>B</em> and the right end of the beam.</p>
+<p>Next, let’s consider the subsystem between sections 1-1 and 3-3 and perform the same analysis</p>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="_images/placeholder_05.png"><img alt="Subsystem between sections 1-1 and 3-3" src="_images/placeholder_05.png" style="width: 628.0px; height: 217.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Subsystem between sections 1-1 (btw supports <em>A</em> and <em>B</em>) and 3-3 (beam’s right end)</span></p>
+</div>
+<div class="math notranslate nohighlight">
+\[\sum{F_x} = 0 \implies N + F_{Bx} - F_{1} = 0 \implies \underline{N|_{3-3} = 0}\]</div>
+<p>If we join these two results, we can plot the <em>internal</em> normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> as a function of the <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> coordinate, as <span class="math notranslate nohighlight">\(\mathbf{N(x)}\)</span>.
+In this simple case, what we end up with is the following piecewise function:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}N(x) = \left\{
+  \begin{array}{cl}
+     0 \ \ \ &amp; \text{if} \ \  0 \leq x &lt; x_B\\
+     -5 kN \ \ \ &amp; \text{if} \ \  &lt; x_B \leq x &lt; L
+  \end{array}
+\right.\end{split}\]</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add plot for function and code for Python example using the <em>beambending</em> package.</p>
+</div>
+</div>
+<div class="section" id="shear-force-v-x-and-moment-m-x">
+<h3>Shear force [V(x)] and moment [M(X)]<a class="headerlink" href="#shear-force-v-x-and-moment-m-x" title="Permalink to this headline">¶</a></h3>
+<div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="_images/placeholder_06.png"><img alt="Insert alternative text here" src="_images/placeholder_06.png" style="width: 549.0px; height: 198.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+<div class="figure align-center" id="id8">
+<a class="reference internal image-reference" href="_images/placeholder_07.png"><img alt="Insert alternative text here" src="_images/placeholder_07.png" style="width: 227.0px; height: 153.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+<div class="figure align-center" id="id9">
+<a class="reference internal image-reference" href="_images/placeholder_08.png"><img alt="Insert alternative text here" src="_images/placeholder_08.png" style="width: 561.0px; height: 158.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We have performed this analysis for point loads, but it applies universally for distributed loads as well.
+More on that in the next section.</p>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Shear force [V(x)] and moment [M(X)]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>It may not be obvious at first sight, but the functions corresponding to shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span> are intimately correlated (i.e. you can calculate one from knowing the other).</p>
+<p>In order to show this, let’s consider an arbitrary load situation</p>
+<div class="figure align-center" id="id10">
+<a class="reference internal image-reference" href="_images/placeholder_09.png"><img alt="Insert alternative text here" src="_images/placeholder_09.png" style="width: 547.0px; height: 151.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+<div class="figure align-center" id="id11">
+<a class="reference internal image-reference" href="_images/placeholder_10.png"><img alt="Insert alternative text here" src="_images/placeholder_10.png" style="width: 521.0px; height: 201.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+<div class="figure align-center" id="id12">
+<a class="reference internal image-reference" href="_images/placeholder_11.png"><img alt="Insert alternative text here" src="_images/placeholder_11.png" style="width: 646.0px; height: 380.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+<div class="figure align-center" id="id13">
+<a class="reference internal image-reference" href="_images/placeholder_12.png"><img alt="Insert alternative text here" src="_images/placeholder_12.png" style="width: 616.0px; height: 556.0px;" /></a>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples/example_1.html" class="btn btn-neutral float-right" title="Beam with one point load and two distributed loads" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Alfredo Carella
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -22,13 +22,21 @@ Project Contents
     installation
 
 .. toctree::
-    :caption: Documentation
+    :caption: Theory
     :maxdepth: 2
 
-    documentation
+    beam_diagrams
 
 .. toctree::
     :caption: Examples
     :maxdepth: 2
 
     examples/example_1
+
+.. toctree::
+    :caption: Documentation
+    :maxdepth: 2
+
+    reference
+
+.. todolist::
