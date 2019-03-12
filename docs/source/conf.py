@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
+    'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'numpydoc'
 ]
@@ -181,3 +182,4 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 numpydoc_show_class_members = False
+todo_include_todos=True
