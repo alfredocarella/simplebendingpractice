@@ -25,7 +25,7 @@ script:
   # test examples
   - pytest examples/
   # run tests
-  - pytest --cov=beambending test/
+  - python -m doctest -v */*.py
   # use sphinx to build docs
   - cd docs/
   - make html
