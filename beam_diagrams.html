@@ -94,7 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#shear-force-v-x-and-moment-m-x">Shear force [V(x)] and moment [M(X)]</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#relationship-between-shear-force-v-x-and-bending-moment-m-x">Relationship between shear force [V(x)] and bending moment [M(X)]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#relationship-between-shear-force-mathbf-v-x-and-bending-moment-mathbf-m-x">Relationship between shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span></a></li>
 </ul>
 </li>
 </ul>
@@ -288,44 +288,105 @@ Instead of the horizontal force <span class="math notranslate nohighlight">\(\ma
 <div class="math notranslate nohighlight">
 \[\begin{split}\sum{F_z} = 0 \implies V + \mathbf{P_1} = 0 \implies V = 10 \text{kN}\\
 \sum{M} = 0 \implies M(x) - \mathbf{P_1} (L-x) = 0 \implies M(x) = \mathbf{P_1} (L-x)\end{split}\]</div>
-<p>At the plane 2-2, the horizontal coordinate is <span class="math notranslate nohighlight">\(x=4\)</span>, hence <span class="math notranslate nohighlight">\(M|_{2-2} = M(x)|_{x=4} = 20 \text{kNm}\)</span>.</p>
+<dl class="docutils">
+<dt>The vertical plane 2-2, corresponds to <span class="math notranslate nohighlight">\(x=4\)</span>, hence</dt>
+<dd><ul class="first last simple">
+<li><span class="math notranslate nohighlight">\(V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}\)</span>, and</li>
+<li><span class="math notranslate nohighlight">\(M|_{2-2} = M(x)|_{x=4} = \underline{20 \text{kNm}}\)</span>.</li>
+</ul>
+</dd>
+</dl>
+<p>Let’s calculate now the shear force and bending moment at the vertical plane 1-1.
+To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.</p>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<dl class="last docutils">
+<dt>Clarify the sign convention:</dt>
+<dd><ul class="first last simple">
+<li>Explain that <span class="math notranslate nohighlight">\(V_{2-2}\)</span> and <span class="math notranslate nohighlight">\(M_{2-2}\)</span> to the right of section 1-2 are (equal and opposite) reactions to <span class="math notranslate nohighlight">\(V_{2-2}\)</span> and <span class="math notranslate nohighlight">\(M_{2-2}\)</span> to the left of section 2-3.</li>
+</ul>
+</dd>
+</dl>
+</div>
 <div class="figure align-center" id="id8">
 <a class="reference internal image-reference" href="_images/placeholder_08.png"><img alt="Insert alternative text here" src="_images/placeholder_08.png" style="width: 561.0px; height: 158.0px;" /></a>
 <p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
 </div>
+<p>The equations for sum of forces and sum of moments become then:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{rl}
+  \mathbf{\sum{F_z}} = -V_{1-1} + F_{Bz} + V_{2-2} &amp;= 0 \\
+   -V_{1-1} + (-20 \text{kN}) + 10 \text{kN} &amp;= 0 \\
+   V_{1-1} &amp;= \underline{-10 \text{kN}}
+\end{array}\\
+\\
+\begin{array}{rrl}
+  &amp; \mathbf{\sum{M}} = M_{1-1} + F_{Bz}(d-x) - V_{2-2}(4\text{m}-x) &amp;= 0 \\
+  &amp; M_{1-1} + 20\text{kN}(3\text{m}-x) - 10 \text{kN}(4\text{m}-x) &amp;= 0\\
+  \text{since } x|_{1-1}=2\text{m} \implies &amp; M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(4\text{m}-2\text{m}) &amp;= 0\\
+  &amp; M_{1-1} &amp;= \underline{0}
+\end{array}\end{split}\]</div>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add plot for function and code for Python example using the <em>beambending</em> package.</p>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">We have performed this analysis for point loads, but it applies universally for distributed loads as well.
-More on that in the next section.</p>
+<p class="last">This result would (of course) have been the same if our free-body diagram had included the whole beam to the right of the plane 1-1.
+The same is true for a free-body of the left side of the beam.
+In order to make sure you will understand the next section, I suggest you <strong>stop reading for a moment and try to verify this</strong>.</p>
 </div>
 </div>
 </div>
-<div class="section" id="relationship-between-shear-force-v-x-and-bending-moment-m-x">
-<h2>Relationship between shear force [V(x)] and bending moment [M(X)]<a class="headerlink" href="#relationship-between-shear-force-v-x-and-bending-moment-m-x" title="Permalink to this headline">¶</a></h2>
-<p>It may not be obvious at first sight, but the functions corresponding to shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span> are intimately correlated (i.e. you can calculate one from knowing the other).</p>
+<div class="section" id="relationship-between-shear-force-mathbf-v-x-and-bending-moment-mathbf-m-x">
+<h2>Relationship between shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span><a class="headerlink" href="#relationship-between-shear-force-mathbf-v-x-and-bending-moment-mathbf-m-x" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>The analysis in the section above was restricted to point loads in order to keep it simple.
+However, it applies universally for distributed loads as well, as we are going to see next.</div></blockquote>
+<p>It may not be obvious at first sight, but the functions corresponding to shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span> are intimately correlated (i.e. you can use one of them for calculating the other one).
+We are going to prove this by performing the same analysis explained above to a differential beam segment of length <span class="math notranslate nohighlight">\(\Delta x\)</span>.</p>
 <dl class="docutils">
-<dt>By this point, our analysis methodology should be clear. It consists of three simple steps:</dt>
+<dt>By this point, our analysis methodology should be clear. It consists of three steps:</dt>
 <dd><ol class="first last arabic simple">
-<li>Choosing an arbitrary sector of a beam,</li>
-<li>Drawing a free body diagram (FBD) of the partition,</li>
-<li>Application of Newton’s first law to the FBD.</li>
+<li>Choosing an arbitrary sector of a beam.</li>
+<li>Drawing a free-body diagram of the partition.</li>
+<li>Applying Newton’s first law to the free-body diagram.</li>
 </ol>
 </dd>
 </dl>
-<p>In order to show this, let’s consider an arbitrary load situation</p>
+<p>Let’s consider an arbitrarily loaded beam as shown in the figure below.</p>
 <div class="figure align-center" id="id9">
 <a class="reference internal image-reference" href="_images/placeholder_09.png"><img alt="Insert alternative text here" src="_images/placeholder_09.png" style="width: 547.0px; height: 151.0px;" /></a>
 <p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
 </div>
+<p>Let’s draw a free-body diagram of a given beam segment <span class="math notranslate nohighlight">\([x_0 \leq x \leq x_0+\Delta x]\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span> is a distributed load applied to the beam.</p>
 <div class="figure align-center" id="id10">
 <a class="reference internal image-reference" href="_images/placeholder_10.png"><img alt="Insert alternative text here" src="_images/placeholder_10.png" style="width: 521.0px; height: 201.0px;" /></a>
 <p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
 </div>
-<div class="figure align-center" id="id11">
-<a class="reference internal image-reference" href="_images/placeholder_11.png"><img alt="Insert alternative text here" src="_images/placeholder_11.png" style="width: 646.0px; height: 380.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
+<p>The equilibrium of vertical forces yields the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{rrl}
+  &amp; \mathbf{\sum{F_z}} &amp;= 0 \\
+  &amp; V(x + \Delta x) -V(x) + \mathbf{P_z}(x) \Delta x &amp;= 0 \\
+  &amp; \cfrac{V(x + \Delta x) -V(x)}{\Delta x} &amp;= -\mathbf{P_z}(x) \\
+  \lim_{\Delta x \to 0} &amp; \boxed{\cfrac{dV(x)}{dx} = -\mathbf{P_z}(x)}
+\end{array}\end{split}\]</div>
+<p>which in words means that the rate of change of the shear force is equal to (minus) the value of the distributed load acting on a given x-coordinate.</p>
+<p>The equilibrium of moments can be written as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{array}{rrl}
+  &amp; \mathbf{\sum M|_{x + \Delta x}} &amp;= 0 \\
+  &amp; M(x + \Delta x) -M(x) - V(x) \Delta x + (\mathbf{P_z}(x) \Delta x \cdot \frac{\Delta x}{2}) &amp;= 0 \\
+  &amp; \cfrac{M(x + \Delta x) -M(x)}{\Delta x} + \underbrace{(\mathbf{P_z}(x) \Delta x \cdot \frac{\Delta x}{2})}_{\Delta x^2\to 0} &amp;= V(x) \\
+  \lim_{\Delta x \to 0} &amp; \boxed{\cfrac{dM(x)}{dx} = V(x)}
+\end{array}\end{split}\]</div>
+<p>which presents explicitly the relationship between <span class="math notranslate nohighlight">\(M(x)\)</span> and <span class="math notranslate nohighlight">\(V(x)\)</span>: the rate of change of the bending moment at a given point is equal to the shear force at that point.</p>
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">Todo</p>
+<p class="last">Replace the figure below by a Python example using the <strong>beambending</strong> package</p>
 </div>
-<div class="figure align-center" id="id12">
+<div class="figure align-center" id="id11">
 <a class="reference internal image-reference" href="_images/placeholder_12.png"><img alt="Insert alternative text here" src="_images/placeholder_12.png" style="width: 616.0px; height: 556.0px;" /></a>
 <p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span></p>
 </div>
