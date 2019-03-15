@@ -170,9 +170,16 @@ Next, we draw a free body diagram of the beam section comprised between planes 2
     \sum{F_z} = 0 \implies V + \mathbf{P_1} = 0 \implies V = 10 \text{kN}\\
     \sum{M} = 0 \implies M(x) - \mathbf{P_1} (L-x) = 0 \implies M(x) = \mathbf{P_1} (L-x)
 
-At the plane 2-2, the horizontal coordinate is :math:`x=4`, hence :math:`M|_{2-2} = M(x)|_{x=4} = 20 \text{kNm}`.
+The vertical plane 2-2, corresponds to :math:`x=4`, hence 
+   - :math:`V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}`, and
+   - :math:`M|_{2-2} = M(x)|_{x=4} = \underline{20 \text{kNm}}`.
 
+Let's calculate now the shear force and bending moment at the vertical plane 1-1.
+To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.
 
+.. todo::
+   Clarify the sign convention:
+      - Explain that :math:`V_{2-2}` and :math:`M_{2-2}` to the right of section 1-2 are (equal and opposite) reactions to :math:`V_{2-2}` and :math:`M_{2-2}` to the left of section 2-3.
 
 .. figure:: /_static/placeholder_08.png
    :scale: 100 %
@@ -181,22 +188,49 @@ At the plane 2-2, the horizontal coordinate is :math:`x=4`, hence :math:`M|_{2-2
 
    **PLACEHOLDER FIG:** Insert caption here
 
+The equations for sum of forces and sum of moments become then:
+
+.. math::
+
+    \begin{array}{rl}
+      \mathbf{\sum{F_z}} = -V_{1-1} + F_{Bz} + V_{2-2} &= 0 \\ 
+       -V_{1-1} + (-20 \text{kN}) + 10 \text{kN} &= 0 \\ 
+       V_{1-1} &= \underline{-10 \text{kN}}
+    \end{array}\\
+    \\
+    \begin{array}{rrl}
+      & \mathbf{\sum{M}} = M_{1-1} + F_{Bz}(d-x) - V_{2-2}(4\text{m}-x) &= 0 \\ 
+      & M_{1-1} + 20\text{kN}(3\text{m}-x) - 10 \text{kN}(4\text{m}-x) &= 0\\ 
+      \text{since } x|_{1-1}=2\text{m} \implies & M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(4\text{m}-2\text{m}) &= 0\\
+      & M_{1-1} &= \underline{0}
+    \end{array}
+    
+.. todo::
+
+   Add plot for function and code for Python example using the *beambending* package.
+
 .. note::
-   We have performed this analysis for point loads, but it applies universally for distributed loads as well.
-   More on that in the next section.
+   This result would (of course) have been the same if our free-body diagram had included the whole beam to the right of the plane 1-1.
+   The same is true for a free-body of the left side of the beam.
+   In order to make sure you will understand the next section, I suggest you **stop reading for a moment and try to verify this**.
 
 
-Relationship between shear force [V(x)] and bending moment [M(X)]
------------------------------------------------------------------
+Relationship between shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}`
+-----------------------------------------------------------------------------------------------
+ The analysis in the section above was restricted to point loads in order to keep it simple.
+ However, it applies universally for distributed loads as well, as we are going to see next.
 
-It may not be obvious at first sight, but the functions corresponding to shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}` are intimately correlated (i.e. you can calculate one from knowing the other).
+It may not be obvious at first sight, but the functions corresponding to shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}` are intimately correlated (i.e. you can use one of them for calculating the other one).
+We are going to prove this by performing the same analysis explained above to a differential beam segment of length :math:`\Delta x`.
 
-By this point, our analysis methodology should be clear. It consists of three simple steps:
-   #. Choosing an arbitrary sector of a beam,
-   #. Drawing a free body diagram (FBD) of the partition,
-   #. Application of Newton's first law to the FBD.
+By this point, our analysis methodology should be clear. It consists of three steps:
+   #. Choosing an arbitrary sector of a beam.
+   #. Drawing a free-body diagram of the partition.
+   #. Applying Newton's first law to the free-body diagram.
 
-In order to show this, let's consider an arbitrary load situation
+.. #. Calculating the (external) reaction forces from the supports. <-- is actually step 1>
+  
+Let's consider an arbitrarily loaded beam as shown in the figure below.
 
 .. figure:: /_static/placeholder_09.png
    :scale: 100 %
@@ -205,6 +239,8 @@ In order to show this, let's consider an arbitrary load situation
 
    **PLACEHOLDER FIG:** Insert caption here
 
+Let's draw a free-body diagram of a given beam segment :math:`[x_0 \leq x \leq x_0+\Delta x]`, where :math:`\mathbf{P_z}(x)` is a distributed load applied to the beam.
+
 .. figure:: /_static/placeholder_10.png
    :scale: 100 %
    :align: center
@@ -212,12 +248,35 @@ In order to show this, let's consider an arbitrary load situation
 
    **PLACEHOLDER FIG:** Insert caption here
 
-.. figure:: /_static/placeholder_11.png
-   :scale: 100 %
-   :align: center
-   :alt: Insert alternative text here
+The equilibrium of vertical forces yields the following:
 
-   **PLACEHOLDER FIG:** Insert caption here
+.. math::
+
+    \begin{array}{rrl}
+      & \mathbf{\sum{F_z}} &= 0 \\
+      & V(x + \Delta x) -V(x) + \mathbf{P_z}(x) \Delta x &= 0 \\
+      & \cfrac{V(x + \Delta x) -V(x)}{\Delta x} &= -\mathbf{P_z}(x) \\
+      \lim_{\Delta x \to 0} & \boxed{\cfrac{dV(x)}{dx} = -\mathbf{P_z}(x)}
+    \end{array}
+
+which in words means that the rate of change of the shear force is equal to (minus) the value of the distributed load acting on a given x-coordinate.
+
+The equilibrium of moments can be written as:
+
+.. math::
+
+    \begin{array}{rrl}
+      & \mathbf{\sum M|_{x + \Delta x}} &= 0 \\
+      & M(x + \Delta x) -M(x) - V(x) \Delta x + (\mathbf{P_z}(x) \Delta x \cdot \frac{\Delta x}{2}) &= 0 \\
+      & \cfrac{M(x + \Delta x) -M(x)}{\Delta x} + \underbrace{(\mathbf{P_z}(x) \Delta x \cdot \frac{\Delta x}{2})}_{\Delta x^2\to 0} &= V(x) \\
+      \lim_{\Delta x \to 0} & \boxed{\cfrac{dM(x)}{dx} = V(x)}
+    \end{array}
+
+which presents explicitly the relationship between :math:`M(x)` and :math:`V(x)`: the rate of change of the bending moment at a given point is equal to the shear force at that point.
+
+.. todo::
+
+   Replace the figure below by a Python example using the **beambending** package
 
 .. figure:: /_static/placeholder_12.png
    :scale: 100 %
