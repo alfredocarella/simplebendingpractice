@@ -5,4 +5,4 @@ pytest>=3.7  # for testing
 pytest-cov  # for calculating coverage
 sphinx  # generating documentation
 sphinx_rtd_theme  # docs theme
-sympy>=1.3  # for analytical integration
+sympy==1.1  # for analytical integration
