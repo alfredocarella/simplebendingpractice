@@ -174,11 +174,9 @@ and DistributedLoad.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the fixed support</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># x-coordinate of the rolling support</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoad</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>  <span class="c1"># 20kN downwards, at x=3m</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>  <span class="c1"># 20kN downwards, at x=3m</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(F_Ax, F_Ay, F_By) =&quot;</span><span class="p">,</span> <span class="n">my_beam</span><span class="o">.</span><span class="n">get_reaction_forces</span><span class="p">())</span>
 <span class="go">(F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-<span class="go">&lt;Figure size 600x1000 with 3 Axes&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -262,29 +260,9 @@ shear force diagram, and bending moment diagram.</p>
 </div>
 <div class="section" id="pointload">
 <h2>PointLoad<a class="headerlink" href="#pointload" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="beam.PointLoad">
-<em class="property">class </em><code class="descclassname">beam.</code><code class="descname">PointLoad</code><a class="reference internal" href="_modules/beam.html#PointLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointLoad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Point load described by a tuple of floats: (force, coord).</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 30kN downwards at x=3m</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 <div class="section" id="distributedload">
 <h2>DistributedLoad<a class="headerlink" href="#distributedload" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="beam.DistributedLoad">
-<em class="property">class </em><code class="descclassname">beam.</code><code class="descname">DistributedLoad</code><a class="reference internal" href="_modules/beam.html#DistributedLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.DistributedLoad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Distributed load, described by its functional form and application interval.</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snow_load</span> <span class="o">=</span> <span class="n">DistributedLoad</span><span class="p">(</span><span class="s2">&quot;10*x+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># Linearly growing load for 0&lt;x&lt;2</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 </div>
 
