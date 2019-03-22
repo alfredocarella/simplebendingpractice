@@ -6,11 +6,9 @@ Example
 >>> my_beam = Beam(9)
 >>> my_beam.fixed_support = 2    # x-coordinate of the fixed support
 >>> my_beam.rolling_support = 7  # x-coordinate of the rolling support
->>> my_beam.add_loads([PointLoad(-20, 3)])  # 20kN downwards, at x=3m
+>>> my_beam.add_loads([PointLoadV(-20, 3)])  # 20kN downwards, at x=3m
 >>> print("(F_Ax, F_Ay, F_By) =", my_beam.get_reaction_forces())
 (F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)
->>> my_beam.plot()
-<Figure size 600x1000 with 3 Axes>
 
 """
 
@@ -26,21 +24,45 @@ from sympy import integrate
 # plt.rc('text', usetex=True)  # This makes the plot text prettier... but SLOWER
 
 
-class PointLoad(namedtuple("PointLoad", "force, coord")):
-    """Point load described by a tuple of floats: (force, coord).
+class PointLoadV(namedtuple("PointLoadV", "force, coord")):
+    """Vertical point load described by a tuple of floats: (force, coord).
 
     Examples
     --------
-    >>> external_force = PointLoad(-30, 3)  # 30kN downwards at x=3m
+    >>> external_force = PointLoadV(-30, 3)  # 30kN downwards at x=3m
+    >>> external_force
+    PointLoadV(force=-30, coord=3)
     """
 
 
-class DistributedLoad(namedtuple("DistributedLoad", "expr, span")):
-    """Distributed load, described by its functional form and application interval.
+class PointLoadH(namedtuple("PointLoadH", "force, coord")):
+    """Horizontal point load described by a tuple of floats: (force, coord).
 
     Examples
     --------
-    >>> snow_load = DistributedLoad("10*x+5", (0, 2))  # Linearly growing load for 0<x<2
+    >>> external_force = PointLoadH(10, 9)  # 10kN towards the right at x=9m
+    >>> external_force
+    PointLoadH(force=10, coord=9)
+    """
+
+
+class DistributedLoadV(namedtuple("DistributedLoadV", "expr, span")):
+    """Distributed vertical load, described by its functional form and application interval.
+
+    Examples
+    --------
+    >>> snow_load = DistributedLoadV("10*x+5", (0, 2))  # Linearly growing load for 0<x<2
+    
+    """
+
+
+class DistributedLoadH(namedtuple("DistributedLoadH", "expr, span")):
+    """Distributed horizontal load, described by its functional form and application interval.
+
+    Examples
+    --------
+    >>> wind_load = DistributedLoadH("10*x**2+5", (1, 3))  # Quadratically growing load for 1<y<3
+    
     """
 
 
@@ -71,7 +93,9 @@ class Beam:
         self._rolling_support = 8
 
         self._loads = []
-        self._distributed_forces = []
+        self._distributed_forces_x = []
+        self._distributed_forces_y = []
+        self._normal_forces = []
         self._shear_forces = []
         self._bending_moments = []
 
@@ -125,10 +149,11 @@ class Beam:
 
         """
         for load in loads:
-            if isinstance(load, (DistributedLoad, PointLoad)):
+            supported_load_types = (DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV)
+            if isinstance(load, supported_load_types):
                 self._loads.append(load)
             else:
-                raise TypeError("The provided loads must be of type DistributedLoad or PointLoad")
+                raise TypeError("The provided loads must be one of the supported types: {0}".format(supported_load_types))
         self._update_loads()
 
     def get_reaction_forces(self):
@@ -149,11 +174,12 @@ class Beam:
         x = sympy.symbols("x")
         x0, x1 = self._x0, self._x1
         xA, xB = self._fixed_support, self._rolling_support
-        F_Rx = 0
-        F_Ry = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces) + \
-               sum(f.force for f in self._point_loads())
-        M_R = sum(integrate(load * x, (x, x0, x1)) for load in self._distributed_forces) + \
-              sum(f.force * f.coord for f in self._point_loads())
+        F_Rx = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces_x) + \
+               sum(f.force for f in self._point_loads_x())
+        F_Ry = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces_y) + \
+               sum(f.force for f in self._point_loads_y())
+        M_R = sum(integrate(load * x, (x, x0, x1)) for load in self._distributed_forces_y) + \
+              sum(f.force * f.coord for f in self._point_loads_y())
         A = np.array([[-1, 0, 0],
                       [0, -1, -xA],
                       [0, -1, -xB]]).T
@@ -174,28 +200,34 @@ class Beam:
         fig = plt.figure(figsize=(6, 10))
         fig.subplots_adjust(hspace=0.4)
 
-        # TODO: Take care of beam plotting
-        ax1 = fig.add_subplot(3, 1, 1)
+        # TODO: Take better care of beam plotting
+        ax1 = fig.add_subplot(4, 1, 1)
         ax1.set_title("Loaded beam diagram")
 
         plot01_params = {'ylabel': "Beam loads", 'yunits': r'kN / m',
                          # 'xlabel':"Beam axis", 'xunits':"m",
-                         'color': "b",
+                         'color': "g",
                          'inverted': True}
-        self._plot_analytical(ax1, sum(self._distributed_forces), **plot01_params)
+        self._plot_analytical(ax1, sum(self._distributed_forces_y), **plot01_params)
         self._draw_beam_schematic(ax1)
 
-        ax2 = fig.add_subplot(3, 1, 2)
-        plot02_params = {'ylabel': "Shear force", 'yunits': r'kN',
+        ax2 = fig.add_subplot(4, 1, 2)
+        plot02_params = {'ylabel': "Normal force", 'yunits': r'kN',
+                         # 'xlabel':"Beam axis", 'xunits':"m",
+                         'color': "b"}
+        self._plot_analytical(ax2, sum(self._normal_forces), **plot02_params)
+
+        ax3 = fig.add_subplot(4, 1, 3)
+        plot03_params = {'ylabel': "Shear force", 'yunits': r'kN',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "r"}
-        self._plot_analytical(ax2, sum(self._shear_forces), **plot02_params)
+        self._plot_analytical(ax3, sum(self._shear_forces), **plot03_params)
 
-        ax3 = fig.add_subplot(3, 1, 3)
-        plot03_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
+        ax4 = fig.add_subplot(4, 1, 4)
+        plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
                          'xlabel': "Beam axis", 'xunits': "m",
                          'color': "y"}
-        self._plot_analytical(ax3, sum(self._bending_moments), **plot03_params)
+        self._plot_analytical(ax4, sum(self._bending_moments), **plot04_params)
 
         return fig
 
@@ -280,11 +312,11 @@ class Beam:
         ax.add_patch(beam_body)
 
         # Draw arrows at point loads
-        _f_ax, f_ay, f_by = self.get_reaction_forces()
-        fixed_support_load = PointLoad(f_ay, self._fixed_support)
-        rolling_support_load = PointLoad(f_by, self._rolling_support)
+        f_ax, f_ay, f_by = self.get_reaction_forces()
+        fixed_support_load = PointLoadV(f_ay, self._fixed_support)
+        rolling_support_load = PointLoadV(f_by, self._rolling_support)
 
-        for load in (*self._point_loads(),
+        for load in (*self._point_loads_y(),
                      fixed_support_load,
                      rolling_support_load):
             if load[0] < 0:
@@ -305,20 +337,26 @@ class Beam:
         x = sympy.symbols("x")
         x0 = self._x0
 
-        self._distributed_forces = [self._create_distributed_force(f) for f in self._distributed_loads()]
+        self._distributed_forces_x = [self._create_distributed_force(f) for f in self._distributed_loads_x()]
+        self._distributed_forces_y = [self._create_distributed_force(f) for f in self._distributed_loads_y()]
 
-        _f_ax, f_ay, f_by = self.get_reaction_forces()
-        fixed_support_load = PointLoad(f_ay, self._fixed_support)
-        rolling_support_load = PointLoad(f_by, self._rolling_support)
+        f_ax, f_ay, f_by = self.get_reaction_forces()
+        fixed_support_load_x = PointLoadH(f_ax, self._fixed_support)
+        fixed_support_load_y = PointLoadV(f_ay, self._fixed_support)
+        rolling_support_load = PointLoadV(f_by, self._rolling_support)
 
-        self._shear_forces = [integrate(load, (x, x0, x)) for load in self._distributed_forces]
-        self._shear_forces.extend(self._shear_from_pointload(f) for f in self._point_loads())
-        self._shear_forces.append(self._shear_from_pointload(fixed_support_load))
-        self._shear_forces.append(self._shear_from_pointload(rolling_support_load))
+        self._normal_forces = [-1*integrate(load, (x, x0, x)) for load in self._distributed_forces_x]
+        self._normal_forces.extend(-1*self._effort_from_pointload(f) for f in self._point_loads_x())
+        self._normal_forces.append(-1*self._effort_from_pointload(fixed_support_load_x))
+
+        self._shear_forces = [integrate(load, (x, x0, x)) for load in self._distributed_forces_y]
+        self._shear_forces.extend(self._effort_from_pointload(f) for f in self._point_loads_y())
+        self._shear_forces.append(self._effort_from_pointload(fixed_support_load_y))
+        self._shear_forces.append(self._effort_from_pointload(rolling_support_load))
 
         self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
 
-    def _create_distributed_force(self, load: DistributedLoad, shift: bool=True):
+    def _create_distributed_force(self, load: DistributedLoadH or DistributedLoadV, shift: bool=True):
         """
         Create a sympy.Piecewise object representing the provided distributed load.
 
@@ -338,7 +376,7 @@ class Beam:
             expr.subs(x, x - x0)
         return sympy.Piecewise((0, x < x0), (0, x > x1), (expr, True))
 
-    def _shear_from_pointload(self, load: PointLoad):
+    def _effort_from_pointload(self, load: PointLoadH or PointLoadV):
         """
         Create a sympy.Piecewise object representing the shear force caused by a
         point load.
@@ -352,12 +390,22 @@ class Beam:
         x = sympy.symbols("x")
         return sympy.Piecewise((0, x < coord), (value, True))
 
-    def _point_loads(self):
+    def _point_loads_x(self):
         for f in self._loads:
-            if isinstance(f, PointLoad):
+            if isinstance(f, PointLoadH):
                 yield f
 
-    def _distributed_loads(self):
+    def _point_loads_y(self):
         for f in self._loads:
-            if isinstance(f, DistributedLoad):
+            if isinstance(f, PointLoadV):
+                yield f
+
+    def _distributed_loads_x(self):
+        for f in self._loads:
+            if isinstance(f, DistributedLoadH):
+                yield f
+
+    def _distributed_loads_y(self):
+        for f in self._loads:
+            if isinstance(f, DistributedLoadV):
                 yield f
