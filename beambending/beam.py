@@ -1,5 +1,5 @@
-"""Main module containing the main class Beam, and auxiliary classes PointLoad 
-and DistributedLoad.
+"""Main module containing the main class Beam, and auxiliary classes PointLoadH,
+PointLoadV, DistributedLoadH, and DistributedLoadV.
 
 Example
 -------

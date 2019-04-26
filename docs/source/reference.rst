@@ -14,8 +14,10 @@ Beam
 
 PointLoad
 ---------
-.. autoclass:: beam.PointLoad
+.. autoclass:: beam.PointLoadH
+.. autoclass:: beam.PointLoadV
 
 DistributedLoad
 ---------------
-.. autoclass:: beam.DistributedLoad
+.. autoclass:: beam.DistributedLoadH
+.. autoclass:: beam.DistributedLoadV
