@@ -15,7 +15,8 @@ Example
 from collections import namedtuple
 from contextlib import contextmanager
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon, Rectangle
+from matplotlib.patches import Polygon, Rectangle, Wedge
+from matplotlib.collections import PatchCollection
 import numpy as np
 import os
 import sympy
@@ -200,7 +201,6 @@ class Beam:
         fig = plt.figure(figsize=(6, 10))
         fig.subplots_adjust(hspace=0.4)
 
-        # TODO: Take better care of beam plotting
         ax1 = fig.add_subplot(4, 1, 1)
         ax1.set_title("Loaded beam diagram")
 
@@ -264,16 +264,21 @@ class Beam:
             ax.add_patch(poly)
 
         if maxmin_hline:
-            ax.axhline(y=max(y_vec), linestyle='--', color="g", alpha=0.5)
-            max_idx = y_vec.argmax()
-            ax.axhline(y=min(y_vec), linestyle='--', color="g", alpha=0.5)
-            min_idx = y_vec.argmin()
-            plt.annotate('${:0.1f}'.format(y_vec[max_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
-                         xy=(x_vec[max_idx], y_vec[max_idx]), xytext=(8, 0), xycoords=('data', 'data'),
-                         textcoords='offset points', size=12)
-            plt.annotate('${:0.1f}'.format(y_vec[min_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
-                         xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
-                         textcoords='offset points', size=12)
+            tol = 1e-3
+
+            if abs(max(y_vec)) > tol:
+                ax.axhline(y=max(y_vec), linestyle='--', color="g", alpha=0.5)
+                max_idx = y_vec.argmax()
+                plt.annotate('${:0.1f}'.format(y_vec[max_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
+                            xy=(x_vec[max_idx], y_vec[max_idx]), xytext=(8, 0), xycoords=('data', 'data'),
+                            textcoords='offset points', size=12)
+
+            if abs(min(y_vec)) > tol:
+                ax.axhline(y=min(y_vec), linestyle='--', color="g", alpha=0.5)
+                min_idx = y_vec.argmin()
+                plt.annotate('${:0.1f}'.format(y_vec[min_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
+                            xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
+                            textcoords='offset points', size=12)
 
         ax.set_xlim([x_vec.min(), x_vec.max()])
         ax.spines['right'].set_visible(False)
@@ -297,28 +302,24 @@ class Beam:
         ymin, ymax = -5, 5
         ylim = (min(ax.get_ylim()[0], ymin), max(ax.get_ylim()[1], ymax))
         ax.set_ylim(ylim)
+        xspan = ax.get_xlim()[1] - ax.get_xlim()[0]
         yspan = ylim[1] - ylim[0]
 
         # Draw beam body
         beam_left, beam_right = self._x0, self._x1
         beam_length = beam_right - beam_left
         beam_height = yspan * 0.03
-        beam_bottom = -1 * beam_height / 2
+        beam_bottom = -(0.75) * beam_height
         beam_top = beam_bottom + beam_height
         beam_body = Rectangle(
             (beam_left, beam_bottom), beam_length, beam_height, fill=True,
             facecolor="black", clip_on=False
         )
-        ax.add_patch(beam_body)
 
         # Draw arrows at point loads
         f_ax, f_ay, f_by = self.get_reaction_forces()
-        fixed_support_load = PointLoadV(f_ay, self._fixed_support)
-        rolling_support_load = PointLoadV(f_by, self._rolling_support)
 
-        for load in (*self._point_loads_y(),
-                     fixed_support_load,
-                     rolling_support_load):
+        for load in self._point_loads_y():
             if load[0] < 0:
                 y0, y1 = beam_top, beam_top + yspan * 0.17
             else:
@@ -332,6 +333,17 @@ class Beam:
         ax.spines['left'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
+
+        # Markers at beam supports
+        fixed_support = Polygon(np.array([self.fixed_support + 0.01*xspan*np.array((-1, -1, 0, 1, 1)), 
+                                           beam_bottom + 0.05*np.array((-1.5, -1,0,-1, -1.5))*yspan]).T)
+        rolling_support = [Polygon(np.array([self.rolling_support + 0.01*xspan*np.array((-1, 0, 1)), 
+                                            beam_bottom + 0.05*np.array((-1,0,-1))*yspan]).T),
+                           Polygon(np.array([self.rolling_support + 0.01*xspan*np.array((-1, -1, 1, 1)), 
+                                            beam_bottom + 0.05*np.array((-1.5,-1.25, -1.25, -1.5))*yspan]).T)]
+
+        patches = PatchCollection([beam_body,fixed_support, *rolling_support], facecolor="black")
+        ax.add_collection(patches)
 
     def _update_loads(self):
         x = sympy.symbols("x")
