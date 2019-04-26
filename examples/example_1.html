@@ -172,15 +172,17 @@
 <h2>Specifications<a class="headerlink" href="#specifications" title="Permalink to this headline">¶</a></h2>
 <p>A beam resting on two supports at x=2 and x=7, with the following applied loads:</p>
 <ul class="simple">
-<li>a downward force of 20kN at x=3,</li>
-<li>a downward distributed load of 20 kN/m on 0 &lt;= x &lt;= 2</li>
-<li>a downward distributed load of 10 kN/m on 3 &lt;= x &lt;= 9</li>
+<li><p>a downward force of 20kN at x=3;</p></li>
+<li><p>a force of 10kN pointing right, also at x=3;</p></li>
+<li><p>a downward distributed load of 20 kN/m on 0 &lt;= x &lt;= 2;</p></li>
+<li><p>a downward distributed load of 10 kN/m on 3 &lt;= x &lt;= 9</p></li>
 </ul>
 </div>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
-<p>A beam representation with the point loads, a shear force diagram and a bending moment diagram are given below.</p>
-<div class="figure">
+<p>A beam representation with the point loads, a shear force diagram and a bending moment diagram are given below.
+Note that only the x-coordinate of the point load(s) is marked with a blue arrow (magnitude is not given).</p>
+<div class="figure align-center">
 <img alt="../_images/example_1.png" src="../_images/example_1.png" />
 </div>
 </div>
@@ -192,7 +194,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sympy</span>
-<span class="kn">from</span> <span class="nn">beambending.beam</span> <span class="k">import</span> <span class="n">Beam</span><span class="p">,</span> <span class="n">DistributedLoadV</span><span class="p">,</span> <span class="n">PointLoadV</span>
+<span class="kn">from</span> <span class="nn">beambending.beam</span> <span class="k">import</span> <span class="n">Beam</span><span class="p">,</span> <span class="n">DistributedLoadV</span><span class="p">,</span> <span class="n">PointLoadH</span><span class="p">,</span> <span class="n">PointLoadV</span>
 
 <span class="k">def</span> <span class="nf">example_1</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Run example 1&quot;&quot;&quot;</span>
@@ -201,6 +203,7 @@
     <span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the fixed support</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># x-coordinate of the rolling support</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">((</span>
+                    <span class="n">PointLoadH</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># 10kN pointing right, at x=3m</span>
                     <span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># 20kN downwards, at x=3m</span>
                     <span class="n">DistributedLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)),</span>  <span class="c1"># 10 kN/m, downward, for 3m &lt;= x &lt;= 9m</span>
                     <span class="n">DistributedLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>  <span class="c1"># 20 kN/m downwards, for 0m &lt;= x &lt;= 2m</span>

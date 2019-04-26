@@ -167,8 +167,8 @@
             
   <div class="section" id="module-beam">
 <span id="beambending-reference"></span><span id="reference"></span><h1>Beambending Reference<a class="headerlink" href="#module-beam" title="Permalink to this headline">¶</a></h1>
-<p>Main module containing the main class Beam, and auxiliary classes PointLoad 
-and DistributedLoad.</p>
+<p>Main module containing the main class Beam, and auxiliary classes PointLoadH,
+PointLoadV, DistributedLoadH, and DistributedLoadV.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
@@ -188,30 +188,25 @@ and DistributedLoad.</p>
 <dd><p>Represents a one-dimensional beam that can take axial and tangential loads.</p>
 <p>A Beam object can accept as inputs:</p>
 <ul class="simple">
-<li>PointLoad objects, and</li>
-<li>DistributedLoad objects.</li>
+<li><p>PointLoad objects, and</p></li>
+<li><p>DistributedLoad objects.</p></li>
 </ul>
 </dd></dl>
 
 <dl class="function">
 <dt id="beam.Beam.add_loads">
-<code class="descclassname">beam.Beam.</code><code class="descname">add_loads</code><span class="sig-paren">(</span><em>self</em>, <em>loads: list</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.add_loads" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">beam.Beam.</code><code class="descname">add_loads</code><span class="sig-paren">(</span><em>self</em>, <em>loads:list</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.add_loads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply an arbitrary list of (point- or distributed) loads to the beam.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>loads</strong> <span class="classifier-delimiter">:</span> <span class="classifier">iterable</span></dt>
-<dd><p class="first last">An iterable containing DistributedLoad or PointLoad objects to
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>loads</strong><span class="classifier">iterable</span></dt><dd><p>An iterable containing DistributedLoad or PointLoad objects to
 be applied to the Beam object. Note that the load application point
 (or segment) must be within the Beam span.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -221,48 +216,82 @@ be applied to the Beam object. Note that the load application point
 <p>The first and second values correspond to the horizontal and vertical 
 forces of the fixed support. The third one is the vertical force at the
 rolling support.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>F_Ax, F_Ay, F_By: (float, float, float)</strong></dt>
-<dd><p class="first last">reaction force components for fixed (x,y) and rolling (y) supports 
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>F_Ax, F_Ay, F_By: (float, float, float)</dt><dd><p>reaction force components for fixed (x,y) and rolling (y) supports 
 respectively.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="beam.Beam.plot">
 <code class="descclassname">beam.Beam.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the loaded beam, with shear force and bending moment diagrams.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>figure</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><cite>~matplotlib.figure.Figure</cite></span></dt>
-<dd><p class="first last">Returns a handle to a figure with the 3 subplots: Beam schematic, 
+<dl class="field-list">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl>
+<dt><strong>figure</strong><span class="classifier"><cite>~matplotlib.figure.Figure</cite></span></dt><dd><p>Returns a handle to a figure with the 3 subplots: Beam schematic, 
 shear force diagram, and bending moment diagram.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="section" id="pointload">
 <h2>PointLoad<a class="headerlink" href="#pointload" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="beam.PointLoadH">
+<em class="property">class </em><code class="descclassname">beam.</code><code class="descname">PointLoadH</code><a class="reference internal" href="_modules/beam.html#PointLoadH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointLoadH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal point load described by a tuple of floats: (force, coord).</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoadH</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>  <span class="c1"># 10kN towards the right at x=9m</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span>
+<span class="go">PointLoadH(force=10, coord=9)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="beam.PointLoadV">
+<em class="property">class </em><code class="descclassname">beam.</code><code class="descname">PointLoadV</code><a class="reference internal" href="_modules/beam.html#PointLoadV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointLoadV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical point load described by a tuple of floats: (force, coord).</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 30kN downwards at x=3m</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span>
+<span class="go">PointLoadV(force=-30, coord=3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="distributedload">
 <h2>DistributedLoad<a class="headerlink" href="#distributedload" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="beam.DistributedLoadH">
+<em class="property">class </em><code class="descclassname">beam.</code><code class="descname">DistributedLoadH</code><a class="reference internal" href="_modules/beam.html#DistributedLoadH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.DistributedLoadH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distributed horizontal load, described by its functional form and application interval.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wind_load</span> <span class="o">=</span> <span class="n">DistributedLoadH</span><span class="p">(</span><span class="s2">&quot;10*x**2+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Quadratically growing load for 1&lt;y&lt;3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="beam.DistributedLoadV">
+<em class="property">class </em><code class="descclassname">beam.</code><code class="descname">DistributedLoadV</code><a class="reference internal" href="_modules/beam.html#DistributedLoadV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.DistributedLoadV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distributed vertical load, described by its functional form and application interval.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snow_load</span> <span class="o">=</span> <span class="n">DistributedLoadV</span><span class="p">(</span><span class="s2">&quot;10*x+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># Linearly growing load for 0&lt;x&lt;2</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 
