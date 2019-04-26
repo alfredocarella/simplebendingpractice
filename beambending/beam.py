@@ -203,7 +203,20 @@ class Beam:
 
         ax1 = fig.add_subplot(4, 1, 1)
         ax1.set_title("Loaded beam diagram")
+        self.plot_beam_diagram(ax1)
 
+        ax2 = fig.add_subplot(4, 1, 2)
+        self.plot_normal_force(ax2)
+
+        ax3 = fig.add_subplot(4, 1, 3)
+        self.plot_shear_force(ax3)
+
+        ax4 = fig.add_subplot(4, 1, 4)
+        self.plot_bending_moment(ax4)
+
+        return fig
+
+    def plot_beam_diagram(self, ax1):
         plot01_params = {'ylabel': "Beam loads", 'yunits': r'kN / m',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "g",
@@ -211,25 +224,23 @@ class Beam:
         self._plot_analytical(ax1, sum(self._distributed_forces_y), **plot01_params)
         self._draw_beam_schematic(ax1)
 
-        ax2 = fig.add_subplot(4, 1, 2)
+    def plot_normal_force(self, ax2):
         plot02_params = {'ylabel': "Normal force", 'yunits': r'kN',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "b"}
         self._plot_analytical(ax2, sum(self._normal_forces), **plot02_params)
 
-        ax3 = fig.add_subplot(4, 1, 3)
+    def plot_shear_force(self, ax3):
         plot03_params = {'ylabel': "Shear force", 'yunits': r'kN',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "r"}
         self._plot_analytical(ax3, sum(self._shear_forces), **plot03_params)
 
-        ax4 = fig.add_subplot(4, 1, 4)
+    def plot_bending_moment(self, ax4):
         plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
                          'xlabel': "Beam axis", 'xunits': "m",
                          'color': "y"}
         self._plot_analytical(ax4, sum(self._bending_moments), **plot04_params)
-
-        return fig
 
     def _plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
                         yunits: str = "", xlabel: str = "", ylabel: str = "", color=None, inverted=False):
