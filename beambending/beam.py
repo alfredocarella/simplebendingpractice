@@ -189,7 +189,14 @@ class Beam:
         return F_Ax, F_Ay, F_By
 
     def plot(self):
-        """Plots the loaded beam, with shear force and bending moment diagrams.
+        """Generates a single figure with 4 plots corresponding respectively to:
+
+        - a schematic of the loaded beam
+        - normal force diagram,
+        - shear force diagram, and
+        - bending moment diagram.
+
+        These plots can be generated separately with dedicated functions.
 
         Returns
         -------
@@ -202,7 +209,6 @@ class Beam:
         fig.subplots_adjust(hspace=0.4)
 
         ax1 = fig.add_subplot(4, 1, 1)
-        ax1.set_title("Loaded beam diagram")
         self.plot_beam_diagram(ax1)
 
         ax2 = fig.add_subplot(4, 1, 2)
@@ -216,31 +222,52 @@ class Beam:
 
         return fig
 
-    def plot_beam_diagram(self, ax1):
+    def plot_beam_diagram(self, ax=None):
+        """Returns a schematic of the beam and all the loads applied on it.
+        """
         plot01_params = {'ylabel': "Beam loads", 'yunits': r'kN / m',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "g",
                          'inverted': True}
-        self._plot_analytical(ax1, sum(self._distributed_forces_y), **plot01_params)
-        self._draw_beam_schematic(ax1)
+        if ax is None:
+            ax = plt.figure(figsize=(6, 2.5)).add_subplot(1,1,1)
+        ax.set_title("Loaded beam diagram")
+        self._plot_analytical(ax, sum(self._distributed_forces_y), **plot01_params)
+        self._draw_beam_schematic(ax)
+        return ax.get_figure()
 
-    def plot_normal_force(self, ax2):
+    def plot_normal_force(self, ax=None):
+        """Returns a plot of the normal force as a function of the x-coordinate.
+        """
         plot02_params = {'ylabel': "Normal force", 'yunits': r'kN',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "b"}
-        self._plot_analytical(ax2, sum(self._normal_forces), **plot02_params)
+        if ax is None:
+            ax = plt.figure(figsize=(6, 2.5)).add_subplot(1,1,1)
+        self._plot_analytical(ax, sum(self._normal_forces), **plot02_params)
+        return ax.get_figure()
 
-    def plot_shear_force(self, ax3):
+    def plot_shear_force(self, ax=None):
+        """Returns a plot of the shear force as a function of the x-coordinate.
+        """
         plot03_params = {'ylabel': "Shear force", 'yunits': r'kN',
                          # 'xlabel':"Beam axis", 'xunits':"m",
                          'color': "r"}
-        self._plot_analytical(ax3, sum(self._shear_forces), **plot03_params)
+        if ax is None:
+            ax = plt.figure(figsize=(6, 2.5)).add_subplot(1,1,1)
+        self._plot_analytical(ax, -1* sum(self._shear_forces), **plot03_params)
+        return ax.get_figure()
 
-    def plot_bending_moment(self, ax4):
+    def plot_bending_moment(self, ax=None):
+        """Returns a plot of the bending moment as a function of the x-coordinate.
+        """
         plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
                          'xlabel': "Beam axis", 'xunits': "m",
                          'color': "y"}
-        self._plot_analytical(ax4, sum(self._bending_moments), **plot04_params)
+        if ax is None:
+            ax = plt.figure(figsize=(6, 2.5)).add_subplot(1,1,1)
+        self._plot_analytical(ax, -1* sum(self._bending_moments), **plot04_params)
+        return ax.get_figure()
 
     def _plot_analytical(self, ax: plt.axes, sym_func, title: str = "", maxmin_hline: bool = True, xunits: str = "",
                         yunits: str = "", xlabel: str = "", ylabel: str = "", color=None, inverted=False):
@@ -271,7 +298,7 @@ class Beam:
         if color:
             a, b = x_vec[0], x_vec[-1]
             verts = [(a, 0)] + list(zip(x_vec, y_vec)) + [(b, 0)]
-            poly = Polygon(verts, facecolor=color, edgecolor='0.5', alpha=0.5)
+            poly = Polygon(verts, facecolor=color, edgecolor='0.5', alpha=0.4)
             ax.add_patch(poly)
 
         if maxmin_hline:
@@ -291,7 +318,8 @@ class Beam:
                             xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
                             textcoords='offset points', size=12)
 
-        ax.set_xlim([x_vec.min(), x_vec.max()])
+        xspan = x_vec.max() - x_vec.min()
+        ax.set_xlim([x_vec.min() - 0.01 * xspan, x_vec.max() + 0.01 * xspan])
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
 
@@ -319,31 +347,14 @@ class Beam:
         # Draw beam body
         beam_left, beam_right = self._x0, self._x1
         beam_length = beam_right - beam_left
-        beam_height = yspan * 0.03
+        beam_height = yspan * 0.06
         beam_bottom = -(0.75) * beam_height
         beam_top = beam_bottom + beam_height
         beam_body = Rectangle(
             (beam_left, beam_bottom), beam_length, beam_height, fill=True,
-            facecolor="black", clip_on=False
+            facecolor="brown", clip_on=False, alpha=0.7
         )
-
-        # Draw arrows at point loads
-        f_ax, f_ay, f_by = self.get_reaction_forces()
-
-        for load in self._point_loads_y():
-            if load[0] < 0:
-                y0, y1 = beam_top, beam_top + yspan * 0.17
-            else:
-                y0, y1 = beam_bottom, beam_bottom - yspan * 0.17
-            ax.annotate("",
-                        xy=(load[1], y0), xycoords='data',
-                        xytext=(load[1], y1), textcoords='data',
-                        arrowprops=dict(arrowstyle="simple", color="blue"),
-                        )
-
-        ax.spines['left'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.spines['top'].set_visible(False)
+        ax.add_patch(beam_body)
 
         # Markers at beam supports
         fixed_support = Polygon(np.array([self.fixed_support + 0.01*xspan*np.array((-1, -1, 0, 1, 1)), 
@@ -353,8 +364,41 @@ class Beam:
                            Polygon(np.array([self.rolling_support + 0.01*xspan*np.array((-1, -1, 1, 1)), 
                                             beam_bottom + 0.05*np.array((-1.5,-1.25, -1.25, -1.5))*yspan]).T)]
 
-        patches = PatchCollection([beam_body,fixed_support, *rolling_support], facecolor="black")
-        ax.add_collection(patches)
+        supports = PatchCollection([fixed_support, *rolling_support], facecolor="black")
+        ax.add_collection(supports)
+
+        # Draw arrows at point loads
+        arrowprops = dict(arrowstyle="simple", color="darkgreen", shrinkA=0.1, mutation_scale=18)
+        for load in self._point_loads_y():
+            x0 = x1 = load[1]
+            if load[0] < 0:
+                y0, y1 = beam_top, beam_top + 0.17 * yspan
+            else:
+                y0, y1 = beam_bottom, beam_bottom - 0.17 * yspan
+            ax.annotate("",
+                        xy=(x0, y0), xycoords='data',
+                        xytext=(x1, y1), textcoords='data',
+                        arrowprops=arrowprops
+                        )
+
+        for load in self._point_loads_x():
+            x0 = load[1]
+            y0 = y1 = (beam_top + beam_bottom) / 2.0
+            if load[0] < 0:
+                x1 = x0 + xspan * 0.05
+            else:
+                x1 = x0 - xspan * 0.05
+            ax.annotate("",
+                        xy=(x0, y0), xycoords='data',
+                        xytext=(x1, y1), textcoords='data',
+                        arrowprops=arrowprops
+                        )
+
+        ax.axes.get_yaxis().set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+        ax.spines['left'].set_visible(False)
+        # ax.tick_params(left="off")
 
     def _update_loads(self):
         x = sympy.symbols("x")
