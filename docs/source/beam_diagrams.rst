@@ -21,9 +21,10 @@ We have already established that for a body to be at rest, the **vector sum** of
 
    **PLACEHOLDER FIG:** A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)
 
+.. todo:: Replace figure above by one without author rights.
+
 Furthermore, for a system to be at rest, each of its components need to be at rest.
-This means that Eq. :eq:`static` must be satisfied for each of our system's components.
-This is exemplified in the figure below, where according to the action-reaction principle :math:`\mathbf{F_{1C}} = \mathbf{-F_{2C}}`.
+This means that Eq. :eq:`static` must be satisfied **for each** component in our system as shown in the figure below.
 
 .. figure:: /_static/placeholder_02.png
    :scale: 50 %
@@ -32,36 +33,65 @@ This is exemplified in the figure below, where according to the action-reaction 
 
    **PLACEHOLDER FIG:** For a system to be in equilibrium, each of its subsystems **must** be in equilibrium.
 
-So far, we have only considered subsystems consisting of one or more rigid bodies that compose the system.
-This means that, so far, each rigid body belonged to *exactly one* subsystem.
-However, Eq. :eq:`static` is even more general than that, since it applies to any arbitrary subset of a body.
-In the next section, we are going to extract some insights from this.
+.. todo:: Replace figure above by one without author rights.
+
+Note that :math:`\mathbf{F_{1C}} = \mathbf{-F_{2C}}`, according to the *action and reaction principle*.
+If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
+As a self-test, the illustration in this `applet
+<https://www.edumedia-sciences.com/en/media/80-action-reaction-principle>`_ should be completely obvious to you.
+
+So far, we have only thought about reaction forces as applied *externally* to one or more rigid bodies.
+In other words, each rigid body has been considered to be fully contained in a single subsystem.
+However, Eq. :eq:`static` can tell us much more than that if we lift that restriction.
+This equation applies to every arbitrary subset of a body, and not only to full bodies.
+We are going to exploit this to a larger extent in the next section.
 
 
-Internal forces
----------------
+Internal beam loads
+-------------------
 
 To state it explicitly once more, the calculation of internal forces for mechanical systems at rest will be based on:
+
    #. The necessary and sufficient conditions for static equilibrium of a system, namely Eq. :eq:`static`
    #. The fact that any arbitrary part of a system is on itself a new system.
 
 So... what if we chose some of the imaginary boundaries that split our system so that they *cut through* a body?
-Let's consider a system consisting of a single beam, as depicted below, and analyze what happens internally to this body.
+Let's consider a system consisting of a single *beam* [#beam]_ and analyze what happens internally to this body.
 
+.. [#beam] A *beam* will be defined in this context as a long, slender component (i.e. whose length along its main axis is significantly larger than on directions perpendicular to it).
 
 Normal force [N(x)]
 *******************
 
 We reserve the name of *normal forces* for those who are perpendicular to a given plane of interest.
-In the context of beams (i.e. slender components), we subdivide a body into subsystems by drawing planes perpendicular to its main axis, as shown in the figure below.
+In the context of beams (i.e. slender components), we subdivide a body into subsystems by drawing planes perpendicular to its main axis (*x-axis*), as shown in the figure below.
 Normal forces are hence perpendicular to these planes, i.e. parallel to the beam's main axis.
 
-.. figure:: /_static/placeholder_03.png
+The first introductory problem to consider will be a 6 meter long horizontal beam resting on two supports:
+
+  * a roller support at :math:`x=0`
+  * a pinned support at :math:`x=3m`
+
+.. container:: toggle
+
+    .. container:: header
+
+        **Show/Hide code for generating the image below**
+
+    .. literalinclude:: /../../examples/example_normal0.py
+       :lines: 10-24
+       :emphasize-lines: 1-5
+       :dedent: 4
+       :linenos:
+
+.. .. figure:: /_static/placeholder_03.png
+
+.. figure:: /../../examples/example_normal0.png
    :scale: 100 %
    :align: center
-   :alt: Beam on two supports
+   :alt: Beam on two supports with horizontal load
 
-   **PLACEHOLDER FIG:** The beam is held in place by a rolling support at *A* and a fixed support at *B*.
+   The beam is held in place by a rolling support at *A* and a fixed support at *B*.
    A normal (tensile) force :math:`F_{1} = 5\text{kN}` is acting at the right end of the beam.
 
 Let's find the reaction forces first, so we can proceed with our analysis.
@@ -76,15 +106,18 @@ Let's find the reaction forces first, so we can proceed with our analysis.
       \end{array}
     \right\} \implies \underline{F_A = F_{Bz}} = 0
 
+.. note:: To keep matters simple, the weight of the beam is neglected throughout this analysis.
+
 With the information about the reaction forces at supports *A* and *B*, let's see what happens to the subsystem between the plane 2-2 (located between support *B* and the right end of the beam) and the plane 3-3 (exactly at the right end of the beam, where the load :math:`\mathbf{F_1}` is acting).
 
-.. figure:: /_static/placeholder_04.png
+.. .. figure:: /_static/placeholder_04.png
+
+.. figure:: /../../examples/example_normal0a.png
    :scale: 100 %
    :align: center
-   :alt: Subsystem between sections 2-2 and 3-3
+   :alt: Subsystem between sections 2-2 and 3-3 under a horizontal external load.
 
-   **PLACEHOLDER FIG:** Subsystem between planes 2-2 and 3-3, to the right of support *B*.
-   Note that the weight of the beam is always neglected.
+   Subsystem between planes 2-2 and 3-3, to the right of support *B*.
 
 Let's apply the equilibrium equations to this subsystem.
 Since we only have *colinear* forces along the x-axis (we neglect the height of the beam), we write the sum of forces along this direction.
@@ -92,29 +125,34 @@ The other equilibrium equations are identically zero (no vertical forces or mome
 
 .. math::
 
-    \sum{F_x} = 0 \implies N - F_{1} = 0 \implies \underline{N|_{x=x_2} = 5\text{kN}}
+    \sum{F_x} = 0 \implies F_{1} - N = 0 \implies \underline{N|_{x=x_2} = 5\text{kN}}
 
 Here we have found the internal normal force :math:`\mathbf{N}` to be equal to 5kN.
-The positive sign corresponds to our choice of the orientation of :math:`\mathbf{N}`.
-It is customary to define :math:`\mathbf{N}` as positive when pointing outwards.
+The positive sign corresponds to the standard convention.
+The normal force :math:`\mathbf{N}` is defined as positive when it points outwards.
 It follows from this that tensile forces are positive and compression forces negative.
-The result would be the same for any choice of the line 2-2 between the support *B* and the right end of the beam.
+The result is the same for any plane located between the support *B* (section 2-2) and the right end of the beam (section 3-3).
 
-Next, let's consider an extended subsystem between planes 1-1 and 3-3 and perform the same analysis
+Next, let's consider a slightly different subsystem between planes 1-1 and 3-3 and perform the same analysis
 
-.. figure:: /_static/placeholder_05.png
+.. .. figure:: /_static/placeholder_05.png
+
+.. figure:: /../../examples/example_normal0b.png
    :scale: 100 %
    :align: center
-   :alt: Subsystem between sections 1-1 and 3-3
+   :alt: Subsystem between sections 1-1 and 3-3 under a horizontal external load.
 
-   **PLACEHOLDER FIG:** Subsystem between planes 1-1 (btw supports *A* and *B*) and 3-3 (beam's right end)
+   Subsystem between planes 1-1 (btw supports *A* and *B*) and 3-3 (beam's right end)
 
 .. math::
 
     \sum{F_x} = 0 \implies N + F_{Bx} - F_{1} = 0 \implies \underline{N|_{x=x_1} = 0}
 
-If we join these two results, we can plot the *internal* normal force :math:`\mathbf{N}` as a function of the :math:`\mathbf{x}` coordinate, as :math:`\mathbf{N(x)}`.
-In this simple case, what we end up with is the following piecewise function:
+The normal force :math:`\mathbf{N}` across the section 1-1 is zero.
+Correspondingly, the result is the same for any plane located between supports A (section 1-1) and B (section 3-3).
+
+If we join these last two results, we can reconstruct the normal force :math:`\mathbf{N}` along the full beam span as a function of the :math:`\mathbf{x}` coordinate, which we will predictably call :math:`\mathbf{N(x)}`.
+In this simple case, we end up with the following piecewise function:
 
 .. math::
 
@@ -125,9 +163,20 @@ In this simple case, what we end up with is the following piecewise function:
       \end{array}
     \right.
 
-.. todo::
+.. container:: toggle
 
-   Add plot for function and code for Python example using the *beambending* package.
+    .. container:: header
+
+        **Show/Hide code for generating the image below**
+
+    .. literalinclude:: /../../examples/example_normal1.py
+       :lines: 10-14
+       :dedent: 4
+
+.. figure:: /../../examples/example_normal1.png
+   :scale: 70 %
+   :align: center
+   :alt: Piecewise function describing the calculated normal force :math:`\mathbf{N(x)}`
 
 
 Shear force [V(x)] and moment [M(X)]
@@ -136,12 +185,27 @@ Shear force [V(x)] and moment [M(X)]
 Let's do a similar analysis of the same beam for vertical forces.
 Instead of the horizontal force :math:`\mathbf{F_1}`, consider now a vertical force :math:`\mathbf{P_1} = 10\text{kN}` acting at the beam's right end (plane 3-3).
 
-.. figure:: /_static/placeholder_06.png
+.. container:: toggle
+
+    .. container:: header
+
+        **Show/Hide code for generating the image below**
+
+    .. literalinclude:: /../../examples/example_shear0.py
+       :lines: 10-24
+       :emphasize-lines: 1-5
+       :dedent: 4
+       :linenos:
+
+.. .. figure:: /_static/placeholder_06.png
+
+.. figure:: /../../examples/example_shear0.png
    :scale: 100 %
    :align: center
-   :alt: Insert alternative text here
+   :alt: Beam on two supports with vertical load
 
-   **PLACEHOLDER FIG:** Insert caption here **Distance between 2-2 and 3-3 needs to increase to 2m**
+   The beam is held in place by a rolling support at *A* and a fixed support at *B*.
+   A force :math:`P_{1} = 10\text{kN}` directed upwards is acting at the right end of the beam.
 
 In the same way as before, we start by finding the reaction forces at the supports *A* and *B*.
 
@@ -155,15 +219,14 @@ where :math:`L=6\text{m}` is the length of the beam, and :math:`d=3\text{m}` is 
 
 Next, we draw a free body diagram of the beam section comprised between planes 2-2 and 3-3, and apply Eq. :eq:`static` once more.
 
-.. todo::
-   Change the distance between planes 2-2 and 3-3- from 1m to 2m. This eliminates periodic decimals and avoids potential confusion between V=10kN and M=10kNm
+.. .. figure:: /_static/placeholder_07.png
 
-.. figure:: /_static/placeholder_07.png
+.. figure:: /../../examples/example_shear0a.png
    :scale: 100 %
    :align: center
-   :alt: Insert alternative text here
+   :alt: Subsystem between sections 2-2 and 3-3 under a vertical external load.
 
-   **PLACEHOLDER FIG:** Insert caption here
+   Subsystem between planes 2-2 and 3-3, to the right of support *B*.
 
 .. math::
 
@@ -171,6 +234,7 @@ Next, we draw a free body diagram of the beam section comprised between planes 2
     \sum{M} = 0 \implies M(x) - \mathbf{P_1} (L-x) = 0 \implies M(x) = \mathbf{P_1} (L-x)
 
 The vertical plane 2-2, corresponds to :math:`x=4`, hence 
+
    - :math:`V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}`, and
    - :math:`M|_{2-2} = M(x)|_{x=4} = \underline{20 \text{kNm}}`.
 
@@ -179,14 +243,17 @@ To that end, we will consider the beam section between planes 1-1 and 2-2, as sh
 
 .. todo::
    Clarify the sign convention:
+
       - Explain that :math:`V_{2-2}` and :math:`M_{2-2}` to the right of section 1-2 are (equal and opposite) reactions to :math:`V_{2-2}` and :math:`M_{2-2}` to the left of section 2-3.
 
-.. figure:: /_static/placeholder_08.png
+.. .. figure:: /_static/placeholder_08.png
+
+.. figure:: /../../examples/example_shear0b.png
    :scale: 100 %
    :align: center
-   :alt: Insert alternative text here
+   :alt: Subsystem between sections 1-1 and 3-3 under a vertical external load.
 
-   **PLACEHOLDER FIG:** Insert caption here
+   Subsystem between planes 1-1 (btw supports *A* and *B*) and 3-3 (beam's right end)
 
 The equations for sum of forces and sum of moments become then:
 
@@ -201,29 +268,44 @@ The equations for sum of forces and sum of moments become then:
     \begin{array}{rrl}
       & \mathbf{\sum{M}} = M_{1-1} + F_{Bz}(d-x) - V_{2-2}(4\text{m}-x) &= 0 \\ 
       & M_{1-1} + 20\text{kN}(3\text{m}-x) - 10 \text{kN}(4\text{m}-x) &= 0\\ 
-      \text{since } x|_{1-1}=2\text{m} \implies & M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(4\text{m}-2\text{m}) &= 0\\
-      & M_{1-1} &= \underline{0}
+      \text{since } x|_{1-1}=2\text{m} \implies & M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(6\text{m}-2\text{m}) &= 0\\
+      & M_{1-1} &= \underline{-20 \text{kNm}}
     \end{array}
     
-.. todo::
-
-   Add plot for function and code for Python example using the *beambending* package.
-
 .. note::
    This result would (of course) have been the same if our free-body diagram had included the whole beam to the right of the plane 1-1.
    The same is true for a free-body of the left side of the beam.
    In order to make sure you will understand the next section, I suggest you **stop reading for a moment and try to verify this**.
 
+As an exercise, you can follow this procedure and calculate the general result for an arbitrary x-coordinate.
+You should obtain a function like the one shown in the image below.
+
+.. container:: toggle
+
+    .. container:: header
+
+        **Show/Hide code for generating the image below**
+
+    .. literalinclude:: /../../examples/example_shear1.py
+       :lines: 11-17
+       :dedent: 4
+
+.. figure:: /../../examples/example_shear1.png
+   :scale: 70 %
+   :align: center
+   :alt: Piecewise function describing the calculated shear force :math:`\mathbf{V(x)}`
+
 
 Relationship between shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}`
 -----------------------------------------------------------------------------------------------
- The analysis in the section above was restricted to point loads in order to keep it simple.
- However, it applies universally for distributed loads as well, as we are going to see next.
+The analysis in the section above was restricted to point loads in order to keep it simple.
+However, it applies universally for distributed loads as well, as we are going to see next.
 
 It may not be obvious at first sight, but the functions corresponding to shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}` are intimately correlated (i.e. you can use one of them for calculating the other one).
 We are going to prove this by performing the same analysis explained above to a differential beam segment of length :math:`\Delta x`.
 
-By this point, our analysis methodology should be clear. It consists of three steps:
+By this point, our analysis methodology should be clear. It consists of the following steps:
+
    #. Choosing an arbitrary sector of a beam.
    #. Drawing a free-body diagram of the partition.
    #. Applying Newton's first law to the free-body diagram.
@@ -239,6 +321,8 @@ Let's consider an arbitrarily loaded beam as shown in the figure below.
 
    **PLACEHOLDER FIG:** Insert caption here
 
+.. todo:: Create a digital version of the figure above.
+
 Let's draw a free-body diagram of a given beam segment :math:`[x_0 \leq x \leq x_0+\Delta x]`, where :math:`\mathbf{P_z}(x)` is a distributed load applied to the beam.
 
 .. figure:: /_static/placeholder_10.png
@@ -247,6 +331,8 @@ Let's draw a free-body diagram of a given beam segment :math:`[x_0 \leq x \leq x
    :alt: Insert alternative text here
 
    **PLACEHOLDER FIG:** Insert caption here
+
+.. todo:: Create a digital version of the figure above.
 
 The equilibrium of vertical forces yields the following:
 
@@ -274,17 +360,4 @@ The equilibrium of moments can be written as:
 
 which presents explicitly the relationship between :math:`M(x)` and :math:`V(x)`: the rate of change of the bending moment at a given point is equal to the shear force at that point.
 
-.. todo::
-
-   Replace the figure below by a Python example using the **beambending** package
-
-.. figure:: /_static/placeholder_12.png
-   :scale: 100 %
-   :align: center
-   :alt: Insert alternative text here
-
-   **PLACEHOLDER FIG:** Insert caption here
-
-
-
-
+Ok, that was it. For some worked examples, take a look at the **Examples** section next.

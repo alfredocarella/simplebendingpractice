@@ -6,9 +6,9 @@ Welcome to beambending
 
 Okay, which concerns does this miniproject address?
 
-* You are taking your first course on statics and you struggle with visualizing shear forces and bending moments diagrams.
-* You feel you understsnd better when you have some examples you can modify at will.
-* You just want to double-check that you are doing things right.
+* You are taking your first course on statics and you would like to have a more interactive way of visualizing shear forces and bending moments diagrams.
+* You feel you understand better when you have some examples you can modify at will.
+* You just want to double-check that you are doing things right and test yourself with some new problems.
 
 If you feel like some of these statements describe you, it may be worth to take a look at this package.
 
