@@ -473,39 +473,33 @@ We are going to prove this by performing the same analysis explained above to a 
 <li><p>Applying Newton’s first law to the free-body diagram.</p></li>
 </ol>
 </div></blockquote>
-<p>Let’s consider an arbitrarily loaded beam as shown in the figure below.</p>
+<p>Let’s consider an arbitrarily loaded beam as shown in the figure below, where <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span> is an arbitrarily distributed load applied to the beam.</p>
 <div class="figure align-center" id="id10">
-<a class="reference internal image-reference" href="_images/placeholder_09.png"><img alt="Insert alternative text here" src="_images/placeholder_09.png" style="width: 547.0px; height: 151.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="_images/example_distributed0.png"><img alt="Insert alternative text here" src="_images/example_distributed0.png" style="width: 621.0px; height: 221.0px;" /></a>
+<p class="caption"><span class="caption-text">Generic problem consisting of a beam under an arbitrarily distributed load <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
-<div class="admonition-todo admonition" id="index-3">
-<p class="admonition-title">Todo</p>
-<p>Create a digital version of the figure above.</p>
-</div>
-<p>Let’s draw a free-body diagram of a given beam segment <span class="math notranslate nohighlight">\([x_0 \leq x \leq x_0+\Delta x]\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span> is a distributed load applied to the beam.</p>
+<p>Let’s zoom-in and draw a free-body diagram of a given beam segment <span class="math notranslate nohighlight">\([x_0 \leq x \leq x_0+\Delta x]\)</span>.</p>
 <div class="figure align-center" id="id11">
-<a class="reference internal image-reference" href="_images/placeholder_10.png"><img alt="Insert alternative text here" src="_images/placeholder_10.png" style="width: 521.0px; height: 201.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="_images/example_distributed1.png"><img alt="Insert alternative text here" src="_images/example_distributed1.png" style="width: 669.0px; height: 220.0px;" /></a>
+<p class="caption"><span class="caption-text">Free body diagram of a differential segment of the beam</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
-<div class="admonition-todo admonition" id="index-4">
-<p class="admonition-title">Todo</p>
-<p>Create a digital version of the figure above.</p>
-</div>
-<p>The equilibrium of vertical forces yields the following:</p>
+<p>The equilibrium of vertical forces yields then the following:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{rrl}
   &amp; \mathbf{\sum{F_z}} &amp;= 0 \\
-  &amp; V(x + \Delta x) -V(x) + \mathbf{P_z}(x) \Delta x &amp;= 0 \\
-  &amp; \cfrac{V(x + \Delta x) -V(x)}{\Delta x} &amp;= -\mathbf{P_z}(x) \\
+  &amp; V(x + \Delta x) -V(x) + \overline{\mathbf{P_z}}(x) \Delta x &amp;= 0 \\
+  &amp; \cfrac{V(x + \Delta x) -V(x)}{\Delta x} &amp;= -\overline{\mathbf{P_z}}(x) \\
   \lim_{\Delta x \to 0} &amp; \boxed{\cfrac{dV(x)}{dx} = -\mathbf{P_z}(x)}
 \end{array}\end{split}\]</div>
 <p>which in words means that the rate of change of the shear force is equal to (minus) the value of the distributed load acting on a given x-coordinate.</p>
+<p>Note that in the expression above, <span class="math notranslate nohighlight">\(\overline{\mathbf{P_z}}(x)\)</span> represents the average value of <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span> in the given interval.
+As <span class="math notranslate nohighlight">\(\Delta x\)</span> goes to zero, <span class="math notranslate nohighlight">\(\overline{\mathbf{P_z}}(x)\)</span> converges to <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span>.</p>
 <p>The equilibrium of moments can be written as:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{rrl}
   &amp; \mathbf{\sum M|_{x + \Delta x}} &amp;= 0 \\
-  &amp; M(x + \Delta x) -M(x) - V(x) \Delta x + (\mathbf{P_z}(x) \Delta x \cdot \frac{\Delta x}{2}) &amp;= 0 \\
-  &amp; \cfrac{M(x + \Delta x) -M(x)}{\Delta x} + \underbrace{(\mathbf{P_z}(x) \Delta x \cdot \frac{\Delta x}{2})}_{\Delta x^2\to 0} &amp;= V(x) \\
+  &amp; M(x + \Delta x) -M(x) - V(x) \Delta x + (\overline{\mathbf{P_z}}(x) \Delta x \cdot \frac{\Delta x}{2}) &amp;= 0 \\
+  &amp; \cfrac{M(x + \Delta x) -M(x)}{\Delta x} + \underbrace{(\overline{\mathbf{P_z}}(x) \Delta x \cdot \frac{\Delta x}{2})}_{\Delta x^2\to 0} &amp;= V(x) \\
   \lim_{\Delta x \to 0} &amp; \boxed{\cfrac{dM(x)}{dx} = V(x)}
 \end{array}\end{split}\]</div>
 <p>which presents explicitly the relationship between <span class="math notranslate nohighlight">\(M(x)\)</span> and <span class="math notranslate nohighlight">\(V(x)\)</span>: the rate of change of the bending moment at a given point is equal to the shear force at that point.</p>
