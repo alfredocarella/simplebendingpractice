@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -89,7 +90,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/example_1.html">Beam with one point load and two distributed loads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/example_1.html">Beam with two point loads and two distributed loads</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -348,7 +349,14 @@
         <span class="k">return</span> <span class="n">F_Ax</span><span class="p">,</span> <span class="n">F_Ay</span><span class="p">,</span> <span class="n">F_By</span>
 
     <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Plots the loaded beam, with shear force and bending moment diagrams.</span>
+        <span class="sd">&quot;&quot;&quot;Generates a single figure with 4 plots corresponding respectively to:</span>
+
+<span class="sd">        - a schematic of the loaded beam</span>
+<span class="sd">        - normal force diagram,</span>
+<span class="sd">        - shear force diagram, and</span>
+<span class="sd">        - bending moment diagram.</span>
+
+<span class="sd">        These plots can be generated separately with dedicated functions.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -361,7 +369,6 @@
         <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
 
         <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Loaded beam diagram&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_beam_diagram</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
 
         <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -375,31 +382,52 @@
 
         <span class="k">return</span> <span class="n">fig</span>
 
-    <span class="k">def</span> <span class="nf">plot_beam_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_beam_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a schematic of the beam and all the loads applied on it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plot01_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Beam loads&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN / m&#39;</span><span class="p">,</span>
                          <span class="c1"># &#39;xlabel&#39;:&quot;Beam axis&quot;, &#39;xunits&#39;:&quot;m&quot;,</span>
                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span>
                          <span class="s1">&#39;inverted&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_y</span><span class="p">),</span> <span class="o">**</span><span class="n">plot01_params</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_beam_schematic</span><span class="p">(</span><span class="n">ax1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Loaded beam diagram&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_y</span><span class="p">),</span> <span class="o">**</span><span class="n">plot01_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_beam_schematic</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">plot_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a plot of the normal force as a function of the x-coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plot02_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Normal force&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN&#39;</span><span class="p">,</span>
                          <span class="c1"># &#39;xlabel&#39;:&quot;Beam axis&quot;, &#39;xunits&#39;:&quot;m&quot;,</span>
                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_normal_forces</span><span class="p">),</span> <span class="o">**</span><span class="n">plot02_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_normal_forces</span><span class="p">),</span> <span class="o">**</span><span class="n">plot02_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">plot_shear_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax3</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_shear_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a plot of the shear force as a function of the x-coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plot03_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Shear force&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN&#39;</span><span class="p">,</span>
                          <span class="c1"># &#39;xlabel&#39;:&quot;Beam axis&quot;, &#39;xunits&#39;:&quot;m&quot;,</span>
                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;r&quot;</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax3</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="p">),</span> <span class="o">**</span><span class="n">plot03_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="p">),</span> <span class="o">**</span><span class="n">plot03_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">plot_bending_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax4</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">plot_bending_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a plot of the bending moment as a function of the x-coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plot04_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Bending moment&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN \cdot m&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Beam axis&quot;</span><span class="p">,</span> <span class="s1">&#39;xunits&#39;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax4</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bending_moments</span><span class="p">),</span> <span class="o">**</span><span class="n">plot04_params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_analytical</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bending_moments</span><span class="p">),</span> <span class="o">**</span><span class="n">plot04_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_plot_analytical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">sym_func</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">maxmin_hline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">xunits</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                         <span class="n">yunits</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inverted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -430,7 +458,7 @@
         <span class="k">if</span> <span class="n">color</span><span class="p">:</span>
             <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">x_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_vec</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">verts</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">x_vec</span><span class="p">,</span> <span class="n">y_vec</span><span class="p">))</span> <span class="o">+</span> <span class="p">[(</span><span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
-            <span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">maxmin_hline</span><span class="p">:</span>
@@ -450,7 +478,8 @@
                             <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">],</span> <span class="n">y_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
                             <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">x_vec</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_vec</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+        <span class="n">xspan</span> <span class="o">=</span> <span class="n">x_vec</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">x_vec</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">x_vec</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">xspan</span><span class="p">,</span> <span class="n">x_vec</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">xspan</span><span class="p">])</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
@@ -478,31 +507,14 @@
         <span class="c1"># Draw beam body</span>
         <span class="n">beam_left</span><span class="p">,</span> <span class="n">beam_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span>
         <span class="n">beam_length</span> <span class="o">=</span> <span class="n">beam_right</span> <span class="o">-</span> <span class="n">beam_left</span>
-        <span class="n">beam_height</span> <span class="o">=</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.03</span>
+        <span class="n">beam_height</span> <span class="o">=</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.06</span>
         <span class="n">beam_bottom</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span> <span class="o">*</span> <span class="n">beam_height</span>
         <span class="n">beam_top</span> <span class="o">=</span> <span class="n">beam_bottom</span> <span class="o">+</span> <span class="n">beam_height</span>
         <span class="n">beam_body</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span>
             <span class="p">(</span><span class="n">beam_left</span><span class="p">,</span> <span class="n">beam_bottom</span><span class="p">),</span> <span class="n">beam_length</span><span class="p">,</span> <span class="n">beam_height</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span>
         <span class="p">)</span>
-
-        <span class="c1"># Draw arrows at point loads</span>
-        <span class="n">f_ax</span><span class="p">,</span> <span class="n">f_ay</span><span class="p">,</span> <span class="n">f_by</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reaction_forces</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads_y</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">beam_top</span><span class="p">,</span> <span class="n">beam_top</span> <span class="o">+</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.17</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">beam_bottom</span><span class="p">,</span> <span class="n">beam_bottom</span> <span class="o">-</span> <span class="n">yspan</span> <span class="o">*</span> <span class="mf">0.17</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-                        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
-                        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y1</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
-                        <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;simple&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">),</span>
-                        <span class="p">)</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">beam_body</span><span class="p">)</span>
 
         <span class="c1"># Markers at beam supports</span>
         <span class="n">fixed_support</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">xspan</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> 
@@ -512,8 +524,41 @@
                            <span class="n">Polygon</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">xspan</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> 
                                             <span class="n">beam_bottom</span> <span class="o">+</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">))</span><span class="o">*</span><span class="n">yspan</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)]</span>
 
-        <span class="n">patches</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">([</span><span class="n">beam_body</span><span class="p">,</span><span class="n">fixed_support</span><span class="p">,</span> <span class="o">*</span><span class="n">rolling_support</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">patches</span><span class="p">)</span>
+        <span class="n">supports</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">([</span><span class="n">fixed_support</span><span class="p">,</span> <span class="o">*</span><span class="n">rolling_support</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">supports</span><span class="p">)</span>
+
+        <span class="c1"># Draw arrows at point loads</span>
+        <span class="n">arrowprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;simple&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkgreen&quot;</span><span class="p">,</span> <span class="n">shrinkA</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">mutation_scale</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads_y</span><span class="p">():</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">beam_top</span><span class="p">,</span> <span class="n">beam_top</span> <span class="o">+</span> <span class="mf">0.17</span> <span class="o">*</span> <span class="n">yspan</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">beam_bottom</span><span class="p">,</span> <span class="n">beam_bottom</span> <span class="o">-</span> <span class="mf">0.17</span> <span class="o">*</span> <span class="n">yspan</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                        <span class="n">arrowprops</span><span class="o">=</span><span class="n">arrowprops</span>
+                        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads_x</span><span class="p">():</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">load</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">beam_top</span> <span class="o">+</span> <span class="n">beam_bottom</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="k">if</span> <span class="n">load</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">x1</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">xspan</span> <span class="o">*</span> <span class="mf">0.05</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x1</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">-</span> <span class="n">xspan</span> <span class="o">*</span> <span class="mf">0.05</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                        <span class="n">arrowprops</span><span class="o">=</span><span class="n">arrowprops</span>
+                        <span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># ax.tick_params(left=&quot;off&quot;)</span>
 
     <span class="k">def</span> <span class="nf">_update_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
@@ -629,7 +674,18 @@
   
   
     
-   
+  
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
 
 </body>
 </html>

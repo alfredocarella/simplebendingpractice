@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Beam with one point load and two distributed loads &mdash; beambending 1.0 documentation</title>
+  <title>Beam with two point loads and two distributed loads &mdash; beambending 1.0 documentation</title>
   
 
   
@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Beambending Reference" href="../reference.html" />
@@ -91,7 +92,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Beam with one point load and two distributed loads</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Beam with two point loads and two distributed loads</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#specifications">Specifications</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#results">Results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#code">Code</a></li>
@@ -146,7 +147,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Beam with one point load and two distributed loads</li>
+      <li>Beam with two point loads and two distributed loads</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -165,8 +166,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="beam-with-one-point-load-and-two-distributed-loads">
-<h1>Beam with one point load and two distributed loads<a class="headerlink" href="#beam-with-one-point-load-and-two-distributed-loads" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="beam-with-two-point-loads-and-two-distributed-loads">
+<h1>Beam with two point loads and two distributed loads<a class="headerlink" href="#beam-with-two-point-loads-and-two-distributed-loads" title="Permalink to this headline">¶</a></h1>
 <p>This example demonstrates some functionality of the ´´beambending´´ package.</p>
 <div class="section" id="specifications">
 <h2>Specifications<a class="headerlink" href="#specifications" title="Permalink to this headline">¶</a></h2>
@@ -180,8 +181,19 @@
 </div>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
-<p>A beam representation with the point loads, a shear force diagram and a bending moment diagram are given below.
-Note that only the x-coordinate of the point load(s) is marked with a blue arrow (magnitude is not given).</p>
+<p>The figure below shows the load case corresponding to the description above.
+The resulting diagrams are respectively:</p>
+<ol class="arabic simple">
+<li><p>a schematic of the beam and its applied (external) loads <a class="footnote-reference brackets" href="#pointload" id="id1">1</a> ,</p></li>
+<li><p>a normal force diagram: <span class="math notranslate nohighlight">\(\mathbf{N(x)}\)</span>,</p></li>
+<li><p>a shear force diagram <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span>, and</p></li>
+<li><p>a bending moment diagram <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span>.</p></li>
+</ol>
+<dl class="footnote brackets">
+<dt class="label" id="pointload"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>The x-coordinates of the point loads are marked with green arrows, but magnitudes are not displayed in the beam schematic in order to keep the figure clean and simple.</p>
+</dd>
+</dl>
 <div class="figure align-center">
 <img alt="../_images/example_1.png" src="../_images/example_1.png" />
 </div>
@@ -270,7 +282,18 @@ Note that only the x-coordinate of the point load(s) is marked with a blue arrow
   
   
     
-   
+  
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
 
 </body>
 </html>

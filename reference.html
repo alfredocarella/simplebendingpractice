@@ -34,9 +34,10 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Beam with one point load and two distributed loads" href="examples/example_1.html" /> 
+    <link rel="prev" title="Beam with two point loads and two distributed loads" href="examples/example_1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,7 +91,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/example_1.html">Beam with one point load and two distributed loads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/example_1.html">Beam with two point loads and two distributed loads</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul class="current">
@@ -230,7 +231,14 @@ respectively.</p>
 <dl class="function">
 <dt id="beam.Beam.plot">
 <code class="descclassname">beam.Beam.</code><code class="descname">plot</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots the loaded beam, with shear force and bending moment diagrams.</p>
+<dd><p>Generates a single figure with 4 plots corresponding respectively to:</p>
+<ul class="simple">
+<li><p>a schematic of the loaded beam</p></li>
+<li><p>normal force diagram,</p></li>
+<li><p>shear force diagram, and</p></li>
+<li><p>bending moment diagram.</p></li>
+</ul>
+<p>These plots can be generated separately with dedicated functions.</p>
 <dl class="field-list">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl>
@@ -240,6 +248,30 @@ shear force diagram, and bending moment diagram.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="beam.Beam.plot_beam_diagram">
+<code class="descclassname">beam.Beam.</code><code class="descname">plot_beam_diagram</code><span class="sig-paren">(</span><em>self</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_beam_diagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a schematic of the beam and all the loads applied on it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="beam.Beam.plot_normal_force">
+<code class="descclassname">beam.Beam.</code><code class="descname">plot_normal_force</code><span class="sig-paren">(</span><em>self</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_normal_force" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a plot of the normal force as a function of the x-coordinate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="beam.Beam.plot_shear_force">
+<code class="descclassname">beam.Beam.</code><code class="descname">plot_shear_force</code><span class="sig-paren">(</span><em>self</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_shear_force" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a plot of the shear force as a function of the x-coordinate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="beam.Beam.plot_bending_moment">
+<code class="descclassname">beam.Beam.</code><code class="descname">plot_bending_moment</code><span class="sig-paren">(</span><em>self</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_bending_moment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a plot of the bending moment as a function of the x-coordinate.</p>
 </dd></dl>
 
 </div>
@@ -304,7 +336,7 @@ shear force diagram, and bending moment diagram.</p>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="examples/example_1.html" class="btn btn-neutral float-left" title="Beam with one point load and two distributed loads" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="examples/example_1.html" class="btn btn-neutral float-left" title="Beam with two point loads and two distributed loads" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -339,7 +371,18 @@ shear force diagram, and bending moment diagram.</p>
   
   
     
-   
+  
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
 
 </body>
 </html>

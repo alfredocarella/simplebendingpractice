@@ -34,9 +34,10 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Beam with one point load and two distributed loads" href="examples/example_1.html" />
+    <link rel="next" title="Beam with two point loads and two distributed loads" href="examples/example_1.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -89,7 +90,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Beam diagrams</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#background-knowledge">Background knowledge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#internal-forces">Internal forces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#internal-beam-loads">Internal beam loads</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#normal-force-n-x">Normal force [N(x)]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#shear-force-v-x-and-moment-m-x">Shear force [V(x)] and moment [M(X)]</a></li>
 </ul>
@@ -100,7 +101,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/example_1.html">Beam with one point load and two distributed loads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/example_1.html">Beam with two point loads and two distributed loads</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -178,42 +179,101 @@ We will start by a quick overview of the required knowledge, and then derive our
 <p>We have already established that for a body to be at rest, the <strong>vector sum</strong> of all forces <span class="math notranslate nohighlight">\(\mathbf{F_i}\)</span> and moments <span class="math notranslate nohighlight">\(\mathbf{M_i}\)</span> acting on it must be zero.</p>
 <div class="math notranslate nohighlight" id="equation-static">
 <span class="eqno">(1)<a class="headerlink" href="#equation-static" title="Permalink to this equation">¶</a></span>\[\sum \mathbf{F_i} = 0; \ \ \ \ \ \sum \mathbf{M_i} = 0\]</div>
-<div class="figure align-center" id="id1">
+<div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="_images/placeholder_01.png"><img alt="rigid body with forces acting on it (resultant zero)" src="_images/placeholder_01.png" style="width: 270.0px; height: 150.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="admonition-title">Todo</p>
+<p>Replace figure above by one without author rights.</p>
 </div>
 <p>Furthermore, for a system to be at rest, each of its components need to be at rest.
-This means that Eq. <a class="reference internal" href="#equation-static">(1)</a> must be satisfied for each of our system’s components.
-This is exemplified in the figure below, where according to the action-reaction principle <span class="math notranslate nohighlight">\(\mathbf{F_{1C}} = \mathbf{-F_{2C}}\)</span>.</p>
-<div class="figure align-center" id="id2">
+This means that Eq. <a class="reference internal" href="#equation-static">(1)</a> must be satisfied <strong>for each</strong> component in our system as shown in the figure below.</p>
+<div class="figure align-center" id="id3">
 <a class="reference internal image-reference" href="_images/placeholder_02.png"><img alt="system where the resultant force acting on each one of the rigid bodies is zero" src="_images/placeholder_02.png" style="width: 513.0px; height: 156.5px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> For a system to be in equilibrium, each of its subsystems <strong>must</strong> be in equilibrium.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> For a system to be in equilibrium, each of its subsystems <strong>must</strong> be in equilibrium.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
-<p>So far, we have only considered subsystems consisting of one or more rigid bodies that compose the system.
-This means that, so far, each rigid body belonged to <em>exactly one</em> subsystem.
-However, Eq. <a class="reference internal" href="#equation-static">(1)</a> is even more general than that, since it applies to any arbitrary subset of a body.
-In the next section, we are going to extract some insights from this.</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="admonition-title">Todo</p>
+<p>Replace figure above by one without author rights.</p>
 </div>
-<div class="section" id="internal-forces">
-<h2>Internal forces<a class="headerlink" href="#internal-forces" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>To state it explicitly once more, the calculation of internal forces for mechanical systems at rest will be based on:</dt><dd><ol class="arabic simple">
+<p>Note that <span class="math notranslate nohighlight">\(\mathbf{F_{1C}} = \mathbf{-F_{2C}}\)</span>, according to the <em>action and reaction principle</em>.
+If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
+As a self-test, the illustration in this <a class="reference external" href="https://www.edumedia-sciences.com/en/media/80-action-reaction-principle">applet</a> should be completely obvious to you.</p>
+<p>So far, we have only thought about reaction forces as applied <em>externally</em> to one or more rigid bodies.
+In other words, each rigid body has been considered to be fully contained in a single subsystem.
+However, Eq. <a class="reference internal" href="#equation-static">(1)</a> can tell us much more than that if we lift that restriction.
+This equation applies to every arbitrary subset of a body, and not only to full bodies.
+We are going to exploit this to a larger extent in the next section.</p>
+</div>
+<div class="section" id="internal-beam-loads">
+<h2>Internal beam loads<a class="headerlink" href="#internal-beam-loads" title="Permalink to this headline">¶</a></h2>
+<p>To state it explicitly once more, the calculation of internal forces for mechanical systems at rest will be based on:</p>
+<blockquote>
+<div><ol class="arabic simple">
 <li><p>The necessary and sufficient conditions for static equilibrium of a system, namely Eq. <a class="reference internal" href="#equation-static">(1)</a></p></li>
 <li><p>The fact that any arbitrary part of a system is on itself a new system.</p></li>
 </ol>
+</div></blockquote>
+<p>So… what if we chose some of the imaginary boundaries that split our system so that they <em>cut through</em> a body?
+Let’s consider a system consisting of a single <em>beam</em> <a class="footnote-reference brackets" href="#beam" id="id1">1</a> and analyze what happens internally to this body.</p>
+<dl class="footnote brackets">
+<dt class="label" id="beam"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>A <em>beam</em> will be defined in this context as a long, slender component (i.e. whose length along its main axis is significantly larger than on directions perpendicular to it).</p>
 </dd>
 </dl>
-<p>So… what if we chose some of the imaginary boundaries that split our system so that they <em>cut through</em> a body?
-Let’s consider a system consisting of a single beam, as depicted below, and analyze what happens internally to this body.</p>
 <div class="section" id="normal-force-n-x">
 <h3>Normal force [N(x)]<a class="headerlink" href="#normal-force-n-x" title="Permalink to this headline">¶</a></h3>
 <p>We reserve the name of <em>normal forces</em> for those who are perpendicular to a given plane of interest.
-In the context of beams (i.e. slender components), we subdivide a body into subsystems by drawing planes perpendicular to its main axis, as shown in the figure below.
+In the context of beams (i.e. slender components), we subdivide a body into subsystems by drawing planes perpendicular to its main axis (<em>x-axis</em>), as shown in the figure below.
 Normal forces are hence perpendicular to these planes, i.e. parallel to the beam’s main axis.</p>
-<div class="figure align-center" id="id3">
-<a class="reference internal image-reference" href="_images/placeholder_03.png"><img alt="Beam on two supports" src="_images/placeholder_03.png" style="width: 506.0px; height: 157.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> The beam is held in place by a rolling support at <em>A</em> and a fixed support at <em>B</em>.
-A normal (tensile) force <span class="math notranslate nohighlight">\(F_{1} = 5\text{kN}\)</span> is acting at the right end of the beam.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p>The first introductory problem to consider will be a 6 meter long horizontal beam resting on two supports:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a roller support at <span class="math notranslate nohighlight">\(x=0\)</span></p></li>
+<li><p>a pinned support at <span class="math notranslate nohighlight">\(x=3m\)</span></p></li>
+</ul>
+</div></blockquote>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p><strong>Show/Hide code for generating the image below</strong></p>
+</div>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
+</span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+</span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadH</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 5kN pointing right, at x=6m</span>
+</span><span class="hll"><span class="n">fig</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">plot_beam_diagram</span><span class="p">()</span>
+</span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.35</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.35</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$F_1=5kN$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkgreen&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Section 1-1&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Section 2-2&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Section 3-3&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="_images/example_normal0.png"><img alt="Beam on two supports with horizontal load" src="_images/example_normal0.png" style="width: 600.0px; height: 250.0px;" /></a>
+<p class="caption"><span class="caption-text">The beam is held in place by a rolling support at <em>A</em> and a fixed support at <em>B</em>.
+A normal (tensile) force <span class="math notranslate nohighlight">\(F_{1} = 5\text{kN}\)</span> is acting at the right end of the beam.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 <p>Let’s find the reaction forces first, so we can proceed with our analysis.</p>
 <div class="math notranslate nohighlight">
@@ -224,31 +284,36 @@ A normal (tensile) force <span class="math notranslate nohighlight">\(F_{1} = 5\
     \sum{F_z} = 0
   \end{array}
 \right\} \implies \underline{F_A = F_{Bz}} = 0\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To keep matters simple, the weight of the beam is neglected throughout this analysis.</p>
+</div>
 <p>With the information about the reaction forces at supports <em>A</em> and <em>B</em>, let’s see what happens to the subsystem between the plane 2-2 (located between support <em>B</em> and the right end of the beam) and the plane 3-3 (exactly at the right end of the beam, where the load <span class="math notranslate nohighlight">\(\mathbf{F_1}\)</span> is acting).</p>
-<div class="figure align-center" id="id4">
-<a class="reference internal image-reference" href="_images/placeholder_04.png"><img alt="Subsystem between sections 2-2 and 3-3" src="_images/placeholder_04.png" style="width: 208.0px; height: 128.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Subsystem between planes 2-2 and 3-3, to the right of support <em>B</em>.
-Note that the weight of the beam is always neglected.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="../../examples/example_normal0a.png"><img alt="Subsystem between sections 2-2 and 3-3 under a horizontal external load." src="../../examples/example_normal0a.png" /></a>
+<p class="caption"><span class="caption-text">Subsystem between planes 2-2 and 3-3, to the right of support <em>B</em>.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <p>Let’s apply the equilibrium equations to this subsystem.
 Since we only have <em>colinear</em> forces along the x-axis (we neglect the height of the beam), we write the sum of forces along this direction.
 The other equilibrium equations are identically zero (no vertical forces or moments acting on the beam), so they don’t add any new information.</p>
 <div class="math notranslate nohighlight">
-\[\sum{F_x} = 0 \implies N - F_{1} = 0 \implies \underline{N|_{x=x_2} = 5\text{kN}}\]</div>
+\[\sum{F_x} = 0 \implies F_{1} - N = 0 \implies \underline{N|_{x=x_2} = 5\text{kN}}\]</div>
 <p>Here we have found the internal normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> to be equal to 5kN.
-The positive sign corresponds to our choice of the orientation of <span class="math notranslate nohighlight">\(\mathbf{N}\)</span>.
-It is customary to define <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> as positive when pointing outwards.
+The positive sign corresponds to the standard convention.
+The normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> is defined as positive when it points outwards.
 It follows from this that tensile forces are positive and compression forces negative.
-The result would be the same for any choice of the line 2-2 between the support <em>B</em> and the right end of the beam.</p>
-<p>Next, let’s consider an extended subsystem between planes 1-1 and 3-3 and perform the same analysis</p>
-<div class="figure align-center" id="id5">
-<a class="reference internal image-reference" href="_images/placeholder_05.png"><img alt="Subsystem between sections 1-1 and 3-3" src="_images/placeholder_05.png" style="width: 628.0px; height: 217.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Subsystem between planes 1-1 (btw supports <em>A</em> and <em>B</em>) and 3-3 (beam’s right end)</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+The result is the same for any plane located between the support <em>B</em> (section 2-2) and the right end of the beam (section 3-3).</p>
+<p>Next, let’s consider a slightly different subsystem between planes 1-1 and 3-3 and perform the same analysis</p>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="../../examples/example_normal0b.png"><img alt="Subsystem between sections 1-1 and 3-3 under a horizontal external load." src="../../examples/example_normal0b.png" /></a>
+<p class="caption"><span class="caption-text">Subsystem between planes 1-1 (btw supports <em>A</em> and <em>B</em>) and 3-3 (beam’s right end)</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 <div class="math notranslate nohighlight">
 \[\sum{F_x} = 0 \implies N + F_{Bx} - F_{1} = 0 \implies \underline{N|_{x=x_1} = 0}\]</div>
-<p>If we join these two results, we can plot the <em>internal</em> normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> as a function of the <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> coordinate, as <span class="math notranslate nohighlight">\(\mathbf{N(x)}\)</span>.
-In this simple case, what we end up with is the following piecewise function:</p>
+<p>The normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> across the section 1-1 is zero.
+Correspondingly, the result is the same for any plane located between supports A (section 1-1) and B (section 3-3).</p>
+<p>If we join these last two results, we can reconstruct the normal force <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> along the full beam span as a function of the <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> coordinate, which we will predictably call <span class="math notranslate nohighlight">\(\mathbf{N(x)}\)</span>.
+In this simple case, we end up with the following piecewise function:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}N(x) = \left\{
   \begin{array}{cl}
@@ -256,18 +321,66 @@ In this simple case, what we end up with is the following piecewise function:</p
      -5 \text{kN} \ \ \ &amp; \text{if} \ \  &lt; x_B \leq x &lt; L
   \end{array}
 \right.\end{split}\]</div>
-<div class="admonition-todo admonition" id="index-0">
-<p class="admonition-title">Todo</p>
-<p>Add plot for function and code for Python example using the <em>beambending</em> package.</p>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p><strong>Show/Hide code for generating the image below</strong></p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
+<span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+<span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadH</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 5kN pointing right, at x=6m</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">plot_normal_force</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/example_normal1.png"><img alt="Piecewise function describing the calculated normal force :math:`\mathbf{N(x)}`" src="_images/example_normal1.png" style="width: 420.0px; height: 175.0px;" /></a>
 </div>
 </div>
 <div class="section" id="shear-force-v-x-and-moment-m-x">
 <h3>Shear force [V(x)] and moment [M(X)]<a class="headerlink" href="#shear-force-v-x-and-moment-m-x" title="Permalink to this headline">¶</a></h3>
 <p>Let’s do a similar analysis of the same beam for vertical forces.
 Instead of the horizontal force <span class="math notranslate nohighlight">\(\mathbf{F_1}\)</span>, consider now a vertical force <span class="math notranslate nohighlight">\(\mathbf{P_1} = 10\text{kN}\)</span> acting at the beam’s right end (plane 3-3).</p>
-<div class="figure align-center" id="id6">
-<a class="reference internal image-reference" href="_images/placeholder_06.png"><img alt="Insert alternative text here" src="_images/placeholder_06.png" style="width: 549.0px; height: 198.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here <strong>Distance between 2-2 and 3-3 needs to increase to 2m</strong></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p><strong>Show/Hide code for generating the image below</strong></p>
+</div>
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
+</span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+</span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 10kN pointing upwards, at x=6m</span>
+</span><span class="hll"><span class="n">fig</span> <span class="o">=</span> <span class="n">my_beam</span><span class="o">.</span><span class="n">plot_beam_diagram</span><span class="p">()</span>
+</span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.35</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.35</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">5.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$P_1=10kN$&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkgreen&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Section 1-1&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Section 2-2&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;Section 3-3&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="_images/example_shear0.png"><img alt="Beam on two supports with vertical load" src="_images/example_shear0.png" style="width: 600.0px; height: 250.0px;" /></a>
+<p class="caption"><span class="caption-text">The beam is held in place by a rolling support at <em>A</em> and a fixed support at <em>B</em>.
+A force <span class="math notranslate nohighlight">\(P_{1} = 10\text{kN}\)</span> directed upwards is acting at the right end of the beam.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 <p>In the same way as before, we start by finding the reaction forces at the supports <em>A</em> and <em>B</em>.</p>
 <div class="math notranslate nohighlight">
@@ -276,38 +389,34 @@ Instead of the horizontal force <span class="math notranslate nohighlight">\(\ma
 \sum{F_z} = 0 \implies F_A = \cfrac{\mathbf{P_1}(L-d)}{d} = 10 \text{kN}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(L=6\text{m}\)</span> is the length of the beam, and <span class="math notranslate nohighlight">\(d=3\text{m}\)</span> is the distance between supports <em>A</em> and <em>B</em>.</p>
 <p>Next, we draw a free body diagram of the beam section comprised between planes 2-2 and 3-3, and apply Eq. <a class="reference internal" href="#equation-static">(1)</a> once more.</p>
-<div class="admonition-todo admonition" id="index-1">
-<p class="admonition-title">Todo</p>
-<p>Change the distance between planes 2-2 and 3-3- from 1m to 2m. This eliminates periodic decimals and avoids potential confusion between V=10kN and M=10kNm</p>
-</div>
-<div class="figure align-center" id="id7">
-<a class="reference internal image-reference" href="_images/placeholder_07.png"><img alt="Insert alternative text here" src="_images/placeholder_07.png" style="width: 227.0px; height: 153.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<div class="figure align-center" id="id8">
+<a class="reference internal image-reference" href="../../examples/example_shear0a.png"><img alt="Subsystem between sections 2-2 and 3-3 under a vertical external load." src="../../examples/example_shear0a.png" /></a>
+<p class="caption"><span class="caption-text">Subsystem between planes 2-2 and 3-3, to the right of support <em>B</em>.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 <div class="math notranslate nohighlight">
 \[\begin{split}\sum{F_z} = 0 \implies V + \mathbf{P_1} = 0 \implies V = 10 \text{kN}\\
 \sum{M} = 0 \implies M(x) - \mathbf{P_1} (L-x) = 0 \implies M(x) = \mathbf{P_1} (L-x)\end{split}\]</div>
-<dl class="simple">
-<dt>The vertical plane 2-2, corresponds to <span class="math notranslate nohighlight">\(x=4\)</span>, hence</dt><dd><ul class="simple">
+<p>The vertical plane 2-2, corresponds to <span class="math notranslate nohighlight">\(x=4\)</span>, hence</p>
+<blockquote>
+<div><ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}\)</span>, and</p></li>
 <li><p><span class="math notranslate nohighlight">\(M|_{2-2} = M(x)|_{x=4} = \underline{20 \text{kNm}}\)</span>.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <p>Let’s calculate now the shear force and bending moment at the vertical plane 1-1.
 To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.</p>
 <div class="admonition-todo admonition" id="index-2">
 <p class="admonition-title">Todo</p>
-<dl class="simple">
-<dt>Clarify the sign convention:</dt><dd><ul class="simple">
+<p>Clarify the sign convention:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>Explain that <span class="math notranslate nohighlight">\(V_{2-2}\)</span> and <span class="math notranslate nohighlight">\(M_{2-2}\)</span> to the right of section 1-2 are (equal and opposite) reactions to <span class="math notranslate nohighlight">\(V_{2-2}\)</span> and <span class="math notranslate nohighlight">\(M_{2-2}\)</span> to the left of section 2-3.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </div>
-<div class="figure align-center" id="id8">
-<a class="reference internal image-reference" href="_images/placeholder_08.png"><img alt="Insert alternative text here" src="_images/placeholder_08.png" style="width: 561.0px; height: 158.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<div class="figure align-center" id="id9">
+<a class="reference internal image-reference" href="../../examples/example_shear0b.png"><img alt="Subsystem between sections 1-1 and 3-3 under a vertical external load." src="../../examples/example_shear0b.png" /></a>
+<p class="caption"><span class="caption-text">Subsystem between planes 1-1 (btw supports <em>A</em> and <em>B</em>) and 3-3 (beam’s right end)</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
 <p>The equations for sum of forces and sum of moments become then:</p>
 <div class="math notranslate nohighlight">
@@ -320,46 +429,67 @@ To that end, we will consider the beam section between planes 1-1 and 2-2, as sh
 \begin{array}{rrl}
   &amp; \mathbf{\sum{M}} = M_{1-1} + F_{Bz}(d-x) - V_{2-2}(4\text{m}-x) &amp;= 0 \\
   &amp; M_{1-1} + 20\text{kN}(3\text{m}-x) - 10 \text{kN}(4\text{m}-x) &amp;= 0\\
-  \text{since } x|_{1-1}=2\text{m} \implies &amp; M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(4\text{m}-2\text{m}) &amp;= 0\\
-  &amp; M_{1-1} &amp;= \underline{0}
+  \text{since } x|_{1-1}=2\text{m} \implies &amp; M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(6\text{m}-2\text{m}) &amp;= 0\\
+  &amp; M_{1-1} &amp;= \underline{-20 \text{kNm}}
 \end{array}\end{split}\]</div>
-<div class="admonition-todo admonition" id="index-3">
-<p class="admonition-title">Todo</p>
-<p>Add plot for function and code for Python example using the <em>beambending</em> package.</p>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This result would (of course) have been the same if our free-body diagram had included the whole beam to the right of the plane 1-1.
 The same is true for a free-body of the left side of the beam.
 In order to make sure you will understand the next section, I suggest you <strong>stop reading for a moment and try to verify this</strong>.</p>
 </div>
+<p>As an exercise, you can follow this procedure and calculate the general result for an arbitrary x-coordinate.
+You should obtain a function like the one shown in the image below.</p>
+<div class="toggle docutils container">
+<div class="header docutils container">
+<p><strong>Show/Hide code for generating the image below</strong></p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
+<span class="n">my_beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+<span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 10kN pointing upwards, at x=6m</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">my_beam</span><span class="o">.</span><span class="n">plot_shear_force</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">my_beam</span><span class="o">.</span><span class="n">plot_bending_moment</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/example_shear1.png"><img alt="Piecewise function describing the calculated shear force :math:`\mathbf{V(x)}`" src="_images/example_shear1.png" style="width: 448.0px; height: 336.0px;" /></a>
+</div>
 </div>
 </div>
 <div class="section" id="relationship-between-shear-force-mathbf-v-x-and-bending-moment-mathbf-m-x">
 <h2>Relationship between shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span><a class="headerlink" href="#relationship-between-shear-force-mathbf-v-x-and-bending-moment-mathbf-m-x" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>The analysis in the section above was restricted to point loads in order to keep it simple.
+<p>The analysis in the section above was restricted to point loads in order to keep it simple.
 However, it applies universally for distributed loads as well, as we are going to see next.</p>
-</div></blockquote>
 <p>It may not be obvious at first sight, but the functions corresponding to shear force <span class="math notranslate nohighlight">\(\mathbf{V(x)}\)</span> and bending moment <span class="math notranslate nohighlight">\(\mathbf{M(x)}\)</span> are intimately correlated (i.e. you can use one of them for calculating the other one).
 We are going to prove this by performing the same analysis explained above to a differential beam segment of length <span class="math notranslate nohighlight">\(\Delta x\)</span>.</p>
-<dl class="simple">
-<dt>By this point, our analysis methodology should be clear. It consists of three steps:</dt><dd><ol class="arabic simple">
+<p>By this point, our analysis methodology should be clear. It consists of the following steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
 <li><p>Choosing an arbitrary sector of a beam.</p></li>
 <li><p>Drawing a free-body diagram of the partition.</p></li>
 <li><p>Applying Newton’s first law to the free-body diagram.</p></li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 <p>Let’s consider an arbitrarily loaded beam as shown in the figure below.</p>
-<div class="figure align-center" id="id9">
+<div class="figure align-center" id="id10">
 <a class="reference internal image-reference" href="_images/placeholder_09.png"><img alt="Insert alternative text here" src="_images/placeholder_09.png" style="width: 547.0px; height: 151.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-todo admonition" id="index-3">
+<p class="admonition-title">Todo</p>
+<p>Create a digital version of the figure above.</p>
 </div>
 <p>Let’s draw a free-body diagram of a given beam segment <span class="math notranslate nohighlight">\([x_0 \leq x \leq x_0+\Delta x]\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span> is a distributed load applied to the beam.</p>
-<div class="figure align-center" id="id10">
+<div class="figure align-center" id="id11">
 <a class="reference internal image-reference" href="_images/placeholder_10.png"><img alt="Insert alternative text here" src="_images/placeholder_10.png" style="width: 521.0px; height: 201.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-todo admonition" id="index-4">
+<p class="admonition-title">Todo</p>
+<p>Create a digital version of the figure above.</p>
 </div>
 <p>The equilibrium of vertical forces yields the following:</p>
 <div class="math notranslate nohighlight">
@@ -379,14 +509,7 @@ We are going to prove this by performing the same analysis explained above to a 
   \lim_{\Delta x \to 0} &amp; \boxed{\cfrac{dM(x)}{dx} = V(x)}
 \end{array}\end{split}\]</div>
 <p>which presents explicitly the relationship between <span class="math notranslate nohighlight">\(M(x)\)</span> and <span class="math notranslate nohighlight">\(V(x)\)</span>: the rate of change of the bending moment at a given point is equal to the shear force at that point.</p>
-<div class="admonition-todo admonition" id="index-4">
-<p class="admonition-title">Todo</p>
-<p>Replace the figure below by a Python example using the <strong>beambending</strong> package</p>
-</div>
-<div class="figure align-center" id="id11">
-<a class="reference internal image-reference" href="_images/placeholder_12.png"><img alt="Insert alternative text here" src="_images/placeholder_12.png" style="width: 616.0px; height: 556.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> Insert caption here</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
-</div>
+<p>Ok, that was it. For some worked examples, take a look at the <strong>Examples</strong> section next.</p>
 </div>
 </div>
 
@@ -398,7 +521,7 @@ We are going to prove this by performing the same analysis explained above to a 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="examples/example_1.html" class="btn btn-neutral float-right" title="Beam with one point load and two distributed loads" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="examples/example_1.html" class="btn btn-neutral float-right" title="Beam with two point loads and two distributed loads" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -436,7 +559,18 @@ We are going to prove this by performing the same analysis explained above to a 
   
   
     
-   
+  
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
 
 </body>
 </html>
