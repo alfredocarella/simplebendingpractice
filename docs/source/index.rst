@@ -9,10 +9,9 @@ Okay, which concerns does this project address?
 * You are taking your first course on statics and you would like to have a more interactive way of visualizing shear forces and bending moments diagrams.
 * You feel you understand better when you have some examples you can modify at will.
 * You want to review the basic theory, double-check that you are doing things right and test yourself with some new problems.
+* You are teaching a course on statics and want to generate practice problems automatically.
 
-If any of these statements describe you, it may be worth your time to take a look at this project.
-
-.. todo:: Write a decent "Getting started" section on how to use this project
+If any of these statements describe you, it may be a good idea to take a quick look at this project.
 
 
 .. toctree::
@@ -36,7 +35,7 @@ If any of these statements describe you, it may be worth your time to take a loo
     examples/example_1
 
 .. toctree::
-    :caption: Package documentation
+    :caption: User documentation
     :maxdepth: 2
 
     reference
