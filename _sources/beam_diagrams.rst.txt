@@ -7,33 +7,33 @@ We will start by a quick overview of the required knowledge, and then derive our
 Background knowledge
 --------------------
 
-We have already established that for a body to be at rest, the **vector sum** of all forces :math:`\mathbf{F_i}` and moments :math:`\mathbf{M_i}` acting on it must be zero.
+We will start from the fact that for a body to be at rest, the **vector sum** of all external forces :math:`\mathbf{F_i}` and moments :math:`\mathbf{M_i}` acting on it must be zero.
 
 .. math::
    :label: static
 
    \sum \mathbf{F_i} = 0; \ \ \ \ \ \sum \mathbf{M_i} = 0
 
-.. figure:: /_static/placeholder_01.png
+.. .. figure:: /_static/placeholder_01.png
+
+.. figure:: /../../examples/foundation01.png
    :scale: 50 %
    :align: center
    :alt: rigid body with forces acting on it (resultant zero)
 
-   **PLACEHOLDER FIG:** A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)
-
-.. todo:: Replace figure above by one without author rights.
+   A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)
 
 Furthermore, for a system to be at rest, each of its components need to be at rest.
-This means that Eq. :eq:`static` must be satisfied **for each** component in our system as shown in the figure below.
+This means that Eq. :eq:`static` must be satisfied **for each** component in our system.
 
-.. figure:: /_static/placeholder_02.png
+.. .. figure:: /_static/placeholder_02.png
+
+.. figure:: /../../examples/foundation02.png
    :scale: 50 %
    :align: center
    :alt: system where the resultant force acting on each one of the rigid bodies is zero
 
-   **PLACEHOLDER FIG:** For a system to be in equilibrium, each of its subsystems **must** be in equilibrium.
-
-.. todo:: Replace figure above by one without author rights.
+   For a system to be in equilibrium, each of its subsystems **must** be in equilibrium.
 
 Note that :math:`\mathbf{F_{1C}} = \mathbf{-F_{2C}}`, according to the *action and reaction principle*.
 If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
@@ -319,7 +319,7 @@ Let's consider an arbitrarily loaded beam as shown in the figure below, where :m
 .. figure:: /../../examples/example_distributed0.png
    :scale: 100 %
    :align: center
-   :alt: Insert alternative text here
+   :alt: Simply supported beam with an arbitrarily distributed load
 
    Generic problem consisting of a beam under an arbitrarily distributed load :math:`\mathbf{P_z}(x)`
 
@@ -330,7 +330,7 @@ Let's zoom-in and draw a free-body diagram of a given beam segment :math:`[x_0 \
 .. figure:: /../../examples/example_distributed1.png
    :scale: 100 %
    :align: center
-   :alt: Insert alternative text here
+   :alt: Free body diagram of a differential segment of the beam
 
    Free body diagram of a differential segment of the beam
 

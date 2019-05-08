@@ -176,26 +176,18 @@
 We will start by a quick overview of the required knowledge, and then derive our analysis from basic principles.</p>
 <div class="section" id="background-knowledge">
 <h2>Background knowledge<a class="headerlink" href="#background-knowledge" title="Permalink to this headline">¶</a></h2>
-<p>We have already established that for a body to be at rest, the <strong>vector sum</strong> of all forces <span class="math notranslate nohighlight">\(\mathbf{F_i}\)</span> and moments <span class="math notranslate nohighlight">\(\mathbf{M_i}\)</span> acting on it must be zero.</p>
+<p>We will start from the fact that for a body to be at rest, the <strong>vector sum</strong> of all external forces <span class="math notranslate nohighlight">\(\mathbf{F_i}\)</span> and moments <span class="math notranslate nohighlight">\(\mathbf{M_i}\)</span> acting on it must be zero.</p>
 <div class="math notranslate nohighlight" id="equation-static">
 <span class="eqno">(1)<a class="headerlink" href="#equation-static" title="Permalink to this equation">¶</a></span>\[\sum \mathbf{F_i} = 0; \ \ \ \ \ \sum \mathbf{M_i} = 0\]</div>
 <div class="figure align-center" id="id2">
-<a class="reference internal image-reference" href="_images/placeholder_01.png"><img alt="rigid body with forces acting on it (resultant zero)" src="_images/placeholder_01.png" style="width: 270.0px; height: 150.0px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-<div class="admonition-todo admonition" id="index-0">
-<p class="admonition-title">Todo</p>
-<p>Replace figure above by one without author rights.</p>
+<a class="reference internal image-reference" href="_images/foundation01.png"><img alt="rigid body with forces acting on it (resultant zero)" src="_images/foundation01.png" style="width: 468.5px; height: 192.5px;" /></a>
+<p class="caption"><span class="caption-text">A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>Furthermore, for a system to be at rest, each of its components need to be at rest.
-This means that Eq. <a class="reference internal" href="#equation-static">(1)</a> must be satisfied <strong>for each</strong> component in our system as shown in the figure below.</p>
+This means that Eq. <a class="reference internal" href="#equation-static">(1)</a> must be satisfied <strong>for each</strong> component in our system.</p>
 <div class="figure align-center" id="id3">
-<a class="reference internal image-reference" href="_images/placeholder_02.png"><img alt="system where the resultant force acting on each one of the rigid bodies is zero" src="_images/placeholder_02.png" style="width: 513.0px; height: 156.5px;" /></a>
-<p class="caption"><span class="caption-text"><strong>PLACEHOLDER FIG:</strong> For a system to be in equilibrium, each of its subsystems <strong>must</strong> be in equilibrium.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-<div class="admonition-todo admonition" id="index-1">
-<p class="admonition-title">Todo</p>
-<p>Replace figure above by one without author rights.</p>
+<a class="reference internal image-reference" href="_images/foundation02.png"><img alt="system where the resultant force acting on each one of the rigid bodies is zero" src="_images/foundation02.png" style="width: 416.5px; height: 219.0px;" /></a>
+<p class="caption"><span class="caption-text">For a system to be in equilibrium, each of its subsystems <strong>must</strong> be in equilibrium.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <p>Note that <span class="math notranslate nohighlight">\(\mathbf{F_{1C}} = \mathbf{-F_{2C}}\)</span>, according to the <em>action and reaction principle</em>.
 If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
@@ -405,7 +397,7 @@ A force <span class="math notranslate nohighlight">\(P_{1} = 10\text{kN}\)</span
 </div></blockquote>
 <p>Let’s calculate now the shear force and bending moment at the vertical plane 1-1.
 To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.</p>
-<div class="admonition-todo admonition" id="index-2">
+<div class="admonition-todo admonition" id="index-0">
 <p class="admonition-title">Todo</p>
 <p>Clarify the sign convention:</p>
 <blockquote>
@@ -475,12 +467,12 @@ We are going to prove this by performing the same analysis explained above to a 
 </div></blockquote>
 <p>Let’s consider an arbitrarily loaded beam as shown in the figure below, where <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span> is an arbitrarily distributed load applied to the beam.</p>
 <div class="figure align-center" id="id10">
-<a class="reference internal image-reference" href="_images/example_distributed0.png"><img alt="Insert alternative text here" src="_images/example_distributed0.png" style="width: 621.0px; height: 221.0px;" /></a>
+<a class="reference internal image-reference" href="_images/example_distributed0.png"><img alt="Simply supported beam with an arbitrarily distributed load" src="_images/example_distributed0.png" style="width: 621.0px; height: 221.0px;" /></a>
 <p class="caption"><span class="caption-text">Generic problem consisting of a beam under an arbitrarily distributed load <span class="math notranslate nohighlight">\(\mathbf{P_z}(x)\)</span></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 <p>Let’s zoom-in and draw a free-body diagram of a given beam segment <span class="math notranslate nohighlight">\([x_0 \leq x \leq x_0+\Delta x]\)</span>.</p>
 <div class="figure align-center" id="id11">
-<a class="reference internal image-reference" href="_images/example_distributed1.png"><img alt="Insert alternative text here" src="_images/example_distributed1.png" style="width: 669.0px; height: 220.0px;" /></a>
+<a class="reference internal image-reference" href="_images/example_distributed1.png"><img alt="Free body diagram of a differential segment of the beam" src="_images/example_distributed1.png" style="width: 669.0px; height: 220.0px;" /></a>
 <p class="caption"><span class="caption-text">Free body diagram of a differential segment of the beam</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
 <p>The equilibrium of vertical forces yields then the following:</p>
