@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; beambending 1.0 documentation</title>
+  <title>Background knowledge &mdash; beambending 1.0 documentation</title>
   
 
   
@@ -34,15 +34,11 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
- 
-
-    <script type="text/javascript">
-      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
-    </script>
-
-
+    <link rel="next" title="Beam diagrams" href="beam_diagrams.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,8 +87,8 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Theory</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="background.html">Background knowledge</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background knowledge</a></li>
 <li class="toctree-l1"><a class="reference internal" href="beam_diagrams.html">Beam diagrams</a></li>
 <li class="toctree-l1"><a class="reference internal" href="shear_moment_relationship.html">Relationship between shear force and bending moment</a></li>
 </ul>
@@ -148,10 +144,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Python Module Index</li>
+      <li>Background knowledge</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/background.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -163,29 +163,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-b"><strong>b</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-b"><td></td><td>
-       <strong>b</strong></td><td></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="reference.html#module-beam"><code class="xref">beam</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <div class="section" id="background-knowledge">
+<h1>Background knowledge<a class="headerlink" href="#background-knowledge" title="Permalink to this headline">¶</a></h1>
+<p>In this page we will go through introductory bending theory, as typically covered in an introductory statics course.
+We will start by a quick overview of the required knowledge, and then derive our analysis from basic principles.</p>
+<p>Our starting point will be the fact that for a body to be at rest, the <strong>vector sum</strong> of all external forces <span class="math notranslate nohighlight">\(\mathbf{F_i}\)</span> and moments <span class="math notranslate nohighlight">\(\mathbf{M_i}\)</span> acting on it must be zero.</p>
+<div class="math notranslate nohighlight" id="equation-static">
+<span class="eqno">(1)<a class="headerlink" href="#equation-static" title="Permalink to this equation">¶</a></span>\[\sum \mathbf{F_i} = 0; \ \ \ \ \ \sum \mathbf{M_i} = 0\]</div>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="_images/foundation01.png"><img alt="rigid body with forces acting on it (resultant zero)" src="_images/foundation01.png" style="width: 468.5px; height: 192.5px;" /></a>
+<p class="caption"><span class="caption-text">A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>Furthermore, for a system to be at rest, each of its components need to be at rest.
+This means that Eq. <a class="reference internal" href="#equation-static">(1)</a> must be satisfied <strong>for each</strong> component in our system.</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="_images/foundation02.png"><img alt="system where the resultant force acting on each one of the rigid bodies is zero" src="_images/foundation02.png" style="width: 416.5px; height: 219.0px;" /></a>
+<p class="caption"><span class="caption-text">For a system to be in equilibrium, each of its subsystems <strong>must</strong> be in equilibrium.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>Note that <span class="math notranslate nohighlight">\(\mathbf{F_{1C}} = \mathbf{-F_{2C}}\)</span>, according to the <em>action and reaction principle</em>.
+If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
+As a self-test, the illustration in this <a class="reference external" href="https://www.edumedia-sciences.com/en/media/80-action-reaction-principle">applet</a> should be completely obvious to you.</p>
+<p>So far, we have only thought about reaction forces as applied <em>externally</em> to one or more rigid bodies.
+In other words, each rigid body has been considered to be fully contained in a single subsystem.
+However, Eq. <a class="reference internal" href="#equation-static">(1)</a> can tell us much more than that if we lift that restriction.
+This equation applies to every arbitrary subset of a body, and not only to full bodies.
+We are going to exploit this to a larger extent in the next section.</p>
+</div>
 
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="beam_diagrams.html" class="btn btn-neutral float-right" title="Beam diagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -218,7 +236,18 @@
   
   
     
-   
+  
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").click(function() {
+            $(this).parent().children().not(".header").toggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+        })
+    });
+</script>
+
 
 </body>
 </html>

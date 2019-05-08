@@ -1,58 +1,9 @@
 Beam diagrams
-===========================
-
-In this page we will go through introductory bending theory, as typically covered in an introductory statics course.
-We will start by a quick overview of the required knowledge, and then derive our analysis from basic principles.
-
-Background knowledge
---------------------
-
-We will start from the fact that for a body to be at rest, the **vector sum** of all external forces :math:`\mathbf{F_i}` and moments :math:`\mathbf{M_i}` acting on it must be zero.
-
-.. math::
-   :label: static
-
-   \sum \mathbf{F_i} = 0; \ \ \ \ \ \sum \mathbf{M_i} = 0
-
-.. .. figure:: /_static/placeholder_01.png
-
-.. figure:: /../../examples/foundation01.png
-   :scale: 50 %
-   :align: center
-   :alt: rigid body with forces acting on it (resultant zero)
-
-   A rigid body in equilibrium (i.e. whose sum of both forces and moments equal zero)
-
-Furthermore, for a system to be at rest, each of its components need to be at rest.
-This means that Eq. :eq:`static` must be satisfied **for each** component in our system.
-
-.. .. figure:: /_static/placeholder_02.png
-
-.. figure:: /../../examples/foundation02.png
-   :scale: 50 %
-   :align: center
-   :alt: system where the resultant force acting on each one of the rigid bodies is zero
-
-   For a system to be in equilibrium, each of its subsystems **must** be in equilibrium.
-
-Note that :math:`\mathbf{F_{1C}} = \mathbf{-F_{2C}}`, according to the *action and reaction principle*.
-If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
-As a self-test, the illustration in this `applet
-<https://www.edumedia-sciences.com/en/media/80-action-reaction-principle>`_ should be completely obvious to you.
-
-So far, we have only thought about reaction forces as applied *externally* to one or more rigid bodies.
-In other words, each rigid body has been considered to be fully contained in a single subsystem.
-However, Eq. :eq:`static` can tell us much more than that if we lift that restriction.
-This equation applies to every arbitrary subset of a body, and not only to full bodies.
-We are going to exploit this to a larger extent in the next section.
-
-
-Internal beam loads
--------------------
+-------------
 
 To state it explicitly once more, the calculation of internal forces for mechanical systems at rest will be based on:
 
-   #. The necessary and sufficient conditions for static equilibrium of a system, namely Eq. :eq:`static`
+   #. The necessary and sufficient conditions for static equilibrium of a system,
    #. The fact that any arbitrary part of a system is on itself a new system.
 
 So... what if we chose some of the imaginary boundaries that split our system so that they *cut through* a body?
@@ -60,8 +11,8 @@ Let's consider a system consisting of a single *beam* [#beam]_ and analyze what 
 
 .. [#beam] A *beam* will be defined in this context as a long, slender component (i.e. whose length along its main axis is significantly larger than on directions perpendicular to it).
 
-Normal force [N(x)]
-*******************
+Normal force :math:`N(x)`
+*************************
 
 We reserve the name of *normal forces* for those who are perpendicular to a given plane of interest.
 In the context of beams (i.e. slender components), we subdivide a body into subsystems by drawing planes perpendicular to its main axis (*x-axis*), as shown in the figure below.
@@ -179,8 +130,8 @@ In this simple case, we end up with the following piecewise function:
    :alt: Piecewise function describing the calculated normal force :math:`\mathbf{N(x)}`
 
 
-Shear force [V(x)] and moment [M(X)]
-************************************
+Shear force :math:`V(x)` and moment :math:`M(x)`
+************************************************
 
 Let's do a similar analysis of the same beam for vertical forces.
 Instead of the horizontal force :math:`\mathbf{F_1}`, consider now a vertical force :math:`\mathbf{P_1} = 10\text{kN}` acting at the beam's right end (plane 3-3).
@@ -217,7 +168,7 @@ In the same way as before, we start by finding the reaction forces at the suppor
 
 where :math:`L=6\text{m}` is the length of the beam, and :math:`d=3\text{m}` is the distance between supports *A* and *B*.
 
-Next, we draw a free body diagram of the beam section comprised between planes 2-2 and 3-3, and apply Eq. :eq:`static` once more.
+Next, we draw a free body diagram of the beam section comprised between planes 2-2 and 3-3, and do a balance of forces and moments once more.
 
 .. .. figure:: /_static/placeholder_07.png
 
@@ -294,73 +245,3 @@ You should obtain a function like the one shown in the image below.
    :scale: 70 %
    :align: center
    :alt: Piecewise function describing the calculated shear force :math:`\mathbf{V(x)}`
-
-
-Relationship between shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}`
------------------------------------------------------------------------------------------------
-The analysis in the section above was restricted to point loads in order to keep it simple.
-However, it applies universally for distributed loads as well, as we are going to see next.
-
-It may not be obvious at first sight, but the functions corresponding to shear force :math:`\mathbf{V(x)}` and bending moment :math:`\mathbf{M(x)}` are intimately correlated (i.e. you can use one of them for calculating the other one).
-We are going to prove this by performing the same analysis explained above to a differential beam segment of length :math:`\Delta x`.
-
-By this point, our analysis methodology should be clear. It consists of the following steps:
-
-   #. Choosing an arbitrary sector of a beam.
-   #. Drawing a free-body diagram of the partition.
-   #. Applying Newton's first law to the free-body diagram.
-
-.. #. Calculating the (external) reaction forces from the supports. <-- is actually step 1>
-  
-Let's consider an arbitrarily loaded beam as shown in the figure below, where :math:`\mathbf{P_z}(x)` is an arbitrarily distributed load applied to the beam.
-
-.. .. figure:: /_static/placeholder_09.pngXXXXX
-
-.. figure:: /../../examples/example_distributed0.png
-   :scale: 100 %
-   :align: center
-   :alt: Simply supported beam with an arbitrarily distributed load
-
-   Generic problem consisting of a beam under an arbitrarily distributed load :math:`\mathbf{P_z}(x)`
-
-Let's zoom-in and draw a free-body diagram of a given beam segment :math:`[x_0 \leq x \leq x_0+\Delta x]`.
-
-.. .. figure:: /_static/placeholder_10.png
-
-.. figure:: /../../examples/example_distributed1.png
-   :scale: 100 %
-   :align: center
-   :alt: Free body diagram of a differential segment of the beam
-
-   Free body diagram of a differential segment of the beam
-
-The equilibrium of vertical forces yields then the following:
-
-.. math::
-
-    \begin{array}{rrl}
-      & \mathbf{\sum{F_z}} &= 0 \\
-      & V(x + \Delta x) -V(x) + \overline{\mathbf{P_z}}(x) \Delta x &= 0 \\
-      & \cfrac{V(x + \Delta x) -V(x)}{\Delta x} &= -\overline{\mathbf{P_z}}(x) \\
-      \lim_{\Delta x \to 0} & \boxed{\cfrac{dV(x)}{dx} = -\mathbf{P_z}(x)}
-    \end{array}
-
-which in words means that the rate of change of the shear force is equal to (minus) the value of the distributed load acting on a given x-coordinate.
-
-Note that in the expression above, :math:`\overline{\mathbf{P_z}}(x)` represents the average value of :math:`\mathbf{P_z}(x)` in the given interval.
-As :math:`\Delta x` goes to zero, :math:`\overline{\mathbf{P_z}}(x)` converges to :math:`\mathbf{P_z}(x)`.
-
-The equilibrium of moments can be written as:
-
-.. math::
-
-    \begin{array}{rrl}
-      & \mathbf{\sum M|_{x + \Delta x}} &= 0 \\
-      & M(x + \Delta x) -M(x) - V(x) \Delta x + (\overline{\mathbf{P_z}}(x) \Delta x \cdot \frac{\Delta x}{2}) &= 0 \\
-      & \cfrac{M(x + \Delta x) -M(x)}{\Delta x} + \underbrace{(\overline{\mathbf{P_z}}(x) \Delta x \cdot \frac{\Delta x}{2})}_{\Delta x^2\to 0} &= V(x) \\
-      \lim_{\Delta x \to 0} & \boxed{\cfrac{dM(x)}{dx} = V(x)}
-    \end{array}
-
-which presents explicitly the relationship between :math:`M(x)` and :math:`V(x)`: the rate of change of the bending moment at a given point is equal to the shear force at that point.
-
-Ok, that was it. For some worked examples, take a look at the **Examples** section next.
