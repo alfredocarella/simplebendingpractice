@@ -1,7 +1,3 @@
-.. Beam diagrams
-.. ===========================
-.. 
-
 Background knowledge
 --------------------
 
