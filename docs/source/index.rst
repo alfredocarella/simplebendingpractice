@@ -4,16 +4,16 @@
 Welcome to beambending
 ======================
 
-Okay, which concerns does this miniproject address?
+Okay, which concerns does this project address?
 
 * You are taking your first course on statics and you would like to have a more interactive way of visualizing shear forces and bending moments diagrams.
 * You feel you understand better when you have some examples you can modify at will.
-* You just want to double-check that you are doing things right and test yourself with some new problems.
+* You want to review the basic theory, double-check that you are doing things right and test yourself with some new problems.
 
-If you feel like some of these statements describe you, it may be worth to take a look at this package.
+If any of these statements describe you, it may be worth your time to take a look at this project.
 
-Project Contents
-=================
+.. todo:: Write a decent "Getting started" section on how to use this project
+
 
 .. toctree::
     :caption: Getting started
@@ -25,7 +25,9 @@ Project Contents
     :caption: Theory
     :maxdepth: 2
 
+    background
     beam_diagrams
+    shear_moment_relationship
 
 .. toctree::
     :caption: Examples
@@ -34,7 +36,7 @@ Project Contents
     examples/example_1
 
 .. toctree::
-    :caption: Documentation
+    :caption: Package documentation
     :maxdepth: 2
 
     reference

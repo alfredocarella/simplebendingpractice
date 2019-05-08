@@ -1,4 +1,4 @@
-.. _example_1
+.. _example_1:
 
 Beam with two point loads and two distributed loads
 ===================================================
