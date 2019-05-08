@@ -21,7 +21,7 @@ def example_shear1():
     mod_path = os.path.dirname(os.path.abspath(__file__))  # current module
     save_name = os.path.basename(__file__).replace('.py', '.png')  # file name
     save_path = os.path.join(mod_path, save_name)
-    fig.savefig(save_path)
+    fig.savefig(save_path, transparent=True)
 
 
 if __name__ == '__main__':  # call function when run as script
