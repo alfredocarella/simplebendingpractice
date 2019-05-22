@@ -279,7 +279,7 @@ In this simple case, we end up with the following piecewise function:</p>
 \[\begin{split}N(x) = \left\{
   \begin{array}{cl}
      0 \ \ \ &amp; \text{if} \ \  0 \leq x &lt; x_B\\
-     -5 \text{kN} \ \ \ &amp; \text{if} \ \  &lt; x_B \leq x &lt; L
+     5 \text{kN} \ \ \ &amp; \text{if} \ \  &lt; x_B \leq x &lt; L
   \end{array}
 \right.\end{split}\]</div>
 <div class="toggle docutils container">
@@ -355,29 +355,36 @@ A force <span class="math notranslate nohighlight">\(P_{1} = 10\text{kN}\)</span
 <p class="caption"><span class="caption-text">Subsystem between planes 2-2 and 3-3, to the right of support <em>B</em>.</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 <div class="math notranslate nohighlight">
-\[\begin{split}\sum{F_z} = 0 \implies V + \mathbf{P_1} = 0 \implies V = 10 \text{kN}\\
-\sum{M} = 0 \implies M(x) - \mathbf{P_1} (L-x) = 0 \implies M(x) = \mathbf{P_1} (L-x)\end{split}\]</div>
+\[\begin{split}\sum{F_z} = 0 \implies \mathbf{P_1} - V = 0 \implies V = 10 \text{kN}\\
+\sum{M} = 0 \implies M(x) - \mathbf{P_1} (x-L) = 0 \implies M(x) = \mathbf{P_1} (x-L)\end{split}\]</div>
 <p>The vertical plane 2-2, corresponds to <span class="math notranslate nohighlight">\(x=4\)</span>, hence</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}\)</span>, and</p></li>
-<li><p><span class="math notranslate nohighlight">\(M|_{2-2} = M(x)|_{x=4} = \underline{20 \text{kNm}}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(M|_{2-2} = M(x)|_{x=4} = \underline{-20 \text{kNm}}\)</span>.</p></li>
 </ul>
 </div></blockquote>
-<p>Let’s calculate now the shear force and bending moment at the vertical plane 1-1.
-To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.</p>
-<div class="admonition-todo admonition" id="index-0">
-<p class="admonition-title">Todo</p>
-<p>Clarify the sign convention:</p>
+<p>The negative value of <span class="math notranslate nohighlight">\(M(x)|_{x=4}\)</span> means that the actual moment acting on the left side of that beam section is <em>opposite to the arrow drawn in the figure above</em> (i.e. clockwise instead of counterclockwise).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The sign convention we follow is shown in the figure below:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Explain that <span class="math notranslate nohighlight">\(V_{2-2}\)</span> and <span class="math notranslate nohighlight">\(M_{2-2}\)</span> to the right of section 1-2 are (equal and opposite) reactions to <span class="math notranslate nohighlight">\(V_{2-2}\)</span> and <span class="math notranslate nohighlight">\(M_{2-2}\)</span> to the left of section 2-3.</p></li>
+<li><p>A positive normal force <em>N</em> contributes to stretching (elongating) of the beam.</p></li>
+<li><p>A positive shear force <em>V</em> points upwards (z+) at the right side of the beam (x+), and downwards (z-) at the left side of the beam (x-).</p></li>
+<li><p>A positive bending moment causes a contributes to stretch on the upper side of the beam and compression on its lower side.</p></li>
 </ul>
 </div></blockquote>
-</div>
 <div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="_images/sign_convention.png"><img alt="Subsystem between sections 1-1 and 3-3 under a vertical external load." src="_images/sign_convention.png" style="width: 708.8000000000001px; height: 115.2px;" /></a>
+<p class="caption"><span class="caption-text">Sign convention used for the beam diagrams: the arrow directions correspond to positive values.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<p>Let’s calculate now the shear force and bending moment at the vertical plane 1-1.
+To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.</p>
+<div class="figure align-center" id="id8">
 <a class="reference internal image-reference" href="_images/example_shear0b.png"><img alt="Subsystem between sections 1-1 and 3-3 under a vertical external load." src="_images/example_shear0b.png" style="width: 695.0px; height: 252.0px;" /></a>
-<p class="caption"><span class="caption-text">Subsystem between planes 1-1 (btw supports <em>A</em> and <em>B</em>) and 3-3 (beam’s right end)</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Subsystem between planes 1-1 (btw supports <em>A</em> and <em>B</em>) and 3-3 (beam’s right end)</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 <p>The equations for sum of forces and sum of moments become then:</p>
 <div class="math notranslate nohighlight">
@@ -393,8 +400,8 @@ To that end, we will consider the beam section between planes 1-1 and 2-2, as sh
   \text{since } x|_{1-1}=2\text{m} \implies &amp; M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(6\text{m}-2\text{m}) &amp;= 0\\
   &amp; M_{1-1} &amp;= \underline{-20 \text{kNm}}
 \end{array}\end{split}\]</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <p>This result would (of course) have been the same if our free-body diagram had included the whole beam to the right of the plane 1-1.
 The same is true for a free-body of the left side of the beam.
 In order to make sure you will understand the next section, I suggest you <strong>stop reading for a moment and try to verify this</strong>.</p>

@@ -110,7 +110,7 @@ In this simple case, we end up with the following piecewise function:
     N(x) = \left\{
       \begin{array}{cl}
          0 \ \ \ & \text{if} \ \  0 \leq x < x_B\\
-         -5 \text{kN} \ \ \ & \text{if} \ \  < x_B \leq x < L
+         5 \text{kN} \ \ \ & \text{if} \ \  < x_B \leq x < L
       \end{array}
     \right.
 
@@ -181,21 +181,35 @@ Next, we draw a free body diagram of the beam section comprised between planes 2
 
 .. math::
 
-    \sum{F_z} = 0 \implies V + \mathbf{P_1} = 0 \implies V = 10 \text{kN}\\
-    \sum{M} = 0 \implies M(x) - \mathbf{P_1} (L-x) = 0 \implies M(x) = \mathbf{P_1} (L-x)
+    \sum{F_z} = 0 \implies \mathbf{P_1} - V = 0 \implies V = 10 \text{kN}\\
+    \sum{M} = 0 \implies M(x) - \mathbf{P_1} (x-L) = 0 \implies M(x) = \mathbf{P_1} (x-L)
 
 The vertical plane 2-2, corresponds to :math:`x=4`, hence 
 
    - :math:`V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}`, and
-   - :math:`M|_{2-2} = M(x)|_{x=4} = \underline{20 \text{kNm}}`.
+   - :math:`M|_{2-2} = M(x)|_{x=4} = \underline{-20 \text{kNm}}`.
+
+The negative value of :math:`M(x)|_{x=4}` means that the actual moment acting on the left side of that beam section is *opposite to the arrow drawn in the figure above* (i.e. clockwise instead of counterclockwise).
+
+.. note::
+   The sign convention we follow is shown in the figure below:
+
+      * A positive normal force *N* contributes to stretching (elongating) of the beam.
+      * A positive shear force *V* points upwards (z+) at the right side of the beam (x+), and downwards (z-) at the left side of the beam (x-).
+      * A positive bending moment causes a contributes to stretch on the upper side of the beam and compression on its lower side.
+
+   .. figure:: /../../examples/sign_convention.png
+      :scale: 80 %
+      :align: center
+      :alt: Subsystem between sections 1-1 and 3-3 under a vertical external load.
+
+      Sign convention used for the beam diagrams: the arrow directions correspond to positive values.
+
+
+
 
 Let's calculate now the shear force and bending moment at the vertical plane 1-1.
 To that end, we will consider the beam section between planes 1-1 and 2-2, as shown in the figure below.
-
-.. todo::
-   Clarify the sign convention:
-
-      - Explain that :math:`V_{2-2}` and :math:`M_{2-2}` to the right of section 1-2 are (equal and opposite) reactions to :math:`V_{2-2}` and :math:`M_{2-2}` to the left of section 2-3.
 
 .. .. figure:: /_static/placeholder_08.png
 
@@ -223,7 +237,7 @@ The equations for sum of forces and sum of moments become then:
       & M_{1-1} &= \underline{-20 \text{kNm}}
     \end{array}
     
-.. note::
+.. tip::
    This result would (of course) have been the same if our free-body diagram had included the whole beam to the right of the plane 1-1.
    The same is true for a free-body of the left side of the beam.
    In order to make sure you will understand the next section, I suggest you **stop reading for a moment and try to verify this**.
