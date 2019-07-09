@@ -4,19 +4,19 @@ from numpy.testing import assert_allclose
 import pytest
 from sympy import lambdify
 
-from beambending import beam
+from beambending import Beam, DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV, x
 
 
 def test_beam_is_correctly_created():
     span = 9
-    my_beam = beam.Beam(span)
+    my_beam = Beam(span)
     assert my_beam._x0 == 0
     assert my_beam._x1 == 9
 
 
 def test_beam_supports_are_correctly_added():
     span = 9
-    my_beam = beam.Beam(span)
+    my_beam = Beam(span)
     my_beam.rolling_support = 7
 
     assert my_beam._fixed_support == 2
@@ -25,7 +25,7 @@ def test_beam_supports_are_correctly_added():
 
 def test_beam_supports_must_be_within_span():
     span = 9
-    my_beam = beam.Beam(span)
+    my_beam = Beam(span)
 
     with pytest.raises(ValueError):
         my_beam.fixed_support = -3
@@ -36,21 +36,21 @@ def test_beam_supports_must_be_within_span():
 
 def test_beam_loads_are_correctly_added():
     span = 9
-    my_beam = beam.Beam(span)
+    my_beam = Beam(span)
 
-    loads = [beam.DistributedLoadV(-20, (0, 2)),
-             beam.PointLoadV(-20, 3),
-             beam.DistributedLoadV("-10", (3, 9)),
-             beam.PointLoadH(15, 5),
-             beam.DistributedLoadV("-2*x", (1, 3))
+    loads = [DistributedLoadV(-20, (0, 2)),
+             PointLoadV(-20, 3),
+             DistributedLoadV("-10", (3, 9)),
+             PointLoadH(15, 5),
+             DistributedLoadV("-2*x", (1, 3))
             ]
     my_beam.add_loads(loads)
 
-    assert my_beam._loads[0] == beam.DistributedLoadV(-20, (0, 2))
-    assert my_beam._loads[1] == beam.PointLoadV(-20, 3)
-    assert my_beam._loads[2] == beam.DistributedLoadV("-10", (3, 9))
-    assert my_beam._loads[3] == beam.PointLoadH(15, 5)
-    assert my_beam._loads[4] == beam.DistributedLoadH("-2*x", (1, 3))
+    assert my_beam._loads[0] == DistributedLoadV(-20, (0, 2))
+    assert my_beam._loads[1] == PointLoadV(-20, 3)
+    assert my_beam._loads[2] == DistributedLoadV("-10", (3, 9))
+    assert my_beam._loads[3] == PointLoadH(15, 5)
+    assert my_beam._loads[4] == DistributedLoadH("-2*x", (1, 3))
 
     with pytest.raises(TypeError):
         my_beam.add_loads((10, (3, 9)))
@@ -58,18 +58,18 @@ def test_beam_loads_are_correctly_added():
 
 @contextmanager
 def defined_canonical_beam(span=9, fixed=2, rolling=7):
-    my_beam = beam.Beam(span)
+    my_beam = Beam(span)
     my_beam.fixed_support = fixed
     my_beam.rolling_support = rolling
-    my_beam.add_loads([beam.DistributedLoadV("-10", (3, 9)),
-                       beam.PointLoadV(-20, 3),
-                       beam.DistributedLoadV(-20, (0, 2)),
-                       beam.PointLoadH(15, 5),
-                       beam.DistributedLoadH("-2", (7, 9))])
+    my_beam.add_loads([DistributedLoadV("-10", (3, 9)),
+                       PointLoadV(-20, 3),
+                       DistributedLoadV(-20, (0, 2)),
+                       PointLoadH(15, 5),
+                       DistributedLoadH("-2", (7, 9))])
     x_vec = np.linspace(0, 9, 19)
 
     try:
-        yield my_beam, beam.x, x_vec
+        yield my_beam, x, x_vec
     finally:
         pass
 
