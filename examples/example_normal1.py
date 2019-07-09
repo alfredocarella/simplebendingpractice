@@ -3,7 +3,7 @@
 both point loads and distributed loads.
 """
 import os
-from beambending.beam import Beam, PointLoadH
+from beambending import Beam, PointLoadH
 
 def example_normal1():
     """Generate normal force introductory problem schematic"""

@@ -3,7 +3,7 @@
 both point loads and distributed loads.
 """
 import os
-from beambending.beam import Beam, PointLoadV
+from beambending import Beam, PointLoadV
 
 def example_shear0():
     """Generate shear force introductory problem schematic"""

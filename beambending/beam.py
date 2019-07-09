@@ -19,10 +19,12 @@ from matplotlib.patches import Polygon, Rectangle, Wedge
 from matplotlib.collections import PatchCollection
 import numpy as np
 import os
-import sympy
-from sympy import integrate
+from sympy import integrate, lambdify, Piecewise, symbols, sympify
 
 # plt.rc('text', usetex=True)  # This makes the plot text prettier... but SLOWER
+
+
+x = symbols("x")
 
 
 class PointLoadV(namedtuple("PointLoadV", "force, coord")):
@@ -172,7 +174,6 @@ class Beam:
             respectively.
 
         """
-        x = sympy.symbols("x")
         x0, x1 = self._x0, self._x1
         xA, xB = self._fixed_support, self._rolling_support
         F_Rx = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces_x) + \
@@ -287,9 +288,8 @@ class Beam:
         :return: a matplotlib.Axes object representing the plotted data.
 
         """
-        x = sympy.symbols('x')
         x_vec = np.linspace(self._x0, self._x1, min(int((self.length) * 1000 + 1), 1e4))
-        y_vec = sympy.lambdify(x, sym_func, "numpy")(x_vec)
+        y_vec = lambdify(x, sym_func, "numpy")(x_vec)
         y_vec *= np.ones(x_vec.shape)
 
         if inverted:
@@ -401,7 +401,6 @@ class Beam:
         # ax.tick_params(left="off")
 
     def _update_loads(self):
-        x = sympy.symbols("x")
         x0 = self._x0
 
         self._distributed_forces_x = [self._create_distributed_force(f) for f in self._distributed_loads_x()]
@@ -436,12 +435,11 @@ class Beam:
         :return: sympy.Piecewise object with the value of the distributed load.
         """
         expr, interval = load
-        x = sympy.symbols("x")
         x0, x1 = interval
-        expr = sympy.sympify(expr)
+        expr = sympify(expr)
         if shift:
             expr.subs(x, x - x0)
-        return sympy.Piecewise((0, x < x0), (0, x > x1), (expr, True))
+        return Piecewise((0, x < x0), (0, x > x1), (expr, True))
 
     def _effort_from_pointload(self, load: PointLoadH or PointLoadV):
         """
@@ -454,8 +452,7 @@ class Beam:
         by the provided point load.
         """
         value, coord = load
-        x = sympy.symbols("x")
-        return sympy.Piecewise((0, x < coord), (value, True))
+        return Piecewise((0, x < coord), (value, True))
 
     def _point_loads_x(self):
         for f in self._loads:

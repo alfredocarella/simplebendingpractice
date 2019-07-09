@@ -4,7 +4,7 @@ both point loads and distributed loads.
 """
 import os
 import matplotlib.pyplot as plt
-from beambending.beam import Beam, PointLoadV
+from beambending import Beam, PointLoadV
 
 def example_shear1():
     """Generate shear force introductory problem schematic"""
