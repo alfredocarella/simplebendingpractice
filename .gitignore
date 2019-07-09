@@ -6,11 +6,13 @@
 
 *__pycache__
 
+*.bak
 *.out
 *.pdf
 *.png
 *.pptx
 *.pyc
+*.sav
 *.swp
 
 ipynb_renumber.py
