@@ -181,10 +181,12 @@
 <span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">PatchCollection</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sympy</span>
-<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">integrate</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">integrate</span><span class="p">,</span> <span class="n">lambdify</span><span class="p">,</span> <span class="n">Piecewise</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">sympify</span>
 
 <span class="c1"># plt.rc(&#39;text&#39;, usetex=True)  # This makes the plot text prettier... but SLOWER</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PointLoadV"><a class="viewcode-back" href="../reference.html#beam.PointLoadV">[docs]</a><span class="k">class</span> <span class="nc">PointLoadV</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;PointLoadV&quot;</span><span class="p">,</span> <span class="s2">&quot;force, coord&quot;</span><span class="p">)):</span>
@@ -334,7 +336,6 @@
 <span class="sd">            respectively.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
         <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span>
         <span class="n">xA</span><span class="p">,</span> <span class="n">xB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span>
         <span class="n">F_Rx</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_x</span><span class="p">)</span> <span class="o">+</span> \
@@ -449,9 +450,8 @@
 <span class="sd">        :return: a matplotlib.Axes object representing the plotted data.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
         <span class="n">x_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">1e4</span><span class="p">))</span>
-        <span class="n">y_vec</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sym_func</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">)(</span><span class="n">x_vec</span><span class="p">)</span>
+        <span class="n">y_vec</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sym_func</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">)(</span><span class="n">x_vec</span><span class="p">)</span>
         <span class="n">y_vec</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x_vec</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">inverted</span><span class="p">:</span>
@@ -563,7 +563,6 @@
         <span class="c1"># ax.tick_params(left=&quot;off&quot;)</span>
 
     <span class="k">def</span> <span class="nf">_update_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
         <span class="n">x0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_x</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_distributed_force</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_loads_x</span><span class="p">()]</span>
@@ -598,12 +597,11 @@
 <span class="sd">        :return: sympy.Piecewise object with the value of the distributed load.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">expr</span><span class="p">,</span> <span class="n">interval</span> <span class="o">=</span> <span class="n">load</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
         <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">interval</span>
-        <span class="n">expr</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sympify</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">sympify</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">shift</span><span class="p">:</span>
             <span class="n">expr</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">x1</span><span class="p">),</span> <span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Piecewise</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">x1</span><span class="p">),</span> <span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_effort_from_pointload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load</span><span class="p">:</span> <span class="n">PointLoadH</span> <span class="ow">or</span> <span class="n">PointLoadV</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -616,8 +614,7 @@
 <span class="sd">        by the provided point load.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">value</span><span class="p">,</span> <span class="n">coord</span> <span class="o">=</span> <span class="n">load</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Piecewise</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">coord</span><span class="p">),</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Piecewise</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">coord</span><span class="p">),</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_point_loads_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loads</span><span class="p">:</span>

@@ -197,7 +197,7 @@ The resulting diagrams are respectively:</p>
 <dd><p>The x-coordinates of the point loads are marked with green arrows, but magnitudes are not displayed in the beam schematic in order to keep the figure clean and simple.</p>
 </dd>
 </dl>
-<div class="figure align-center">
+<div class="figure align-default">
 <img alt="../_images/example_1.png" src="../_images/example_1.png" />
 </div>
 </div>
@@ -208,20 +208,18 @@ The resulting diagrams are respectively:</p>
 <span class="sd">both point loads and distributed loads.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sympy</span>
-<span class="kn">from</span> <span class="nn">beambending.beam</span> <span class="k">import</span> <span class="n">Beam</span><span class="p">,</span> <span class="n">DistributedLoadV</span><span class="p">,</span> <span class="n">PointLoadH</span><span class="p">,</span> <span class="n">PointLoadV</span>
+<span class="kn">from</span> <span class="nn">beambending</span> <span class="k">import</span> <span class="n">Beam</span><span class="p">,</span> <span class="n">DistributedLoadV</span><span class="p">,</span> <span class="n">PointLoadH</span><span class="p">,</span> <span class="n">PointLoadV</span><span class="p">,</span> <span class="n">x</span>
 
 <span class="k">def</span> <span class="nf">example_1</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Run example 1&quot;&quot;&quot;</span>
-    <span class="c1"># x = sympy.symbols(&quot;x&quot;)  # uncomment if you use variable distributed loads</span>
-    <span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># Initialize a Beam object of length 9m</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the fixed support</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># x-coordinate of the rolling support</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">((</span>
                     <span class="n">PointLoadH</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># 10kN pointing right, at x=3m</span>
                     <span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># 20kN downwards, at x=3m</span>
-                    <span class="n">DistributedLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)),</span>  <span class="c1"># 10 kN/m, downward, for 3m &lt;= x &lt;= 9m</span>
-                    <span class="n">DistributedLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>  <span class="c1"># 20 kN/m downwards, for 0m &lt;= x &lt;= 2m</span>
+                    <span class="n">DistributedLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)),</span>  <span class="c1"># 10 kN/m, downwards, for 3m &lt;= x &lt;= 9m</span>
+                    <span class="n">DistributedLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>  <span class="c1"># variable load, for 0m &lt;= x &lt;= 2m</span>
                 <span class="p">))</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 

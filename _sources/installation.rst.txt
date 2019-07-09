@@ -13,5 +13,7 @@ First steps
 
     python3 -m pip install --user git+https://github.com/alfredocarella/simplebendingpractice
 
-This project is open source, and all of its code can be found in this `GitHub repository
+.. tip:: If you are not 100% familiar with basic one-dimensional elasticity (i.e. shear force and bending moment diagrams), I recommend you to start by going through the section :ref:`background`.
+
+This project is completely open source, and the code can be found in this `GitHub repository
 <https://github.com/alfredocarella/simplebendingpractice>`_.
