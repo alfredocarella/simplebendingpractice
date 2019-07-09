@@ -1,5 +1,5 @@
 ---
-title: 'Simple Bending Practice: A guide to shear force and bending moment diagrams'
+title: 'BeamBending: a teaching aid for 1-D shear force and bending moment diagrams'
 tags:
 - bending moment diagram
 - shear force diagram
@@ -18,7 +18,7 @@ date: 8 July 2019
 bibliography: paper.bib
 ---
 
-# Summary / Description
+# Summary
 BeamBending is an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
 The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of:
 * stresses on slender _one-dimensional_ solids (i.e. beams)

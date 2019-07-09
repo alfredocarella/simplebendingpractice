@@ -10,8 +10,8 @@ from setuptools import setup
 
 
 setup(name='beambending',  # name of package on import
-      version='0.1',  # package version
-      description='Educational package for visualizing shear forces and bending moments on a beam',  # brief description
+      version='1.0',  # package version
+      description='Educational package for visualizing shear forces and bending moments on 1-D beams',  # brief description
       license='cc-by-4.0',  # licensing
       long_description=open('README.md').read(),
       url='https://github.com/alfredocarella/simplebendingpractice',  # git repo url
