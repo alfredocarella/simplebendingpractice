@@ -22,10 +22,12 @@ before_script:
 
 # command to test examples and then run tests
 script:
+  # run tests
+  - pytest test/
   # test examples
   - pytest examples/
-  # run tests
-  - python -m doctest -v */*.py
+  # run doctests (disabled)
+  # - python -m doctest -v */*.py
   # use sphinx to build docs
   - cd docs/
   - make html
