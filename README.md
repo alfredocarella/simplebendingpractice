@@ -105,7 +105,7 @@ If you install the package via `pip`, the listed dependencies should be installe
 
 Pull requests are welcome.
 You can also open an issue if you find a bug, or have a suggestion.
-Constructive feedback is always welcome.
+Constructive feedback is always appreciated.
 
 ## Copyright and License
 
