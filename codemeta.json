@@ -1,0 +1,23 @@
+{
+  "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+  "@type": "Code",
+  "author": [
+    {
+      "@id": "https://orcid.org/0000-0001-8340-3427",
+      "@type": "Person",
+      "email": "alfredocarella@gmail.com",
+      "name": "Alfredo R. Carella",
+      "affiliation": "OsloMet - Oslo Metropolitan University"
+    }
+  ],
+  "identifier": "",
+  "codeRepository": "https://github.com/alfredocarella/simplebendingpractice",
+  "datePublished": "2019-07-10",
+  "dateModified": "2019-07-10",
+  "dateCreated": "2019-07-10",
+  "description": "BeamBending is both an educational module and a Python package, intended to serve as a teaching aid during a first course in Statics. The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of: 1)stresses on slender one-dimensional solids [a.k.a. beams], and 2)normal-force, shear-force, and bending-moment diagrams",
+  "keywords": "statics, mechanics, beam, bending moment diagram, shear force diagram, python",
+  "license": "CC-BY 4.0",
+  "title": "BeamBending: a teaching aid for 1-D shear-force and bending-moment diagrams",
+  "version": "v1.0.0"
+}
