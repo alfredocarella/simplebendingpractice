@@ -19,7 +19,7 @@ bibliography: paper.bib
 ---
 
 # Summary
-BeamBending is an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
+BeamBending is _both_ an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
 The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of:
 * stresses on slender _one-dimensional_ solids (i.e. beams)
 * normal force, shear force and bending moment diagrams
@@ -61,7 +61,9 @@ beam.fixed_support = 2    # x-coordinate of the fixed support
 beam.rolling_support = 7  # x-coordinate of the rolling support
 ```
 
-Each load applied to the beam requires an instance of one of the load classes `DistributedLoadH`, `DistributedLoadV`, `PointLoadH`, or `PointLoadV`. The load classes are simply _namedtuples_, and make the resulting scripts easier to read by making the user's intention explicit.
+Each load applied to the beam requires an instance of one of the load classes `DistributedLoadH`, `DistributedLoadV`, `PointLoadH`, or `PointLoadV`.
+The load classes are simply _namedtuples_, and make the resulting scripts easier to read by making the user's intention explicit.
+The symbolic variable `x`, also defined by the module, is used for defining variable distributed loads.
 
 ```python
 from beambending import DistributedLoadV, PointLoadH, PointLoadV, x
@@ -84,7 +86,7 @@ After the problem is fully defined (beam length + placement of supports + loads)
 fig = beam.plot()
 ```
 
-The `plot` method is actually a wrapper that combines four plots from methods `plot_beam_diagram`, `plot_normal_force`, `plot_shear_force` and `plot_bending_moment` into a single A4-sized printer-friendly plot.
+The `plot` method is actually a wrapper that combines these four methods: `plot_beam_diagram`, `plot_normal_force`, `plot_shear_force` and `plot_bending_moment` into a single A4-sized printer-friendly plot.
 
 ## Example
 The following example, provided within the [package documentation](https://alfredocarella.github.io/simplebendingpractice/reference.html), summarizes the explanation above.
