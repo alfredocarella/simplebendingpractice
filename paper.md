@@ -21,17 +21,19 @@ bibliography: paper.bib
 # Summary
 BeamBending is _both_ an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
 The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of:
+
 * stresses on slender _one-dimensional_ solids (i.e. beams)
 * normal force, shear force and bending moment diagrams
 
-The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous) explanation of the background theory, inspired in [@Bell2015].
+The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous enough) explanation of the background theory, inspired in [@Bell2015].
 It is assumed that the students understand static equilibrium of flat rigid bodies, but a short recap is provided.
 Code snippets that reproduce the theory examples are presented next to each result.
 
 The package can be used by
+
 * teachers who want to automatically create problem sets with their solutions (easily scriptable, _random-problem-generator friendly_);
 * students who want to verify their solutions to introductory problem sets;
-* students who like to play with example problems and receive immediate visual feedback about how simple modifications to imposed loads affect the resulting reaction forces and internal stresses.
+* students who like to play with example problems and receive immediate visual feedback (i.e. about how simple modifications to imposed loads affect the resulting reaction forces and internal stresses).
 
 The `beambending` package is ready for installation using `pip`, or can be tested online using the provided [Jupyter notebook](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb).
 
