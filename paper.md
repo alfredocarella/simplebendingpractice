@@ -110,7 +110,7 @@ fig = beam.plot()
 
 ### Output
 The script above produces the following Matplotlib figure:
-![Output corresponding to the example code above](.\examples\example_1.png)
+![Output corresponding to the example code above](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1.png)
 
 
 # Recent Uses
