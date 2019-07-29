@@ -2,6 +2,7 @@
 
 [![Version](https://img.shields.io/badge/version-1.0-blue.svg)](None)
 [![License](https://img.shields.io/badge/license-CC--BY%204.0-lightgrey.svg)](https://github.com/alfredocarella/simplebendingpractice/raw/master/LICENSE)
+[![status](http://jose.theoj.org/papers/8f3c2cbbcd7338364864a8c8e7155fa5/status.svg)](http://jose.theoj.org/papers/8f3c2cbbcd7338364864a8c8e7155fa5)
 [![Build Status](https://travis-ci.com/alfredocarella/simplebendingpractice.svg?branch=master)](https://travis-ci.com/alfredocarella/simplebendingpractice)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb)
 <!-- [![status](https://jose.theoj.org/papers/MYPAPERNUMBER/status.svg)](http://jose.theoj.org/papers/MYPAPERNUMBER) -->
@@ -11,7 +12,7 @@ The aim of this module is to enhance clarity and provide visual hands-on example
 * stresses on slender _one-dimensional_ solids (i.e. beams)
 * normal force, shear force and bending moment diagrams
 
-The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous) explanation of the background theory, inspired in [@Bell2015].
+The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous) explanation of the background theory, inspired in [@Bell2015,@Beer2017].
 It is assumed that the students understand static equilibrium of flat rigid bodies, but a short recap is provided.
 Code snippets that reproduce the theory examples are presented next to each result.
 

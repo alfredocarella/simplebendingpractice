@@ -25,7 +25,7 @@ The aim of this module is to enhance clarity and provide visual hands-on example
 * stresses on slender _one-dimensional_ solids (i.e. beams)
 * normal force, shear force and bending moment diagrams
 
-The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous enough) explanation of the background theory, inspired in [@Bell2015].
+The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous enough) explanation of the background theory, inspired in [@Bell2015,@Beer2017].
 It is assumed that the students understand static equilibrium of flat rigid bodies, but a short recap is provided.
 Code snippets that reproduce the theory examples are presented next to each result.
 
