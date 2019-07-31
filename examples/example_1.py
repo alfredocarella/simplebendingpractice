@@ -8,7 +8,7 @@ from beambending import Beam, DistributedLoadV, PointLoadH, PointLoadV, x
 def example_1():
     """Run example 1"""
     beam = Beam(9)  # Initialize a Beam object of length 9m
-    beam.fixed_support = 2    # x-coordinate of the fixed support
+    beam.pinned_support = 2    # x-coordinate of the pinned support
     beam.rolling_support = 7  # x-coordinate of the rolling support
     beam.add_loads((
                     PointLoadH(10, 3),  # 10kN pointing right, at x=3m

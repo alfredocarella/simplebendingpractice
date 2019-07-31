@@ -9,7 +9,7 @@ def example_shear0():
     """Generate shear force introductory problem schematic"""
     my_beam = Beam(6)
     my_beam.rolling_support = 0  # x-coordinate of the rolling support
-    my_beam.fixed_support = 3    # x-coordinate of the fixed support
+    my_beam.pinned_support = 3    # x-coordinate of the pinned support
     my_beam.add_loads([PointLoadV(10, 6)])  # 10kN pointing upwards, at x=6m
     fig = my_beam.plot_beam_diagram()
     ax = fig.gca()

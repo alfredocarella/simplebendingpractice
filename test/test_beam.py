@@ -19,7 +19,7 @@ def test_beam_supports_are_correctly_added():
     my_beam = Beam(span)
     my_beam.rolling_support = 7
 
-    assert my_beam._fixed_support == 2
+    assert my_beam._pinned_support == 2
     assert my_beam._rolling_support == 7
 
 
@@ -28,7 +28,7 @@ def test_beam_supports_must_be_within_span():
     my_beam = Beam(span)
 
     with pytest.raises(ValueError):
-        my_beam.fixed_support = -3
+        my_beam.pinned_support = -3
 
     with pytest.raises(ValueError):
         my_beam.rolling_support = 10
@@ -57,9 +57,9 @@ def test_beam_loads_are_correctly_added():
 
 
 @contextmanager
-def defined_canonical_beam(span=9, fixed=2, rolling=7):
+def defined_canonical_beam(span=9, pinned=2, rolling=7):
     my_beam = Beam(span)
-    my_beam.fixed_support = fixed
+    my_beam.pinned_support = pinned
     my_beam.rolling_support = rolling
     my_beam.add_loads([DistributedLoadV("-10", (3, 9)),
                        PointLoadV(-20, 3),

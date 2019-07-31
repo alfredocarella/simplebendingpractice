@@ -56,10 +56,10 @@ from beambending import Beam
 beam = Beam(9)  # Initialize a Beam object of length 9m
 ```
 
-After a `Beam` object is created, the properties corresponding to the x-coordinates of the fixed and rolling supports must be defined.
+After a `Beam` object is created, the properties corresponding to the x-coordinates of the pinned and rolling supports must be defined.
 
 ```python
-beam.fixed_support = 2    # x-coordinate of the fixed support
+beam.pinned_support = 2    # x-coordinate of the pinned support
 beam.rolling_support = 7  # x-coordinate of the rolling support
 ```
 
@@ -97,8 +97,8 @@ The following example, provided within the [package documentation](https://alfre
 ```python
 from beambending import Beam, DistributedLoadV, PointLoadH, PointLoadV, x
 beam = Beam(9)  # Initialize a Beam object of length 9m
-beam.fixed_support = 2    # x-coordinate of the fixed support
 beam.rolling_support = 7  # x-coordinate of the rolling support
+beam.pinned_support = 2
 beam.add_loads((
                 PointLoadH(10, 3),  # 10kN pointing right, at x=3m
                 PointLoadV(-20, 3),  # 20kN downwards, at x=3m

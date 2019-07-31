@@ -9,7 +9,7 @@ def example_normal0():
     """Generate normal force introductory problem schematic"""
     beam = Beam(6)
     beam.rolling_support = 0  # x-coordinate of the rolling support
-    beam.fixed_support = 3    # x-coordinate of the fixed support
+    beam.pinned_support = 3    # x-coordinate of the pinned support
     beam.add_loads([PointLoadH(5, 6)])  # 5kN pointing right, at x=6m
     fig = beam.plot_beam_diagram()
     ax = fig.gca()

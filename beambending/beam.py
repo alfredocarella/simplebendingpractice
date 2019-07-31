@@ -4,7 +4,7 @@ PointLoadV, DistributedLoadH, and DistributedLoadV.
 Example
 -------
 >>> my_beam = Beam(9)
->>> my_beam.fixed_support = 2    # x-coordinate of the fixed support
+>>> my_beam.pinned_support = 2    # x-coordinate of the pinned support
 >>> my_beam.rolling_support = 7  # x-coordinate of the rolling support
 >>> my_beam.add_loads([PointLoadV(-20, 3)])  # 20kN downwards, at x=3m
 >>> print("(F_Ax, F_Ay, F_By) =", my_beam.get_reaction_forces())
@@ -86,13 +86,13 @@ class Beam:
         Parameters
         ----------
         span : float or int
-            Length of the beam span. Must be positive, and the fixed and rolling
+            Length of the beam span. Must be positive, and the pinned and rolling
             supports can only be placed within this span. The default value is 10.
 
         """
         self._x0 = 0
         self._x1 = span
-        self._fixed_support = 2
+        self._pinned_support = 2
         self._rolling_support = 8
 
         self._loads = []
@@ -115,17 +115,17 @@ class Beam:
             raise ValueError("The provided length must be positive.")
 
     @property
-    def fixed_support(self):
-        """float or int: x-coordinate of the beam's fixed support. Must be 
+    def pinned_support(self):
+        """float or int: x-coordinate of the beam's pinned support. Must be 
         within the beam span."""
-        return self._fixed_support
+        return self._pinned_support
 
-    @fixed_support.setter
-    def fixed_support(self, x_coord: float):
+    @pinned_support.setter
+    def pinned_support(self, x_coord: float):
         if self._x0 <= x_coord <= self._x1:
-            self._fixed_support = x_coord
+            self._pinned_support = x_coord
         else:
-            raise ValueError("The fixed support must be located within the beam span.")
+            raise ValueError("The pinned support must be located within the beam span.")
 
     @property
     def rolling_support(self):
@@ -164,18 +164,18 @@ class Beam:
         Calculates the reaction forces at the supports, given the applied loads.
         
         The first and second values correspond to the horizontal and vertical 
-        forces of the fixed support. The third one is the vertical force at the
+        forces of the pinned support. The third one is the vertical force at the
         rolling support.
 
         Returns
         -------
         F_Ax, F_Ay, F_By: (float, float, float)
-            reaction force components for fixed (x,y) and rolling (y) supports 
+            reaction force components for pinned (x,y) and rolling (y) supports 
             respectively.
 
         """
         x0, x1 = self._x0, self._x1
-        xA, xB = self._fixed_support, self._rolling_support
+        xA, xB = self._pinned_support, self._rolling_support
         F_Rx = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces_x) + \
                sum(f.force for f in self._point_loads_x())
         F_Ry = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces_y) + \
@@ -357,14 +357,14 @@ class Beam:
         ax.add_patch(beam_body)
 
         # Markers at beam supports
-        fixed_support = Polygon(np.array([self.fixed_support + 0.01*xspan*np.array((-1, -1, 0, 1, 1)), 
+        pinned_support = Polygon(np.array([self.pinned_support + 0.01*xspan*np.array((-1, -1, 0, 1, 1)), 
                                            beam_bottom + 0.05*np.array((-1.5, -1,0,-1, -1.5))*yspan]).T)
         rolling_support = [Polygon(np.array([self.rolling_support + 0.01*xspan*np.array((-1, 0, 1)), 
                                             beam_bottom + 0.05*np.array((-1,0,-1))*yspan]).T),
                            Polygon(np.array([self.rolling_support + 0.01*xspan*np.array((-1, -1, 1, 1)), 
                                             beam_bottom + 0.05*np.array((-1.5,-1.25, -1.25, -1.5))*yspan]).T)]
 
-        supports = PatchCollection([fixed_support, *rolling_support], facecolor="black")
+        supports = PatchCollection([pinned_support, *rolling_support], facecolor="black")
         ax.add_collection(supports)
 
         # Draw arrows at point loads
@@ -407,17 +407,17 @@ class Beam:
         self._distributed_forces_y = [self._create_distributed_force(f) for f in self._distributed_loads_y()]
 
         f_ax, f_ay, f_by = self.get_reaction_forces()
-        fixed_support_load_x = PointLoadH(f_ax, self._fixed_support)
-        fixed_support_load_y = PointLoadV(f_ay, self._fixed_support)
+        pinned_support_load_x = PointLoadH(f_ax, self._pinned_support)
+        pinned_support_load_y = PointLoadV(f_ay, self._pinned_support)
         rolling_support_load = PointLoadV(f_by, self._rolling_support)
 
         self._normal_forces = [-1*integrate(load, (x, x0, x)) for load in self._distributed_forces_x]
         self._normal_forces.extend(-1*self._effort_from_pointload(f) for f in self._point_loads_x())
-        self._normal_forces.append(-1*self._effort_from_pointload(fixed_support_load_x))
+        self._normal_forces.append(-1*self._effort_from_pointload(pinned_support_load_x))
 
         self._shear_forces = [integrate(load, (x, x0, x)) for load in self._distributed_forces_y]
         self._shear_forces.extend(self._effort_from_pointload(f) for f in self._point_loads_y())
-        self._shear_forces.append(self._effort_from_pointload(fixed_support_load_y))
+        self._shear_forces.append(self._effort_from_pointload(pinned_support_load_y))
         self._shear_forces.append(self._effort_from_pointload(rolling_support_load))
 
         self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
