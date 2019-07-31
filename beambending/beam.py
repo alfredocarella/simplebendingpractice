@@ -73,10 +73,15 @@ class Beam:
     """
     Represents a one-dimensional beam that can take axial and tangential loads.
     
-    A Beam object can accept as inputs:
+    Through the method `add_loads`, a Beam object can accept a list of:
     
-    * PointLoad objects, and
+    * PointLoad objects, and/or
     * DistributedLoad objects.
+
+    Notes
+    -----
+    The Beam class currently supports only statically determined beams with
+    (exactly) one pinned and one roller support.
 
     """
     

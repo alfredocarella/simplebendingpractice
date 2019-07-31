@@ -63,6 +63,8 @@ beam.pinned_support = 2    # x-coordinate of the pinned support
 beam.rolling_support = 7  # x-coordinate of the rolling support
 ```
 
+Note that the Beam class currently supports only statically determined beams with (exactly) one pinned and one roller support.
+
 Each load applied to the beam requires an instance of one of the load classes `DistributedLoadH`, `DistributedLoadV`, `PointLoadH`, or `PointLoadV`.
 The load classes are simply _namedtuples_, and make the resulting scripts easier to read by making the user's intention explicit.
 The symbolic variable `x`, also defined by the module, is used for defining variable distributed loads.
@@ -75,10 +77,14 @@ The loads can be applied to the `Beam` by passing an iterable (list or tuple) to
 
 ```python
 beam.add_loads((
-                PointLoadH(10, 3),  # 10kN pointing right, at x=3m
-                PointLoadV(-20, 3),  # 20kN downwards, at x=3m
-                DistributedLoadV(-10, (3, 9)),  # 10 kN/m, downward, for 3m <= x <= 9m
-                DistributedLoadV(-20 + x**2, (0, 2)),  # variable load, for 0m <= x <= 2m
+                # 10kN pointing right, at x=3m
+                PointLoadH(10, 3),
+                # 20kN downwards, at x=3m
+                PointLoadV(-20, 3),
+                # 10 kN/m, downward, for 3m <= x <= 9m
+                DistributedLoadV(-10, (3, 9)),
+                # Variable load, for 0m <= x <= 2m
+                DistributedLoadV(-20 + x**2, (0, 2)),
             ))
 ```
 
@@ -92,31 +98,28 @@ The `plot` method is actually a wrapper that combines these four methods: `plot_
 
 ## Example
 The following example, provided within the [package documentation](https://alfredocarella.github.io/simplebendingpractice/reference.html), summarizes the explanation above.
+The output is shown in Figure 1.
 
-### Input
 ```python
 from beambending import Beam, DistributedLoadV, PointLoadH, PointLoadV, x
-beam = Beam(9)  # Initialize a Beam object of length 9m
-beam.rolling_support = 7  # x-coordinate of the rolling support
+beam = Beam(9)
 beam.pinned_support = 2
+beam.rolling_support = 7
 beam.add_loads((
-                PointLoadH(10, 3),  # 10kN pointing right, at x=3m
-                PointLoadV(-20, 3),  # 20kN downwards, at x=3m
-                DistributedLoadV(-10, (3, 9)),  # 10 kN/m, downwards, for 3m <= x <= 9m
-                DistributedLoadV(-20 + x**2, (0, 2)),  # variable load, for 0m <= x <= 2m
+                PointLoadH(10, 3),
+                PointLoadV(-20, 3),
+                DistributedLoadV(-10, (3, 9)),
+                DistributedLoadV(-20 + x**2, (0, 2)),
             ))
 fig = beam.plot()
 ```
 
-### Output
-The script above produces the following Matplotlib figure:
-
-![Output corresponding to the example code above](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1.png)
+![Output corresponding to the example code above](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1_62pct.png)
 
 
 # Recent Uses
-I developed `beambending` for using it in my *Statics* course in the Autumn 2019 semester at OsloMet - Oslo Metropolitan University.
-Beta versions were tried and commented by students during the Autumn 2018 semester, but the effectiveness of the package has still not been tested with large groups of students.
+The `beambending` package was developed as a teaching aid for the *Statics* course in the Autumn 2019 semester at OsloMet - Oslo Metropolitan University.
+Beta versions were tried and commented by students during the Autumn 2018 semester, but the effectiveness of the tool has not been tested with large groups of students yet.
 
 
 # References

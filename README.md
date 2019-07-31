@@ -53,6 +53,8 @@ beam.pinned_support = 2    # x-coordinate of the pinned support
 beam.rolling_support = 7  # x-coordinate of the rolling support
 ```
 
+Note that the Beam class currently supports only statically determined beams with _exactly_ one pinned and one roller support.
+
 Each load applied to the beam requires an instance of one of the load classes `DistributedLoadH`, `DistributedLoadV`, `PointLoadH`, or `PointLoadV`.
 The load classes are simply _namedtuples_, and make the resulting scripts easier to read by making the user's intention explicit.
 The symbolic variable `x`, also defined by the module, is used for defining variable distributed loads.
