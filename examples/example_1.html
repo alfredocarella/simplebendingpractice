@@ -213,7 +213,7 @@ The resulting diagrams are respectively:</p>
 <span class="k">def</span> <span class="nf">example_1</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Run example 1&quot;&quot;&quot;</span>
     <span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># Initialize a Beam object of length 9m</span>
-    <span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the fixed support</span>
+    <span class="n">beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the pinned support</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># x-coordinate of the rolling support</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">((</span>
                     <span class="n">PointLoadH</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>  <span class="c1"># 10kN pointing right, at x=3m</span>

@@ -42,7 +42,7 @@ The first introductory problem to consider will be a 6 meter long horizontal bea
    :align: center
    :alt: Beam on two supports with horizontal load
 
-   The beam is held in place by a rolling support at *A* and a fixed support at *B*.
+   The beam is held in place by a rolling support at *A* and a pinned support at *B*.
    A normal (tensile) force :math:`F_{1} = 5\text{kN}` is acting at the right end of the beam.
 
 Let's find the reaction forces first, so we can proceed with our analysis.
@@ -155,7 +155,7 @@ Instead of the horizontal force :math:`\mathbf{F_1}`, consider now a vertical fo
    :align: center
    :alt: Beam on two supports with vertical load
 
-   The beam is held in place by a rolling support at *A* and a fixed support at *B*.
+   The beam is held in place by a rolling support at *A* and a pinned support at *B*.
    A force :math:`P_{1} = 10\text{kN}` directed upwards is acting at the right end of the beam.
 
 In the same way as before, we start by finding the reaction forces at the supports *A* and *B*.

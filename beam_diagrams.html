@@ -215,7 +215,7 @@ Normal forces are hence perpendicular to these planes, i.e. parallel to the beam
 14
 15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
-</span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+</span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the pinned support</span>
 </span><span class="hll"><span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadH</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 5kN pointing right, at x=6m</span>
 </span><span class="hll"><span class="n">fig</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">plot_beam_diagram</span><span class="p">()</span>
 </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
@@ -233,7 +233,7 @@ Normal forces are hence perpendicular to these planes, i.e. parallel to the beam
 </div>
 <div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="_images/example_normal0.png"><img alt="Beam on two supports with horizontal load" src="_images/example_normal0.png" style="width: 600.0px; height: 250.0px;" /></a>
-<p class="caption"><span class="caption-text">The beam is held in place by a rolling support at <em>A</em> and a fixed support at <em>B</em>.
+<p class="caption"><span class="caption-text">The beam is held in place by a rolling support at <em>A</em> and a pinned support at <em>B</em>.
 A normal (tensile) force <span class="math notranslate nohighlight">\(F_{1} = 5\text{kN}\)</span> is acting at the right end of the beam.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>Let’s find the reaction forces first, so we can proceed with our analysis.</p>
@@ -288,7 +288,7 @@ In this simple case, we end up with the following piecewise function:</p>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 <span class="n">beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
-<span class="n">beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+<span class="n">beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the pinned support</span>
 <span class="n">beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadH</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 5kN pointing right, at x=6m</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">beam</span><span class="o">.</span><span class="n">plot_normal_force</span><span class="p">()</span>
 </pre></div>
@@ -322,7 +322,7 @@ Instead of the horizontal force <span class="math notranslate nohighlight">\(\ma
 14
 15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
-</span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+</span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the pinned support</span>
 </span><span class="hll"><span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 10kN pointing upwards, at x=6m</span>
 </span><span class="hll"><span class="n">fig</span> <span class="o">=</span> <span class="n">my_beam</span><span class="o">.</span><span class="n">plot_beam_diagram</span><span class="p">()</span>
 </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
@@ -340,7 +340,7 @@ Instead of the horizontal force <span class="math notranslate nohighlight">\(\ma
 </div>
 <div class="figure align-center" id="id5">
 <a class="reference internal image-reference" href="_images/example_shear0.png"><img alt="Beam on two supports with vertical load" src="_images/example_shear0.png" style="width: 600.0px; height: 250.0px;" /></a>
-<p class="caption"><span class="caption-text">The beam is held in place by a rolling support at <em>A</em> and a fixed support at <em>B</em>.
+<p class="caption"><span class="caption-text">The beam is held in place by a rolling support at <em>A</em> and a pinned support at <em>B</em>.
 A force <span class="math notranslate nohighlight">\(P_{1} = 10\text{kN}\)</span> directed upwards is acting at the right end of the beam.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 <p>In the same way as before, we start by finding the reaction forces at the supports <em>A</em> and <em>B</em>.</p>
@@ -414,7 +414,7 @@ You should obtain a function like the one shown in the image below.</p>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 <span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-coordinate of the rolling support</span>
-<span class="n">my_beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the fixed support</span>
+<span class="n">my_beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">3</span>    <span class="c1"># x-coordinate of the pinned support</span>
 <span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)])</span>  <span class="c1"># 10kN pointing upwards, at x=6m</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">my_beam</span><span class="o">.</span><span class="n">plot_shear_force</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>

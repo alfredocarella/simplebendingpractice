@@ -166,7 +166,7 @@
 <span class="sd">Example</span>
 <span class="sd">-------</span>
 <span class="sd">&gt;&gt;&gt; my_beam = Beam(9)</span>
-<span class="sd">&gt;&gt;&gt; my_beam.fixed_support = 2    # x-coordinate of the fixed support</span>
+<span class="sd">&gt;&gt;&gt; my_beam.pinned_support = 2    # x-coordinate of the pinned support</span>
 <span class="sd">&gt;&gt;&gt; my_beam.rolling_support = 7  # x-coordinate of the rolling support</span>
 <span class="sd">&gt;&gt;&gt; my_beam.add_loads([PointLoadV(-20, 3)])  # 20kN downwards, at x=3m</span>
 <span class="sd">&gt;&gt;&gt; print(&quot;(F_Ax, F_Ay, F_By) =&quot;, my_beam.get_reaction_forces())</span>
@@ -235,10 +235,15 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a one-dimensional beam that can take axial and tangential loads.</span>
 <span class="sd">    </span>
-<span class="sd">    A Beam object can accept as inputs:</span>
+<span class="sd">    Through the method `add_loads`, a Beam object can accept a list of:</span>
 <span class="sd">    </span>
-<span class="sd">    * PointLoad objects, and</span>
+<span class="sd">    * PointLoad objects, and/or</span>
 <span class="sd">    * DistributedLoad objects.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Beam class currently supports only statically determined beams with</span>
+<span class="sd">    (exactly) one pinned and one roller support.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -248,13 +253,13 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        span : float or int</span>
-<span class="sd">            Length of the beam span. Must be positive, and the fixed and rolling</span>
+<span class="sd">            Length of the beam span. Must be positive, and the pinned and rolling</span>
 <span class="sd">            supports can only be placed within this span. The default value is 10.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span> <span class="o">=</span> <span class="n">span</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pinned_support</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span> <span class="o">=</span> <span class="mi">8</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_loads</span> <span class="o">=</span> <span class="p">[]</span>
@@ -277,17 +282,17 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The provided length must be positive.&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">fixed_support</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;float or int: x-coordinate of the beam&#39;s fixed support. Must be </span>
+    <span class="k">def</span> <span class="nf">pinned_support</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;float or int: x-coordinate of the beam&#39;s pinned support. Must be </span>
 <span class="sd">        within the beam span.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pinned_support</span>
 
-    <span class="nd">@fixed_support</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">fixed_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_coord</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="nd">@pinned_support</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">pinned_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_coord</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span> <span class="o">&lt;=</span> <span class="n">x_coord</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span> <span class="o">=</span> <span class="n">x_coord</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pinned_support</span> <span class="o">=</span> <span class="n">x_coord</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The fixed support must be located within the beam span.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The pinned support must be located within the beam span.&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rolling_support</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -326,18 +331,18 @@
 <span class="sd">        Calculates the reaction forces at the supports, given the applied loads.</span>
 <span class="sd">        </span>
 <span class="sd">        The first and second values correspond to the horizontal and vertical </span>
-<span class="sd">        forces of the fixed support. The third one is the vertical force at the</span>
+<span class="sd">        forces of the pinned support. The third one is the vertical force at the</span>
 <span class="sd">        rolling support.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        F_Ax, F_Ay, F_By: (float, float, float)</span>
-<span class="sd">            reaction force components for fixed (x,y) and rolling (y) supports </span>
+<span class="sd">            reaction force components for pinned (x,y) and rolling (y) supports </span>
 <span class="sd">            respectively.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span>
-        <span class="n">xA</span><span class="p">,</span> <span class="n">xB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span>
+        <span class="n">xA</span><span class="p">,</span> <span class="n">xB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pinned_support</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span>
         <span class="n">F_Rx</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_x</span><span class="p">)</span> <span class="o">+</span> \
                <span class="nb">sum</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">force</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads_x</span><span class="p">())</span>
         <span class="n">F_Ry</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_y</span><span class="p">)</span> <span class="o">+</span> \
@@ -519,14 +524,14 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">beam_body</span><span class="p">)</span>
 
         <span class="c1"># Markers at beam supports</span>
-        <span class="n">fixed_support</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">xspan</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> 
+        <span class="n">pinned_support</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">xspan</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> 
                                            <span class="n">beam_bottom</span> <span class="o">+</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">))</span><span class="o">*</span><span class="n">yspan</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="n">rolling_support</span> <span class="o">=</span> <span class="p">[</span><span class="n">Polygon</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">xspan</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> 
                                             <span class="n">beam_bottom</span> <span class="o">+</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">*</span><span class="n">yspan</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">),</span>
                            <span class="n">Polygon</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">+</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">xspan</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> 
                                             <span class="n">beam_bottom</span> <span class="o">+</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">))</span><span class="o">*</span><span class="n">yspan</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)]</span>
 
-        <span class="n">supports</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">([</span><span class="n">fixed_support</span><span class="p">,</span> <span class="o">*</span><span class="n">rolling_support</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">supports</span> <span class="o">=</span> <span class="n">PatchCollection</span><span class="p">([</span><span class="n">pinned_support</span><span class="p">,</span> <span class="o">*</span><span class="n">rolling_support</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">supports</span><span class="p">)</span>
 
         <span class="c1"># Draw arrows at point loads</span>
@@ -569,17 +574,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_y</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_distributed_force</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_loads_y</span><span class="p">()]</span>
 
         <span class="n">f_ax</span><span class="p">,</span> <span class="n">f_ay</span><span class="p">,</span> <span class="n">f_by</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_reaction_forces</span><span class="p">()</span>
-        <span class="n">fixed_support_load_x</span> <span class="o">=</span> <span class="n">PointLoadH</span><span class="p">(</span><span class="n">f_ax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">)</span>
-        <span class="n">fixed_support_load_y</span> <span class="o">=</span> <span class="n">PointLoadV</span><span class="p">(</span><span class="n">f_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_support</span><span class="p">)</span>
+        <span class="n">pinned_support_load_x</span> <span class="o">=</span> <span class="n">PointLoadH</span><span class="p">(</span><span class="n">f_ax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pinned_support</span><span class="p">)</span>
+        <span class="n">pinned_support_load_y</span> <span class="o">=</span> <span class="n">PointLoadV</span><span class="p">(</span><span class="n">f_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pinned_support</span><span class="p">)</span>
         <span class="n">rolling_support_load</span> <span class="o">=</span> <span class="n">PointLoadV</span><span class="p">(</span><span class="n">f_by</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rolling_support</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_normal_forces</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_x</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_normal_forces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads_x</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_normal_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">fixed_support_load_x</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_normal_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">pinned_support_load_x</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span> <span class="o">=</span> <span class="p">[</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distributed_forces_y</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_loads_y</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">fixed_support_load_y</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">pinned_support_load_y</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_effort_from_pointload</span><span class="p">(</span><span class="n">rolling_support_load</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_bending_moments</span> <span class="o">=</span> <span class="p">[</span><span class="n">integrate</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shear_forces</span><span class="p">]</span>

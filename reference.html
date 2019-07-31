@@ -175,7 +175,7 @@ PointLoadV, DistributedLoadH, and DistributedLoadV.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">fixed_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the fixed support</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the pinned support</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># x-coordinate of the rolling support</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>  <span class="c1"># 20kN downwards, at x=3m</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;(F_Ax, F_Ay, F_By) =&quot;</span><span class="p">,</span> <span class="n">my_beam</span><span class="o">.</span><span class="n">get_reaction_forces</span><span class="p">())</span>
@@ -189,11 +189,14 @@ PointLoadV, DistributedLoadH, and DistributedLoadV.</p>
 <dt id="beam.Beam">
 <em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">Beam</code><span class="sig-paren">(</span><em class="sig-param">span: float = 10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/beam.html#Beam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.Beam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a one-dimensional beam that can take axial and tangential loads.</p>
-<p>A Beam object can accept as inputs:</p>
+<p>Through the method <cite>add_loads</cite>, a Beam object can accept a list of:</p>
 <ul class="simple">
-<li><p>PointLoad objects, and</p></li>
+<li><p>PointLoad objects, and/or</p></li>
 <li><p>DistributedLoad objects.</p></li>
 </ul>
+<p class="rubric">Notes</p>
+<p>The Beam class currently supports only statically determined beams with
+(exactly) one pinned and one roller support.</p>
 </dd></dl>
 
 <dl class="function">
@@ -217,12 +220,12 @@ be applied to the Beam object. Note that the load application point
 <code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">get_reaction_forces</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.get_reaction_forces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the reaction forces at the supports, given the applied loads.</p>
 <p>The first and second values correspond to the horizontal and vertical 
-forces of the fixed support. The third one is the vertical force at the
+forces of the pinned support. The third one is the vertical force at the
 rolling support.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>F_Ax, F_Ay, F_By: (float, float, float)</dt><dd><p>reaction force components for fixed (x,y) and rolling (y) supports 
+<dt>F_Ax, F_Ay, F_By: (float, float, float)</dt><dd><p>reaction force components for pinned (x,y) and rolling (y) supports 
 respectively.</p>
 </dd>
 </dl>
