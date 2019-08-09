@@ -106,9 +106,7 @@ If you install the package via `pip`, the listed dependencies should be installe
 
 ## How to contribute to BeamBending
 
-Pull requests are welcome.
-You can also open an issue if you find a bug, or have a suggestion.
-Constructive feedback is always appreciated.
+The guidelines for contributing are specified [here](https://github.com/alfredocarella/simplebendingpractice/raw/master/CONTRIBUTING.md).
 
 ## Copyright and License
 
