@@ -83,21 +83,24 @@ def test_beam_distributed_loads_are_correct():
 
 def test_beam_normal_forces_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
-        normal_force_sample = lambdify(x, sum(the_beam._normal_forces), "numpy")(x_vec)
+        normal_force_lambda = lambdify(x, sum(the_beam._normal_forces), "numpy")
+        normal_force_sample = [normal_force_lambda(t) for t in x_vec]
         expected = [0, 0, 0, 0, 11, 11, 11, 11, 11, 11, -4, -4, -4, -4, -4, -3, -2, -1, 0]
         np.testing.assert_allclose(normal_force_sample, expected)
 
 
 def test_beam_shear_forces_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
-        shear_force_sample = lambdify(x, sum(the_beam._shear_forces), "numpy")(x_vec)
+        shear_force_lambda = lambdify(x, sum(the_beam._shear_forces), "numpy")
+        shear_force_sample = [shear_force_lambda(t) for t in x_vec]
         expected = [0, -10, -20, -30, 36, 36, 16, 11, 6, 1, -4, -9, -14, -19, 20, 15, 10, 5, 0]
         np.testing.assert_allclose(shear_force_sample, expected)
 
 
 def test_beam_bending_moments_are_correct():
     with defined_canonical_beam() as (the_beam, x, x_vec):
-        bending_moment_sample = lambdify(x, sum(the_beam._bending_moments), "numpy")(x_vec)
+        bending_moment_lambda = lambdify(x, sum(the_beam._bending_moments), "numpy")
+        bending_moment_sample = [bending_moment_lambda(t) for t in x_vec]
         expected = [0, -2.5, -10, -22.5, -40, -22, -4, 2.75, 7, 8.75, 8, 4.75, -1, -9.25, -20, -11.25, -5, -1.25, 0]
         np.testing.assert_allclose(bending_moment_sample, expected)
 

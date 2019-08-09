@@ -19,12 +19,10 @@ from matplotlib.patches import Polygon, Rectangle, Wedge
 from matplotlib.collections import PatchCollection
 import numpy as np
 import os
-from sympy import integrate, lambdify, Piecewise, symbols, sympify
+from sympy import integrate, lambdify, Piecewise, sympify
+from sympy.abc import x
 
 # plt.rc('text', usetex=True)  # This makes the plot text prettier... but SLOWER
-
-
-x = symbols("x")
 
 
 class PointLoadV(namedtuple("PointLoadV", "force, coord")):
@@ -294,8 +292,8 @@ class Beam:
 
         """
         x_vec = np.linspace(self._x0, self._x1, min(int((self.length) * 1000 + 1), 1e4))
-        y_vec = lambdify(x, sym_func, "numpy")(x_vec)
-        y_vec *= np.ones(x_vec.shape)
+        y_lam = lambdify(x, sym_func, "numpy")
+        y_vec = np.array([y_lam(t) for t in x_vec])
 
         if inverted:
             y_vec *= -1
