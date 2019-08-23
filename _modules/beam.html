@@ -168,7 +168,7 @@
 <span class="sd">&gt;&gt;&gt; my_beam = Beam(9)</span>
 <span class="sd">&gt;&gt;&gt; my_beam.pinned_support = 2    # x-coordinate of the pinned support</span>
 <span class="sd">&gt;&gt;&gt; my_beam.rolling_support = 7  # x-coordinate of the rolling support</span>
-<span class="sd">&gt;&gt;&gt; my_beam.add_loads([PointLoadV(-20, 3)])  # 20kN downwards, at x=3m</span>
+<span class="sd">&gt;&gt;&gt; my_beam.add_loads([PointLoadV(-20, 3)])  # 20 kN downwards, at x=3 m</span>
 <span class="sd">&gt;&gt;&gt; print(&quot;(F_Ax, F_Ay, F_By) =&quot;, my_beam.get_reaction_forces())</span>
 <span class="sd">(F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)</span>
 
@@ -192,7 +192,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; external_force = PointLoadV(-30, 3)  # 30kN downwards at x=3m</span>
+<span class="sd">    &gt;&gt;&gt; external_force = PointLoadV(-30, 3)  # 30 kN downwards at x=3 m</span>
 <span class="sd">    &gt;&gt;&gt; external_force</span>
 <span class="sd">    PointLoadV(force=-30, coord=3)</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
@@ -203,7 +203,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; external_force = PointLoadH(10, 9)  # 10kN towards the right at x=9m</span>
+<span class="sd">    &gt;&gt;&gt; external_force = PointLoadH(10, 9)  # 10 kN towards the right at x=9 m</span>
 <span class="sd">    &gt;&gt;&gt; external_force</span>
 <span class="sd">    PointLoadH(force=10, coord=9)</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
@@ -214,7 +214,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; snow_load = DistributedLoadV(&quot;10*x+5&quot;, (0, 2))  # Linearly growing load for 0&lt;x&lt;2</span>
+<span class="sd">    &gt;&gt;&gt; snow_load = DistributedLoadV(&quot;10*x+5&quot;, (0, 2))  # Linearly growing load for 0&lt;x&lt;2 m</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -240,8 +240,10 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The Beam class currently supports only statically determined beams with</span>
-<span class="sd">    (exactly) one pinned and one roller support.</span>
+<span class="sd">    * The Beam class currently supports only statically determined beams with</span>
+<span class="sd">      (exactly) one pinned and one roller support.</span>
+<span class="sd">    * The default units package units for length, force and bending moment </span>
+<span class="sd">      (torque) are respectively (m, kN, kN·m)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
@@ -427,7 +429,7 @@
     <span class="k">def</span> <span class="nf">plot_bending_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a plot of the bending moment as a function of the x-coordinate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">plot04_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Bending moment&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN \cdot m&#39;</span><span class="p">,</span>
+        <span class="n">plot04_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Bending moment&quot;</span><span class="p">,</span> <span class="s1">&#39;yunits&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kN·m&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="s2">&quot;Beam axis&quot;</span><span class="p">,</span> <span class="s1">&#39;xunits&#39;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -446,7 +448,7 @@
 <span class="sd">        :param title: title to show above the plot, optional</span>
 <span class="sd">        :param maxmin_hline: when set to False, the extreme values of the function are not displayed</span>
 <span class="sd">        :param xunits: str, physical unit to be used for the x-axis. Example: &quot;m&quot;</span>
-<span class="sd">        :param yunits: str, physical unit to be used for the y-axis. Example: &quot;m&quot;</span>
+<span class="sd">        :param yunits: str, physical unit to be used for the y-axis. Example: &quot;kN&quot;</span>
 <span class="sd">        :param xlabel: str, physical variable displayed on the x-axis. Example: &quot;Length&quot;</span>
 <span class="sd">        :param ylabel: str, physical variable displayed on the y-axis. Example: &quot;Shear force&quot;</span>
 <span class="sd">        :param color: color to be used for the shaded area of the plot. No shading if not provided</span>
@@ -472,14 +474,14 @@
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">y_vec</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">y_vec</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
                 <span class="n">max_idx</span> <span class="o">=</span> <span class="n">y_vec</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
-                <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">inverted</span><span class="p">))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yunits</span><span class="p">),</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">inverted</span><span class="p">))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; $ </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yunits</span><span class="p">),</span>
                             <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">],</span> <span class="n">y_vec</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
                             <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y_vec</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">y_vec</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
                 <span class="n">min_idx</span> <span class="o">=</span> <span class="n">y_vec</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
-                <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">inverted</span><span class="p">))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="s2">$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yunits</span><span class="p">),</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s1">&#39;$</span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">inverted</span><span class="p">))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; $ </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yunits</span><span class="p">),</span>
                             <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">],</span> <span class="n">y_vec</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">xycoords</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
                             <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 
@@ -492,10 +494,10 @@
             <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">or</span> <span class="n">xunits</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> $[</span><span class="si">{}</span><span class="s1">]$&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">xunits</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">xunits</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">or</span> <span class="n">yunits</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> $[</span><span class="si">{}</span><span class="s2">]$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">yunits</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="n">yunits</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">ax</span>
 
