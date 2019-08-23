@@ -1,0 +1,27 @@
+\documentclass{article}
+\usepackage{amssymb,booktabs,graphicx,hyperref,pifont}
+\usepackage[dvipsnames]{xcolor} 
+\newcommand{\cmark}{{\color{Green} \ding{51}}}
+\newcommand{\xmark}{{\color{Red} \ding{55}}}
+\newcommand{\mcrot}[4]{\multicolumn{#1}{#2}{\rlap{\rotatebox{#3}{#4}~}}}
+\newcommand{\rotangle}{45}
+%
+\begin{document}
+\begin{table}[]
+\begin{tabular}{*9l}
+\multicolumn{1}{l}{ } & \mcrot{1}{l}{\rotangle}{Arbitrary \# of distributed loads} & \mcrot{1}{l}{\rotangle}{Full GUI (no code required)} & \mcrot{1}{l}{\rotangle}{Arbitrary amount of loads} & \mcrot{1}{l}{\rotangle}{Free (as in free beer)} & \mcrot{1}{l}{\rotangle}{Open Source} & \mcrot{1}{l}{\rotangle}{Featured theory module} & \mcrot{1}{l}{\rotangle}{Detailed solution procedure} & \mcrot{1}{l}{\rotangle}{Programmable interface} \\ %\hline
+\cmidrule{2-9}
+\href{https://alfredocarella.github.io/simplebendingpractice/}{BeamBending} & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \xmark & \cmark \\ %\hline
+\href{http://rascheta.net/beamuk/}{Beam Calculator Online} & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark \\ %\hline
+\href{http://beamguru.com/}{Beam Guru} & \xmark & \cmark & \cmark & \cmark & \xmark & \xmark & \cmark & \xmark \\ %\hline
+\href{https://www.engineersedge.com/}{Engineers Edge} & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark & \xmark \\ %\hline
+\href{https://mechanicalc.com/calculators/beam-analysis/}{MechaniCalc} & \xmark & \cmark & \cmark & \xmark & \xmark & \cmark & \xmark & \xmark \\ %\hline
+\href{https://skyciv.com/structural-software/beam-analysis-software/}{SkyCiv Beam} & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \cmark & \xmark \\ %\hline
+\href{https://www.steelbeamcalculator.com/}{Steel Beam Calculator} & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark \\ %\hline
+\href{https://www.amesweb.info/StructuralBeamDeflection/BeamDeflectionCalculators.aspx}{Structural Beam Calculator} & \xmark & \xmark & \xmark & \cmark & \xmark & \xmark & \xmark & \xmark \\ %\hline
+\href{https://webstructural.com/shear-and-moment-diagram.html}{WebStructural} & \xmark & \cmark & \cmark & \xmark & \xmark & \xmark & \xmark & \xmark \\ %\hline
+\bottomrule
+\end{tabular}
+\caption{Summary of feature comparison with existing packages}
+\end{table}
+\end{document}
