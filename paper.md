@@ -19,7 +19,7 @@ bibliography: paper.bib
 ---
 
 # Summary
-BeamBending is _both_ an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
+BeamBending is _both_ an educational module _and_ a Python package, based mainly on [@Hunter:2007], [@oliphant2006guide] and [@10.7717/peerj-cs.103] It is intended to serve as a teaching aid during a first course in Statics.
 The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of:
 
 * stresses on slender _one-dimensional_ solids (i.e. beams)
@@ -47,7 +47,7 @@ This package/module aims to bridge this gap and simplify students' first contact
 1. Explain the [background theory](https://alfredocarella.github.io/simplebendingpractice/background.html) from a simple example with focus on connecting the mathematical description with the physical beam model (`beambending` code snippets are interleaved in order to illustrate how the package works).
 2. Provide a temporary scaffolding that helps to establish an immediate visual association between beam load states and internal stresses.
 
-Several online tools with similar functionality are currently available.
+Several online tools with similar functionality are currently available, such as [@beamguru], [@structuralbeam], [@skyciv], [@mechanicalc], [@engineersedge], [@webstructural], [@beamcalculatoronline], and [@steelbeamcalculator].
 Most of them expose only a graphical user interface to the user, eliminating the need to write any code; roughly half of the surveyed tools are free while others charge monthly subscriptions; and only a few include a theoretical module or present to the user a detailed solution procedure for the problems.
 This feature comparison is presented in the Table 1.
 
