@@ -7,14 +7,14 @@ from beambending import Beam, DistributedLoadV, PointLoadH, PointLoadV, x
 
 def example_1():
     """Run example 1"""
-    beam = Beam(9)  # Initialize a Beam object of length 9m
+    beam = Beam(9)  # Initialize a Beam object of length 9 m
     beam.pinned_support = 2    # x-coordinate of the pinned support
     beam.rolling_support = 7  # x-coordinate of the rolling support
     beam.add_loads((
-                    PointLoadH(10, 3),  # 10kN pointing right, at x=3m
-                    PointLoadV(-20, 3),  # 20kN downwards, at x=3m
-                    DistributedLoadV(-10, (3, 9)),  # 10 kN/m, downwards, for 3m <= x <= 9m
-                    DistributedLoadV(-20 + x**2, (0, 2)),  # variable load, for 0m <= x <= 2m
+                    PointLoadH(10, 3),  # 10 kN pointing right, at x=3 m
+                    PointLoadV(-20, 3),  # 20 kN downwards, at x=3 m
+                    DistributedLoadV(-10, (3, 9)),  # 10 kN/m, downwards, for 3 m <= x <= 9 m
+                    DistributedLoadV(-20 + x**2, (0, 2)),  # variable load, for 0 <= x <= 2 m
                 ))
     fig = beam.plot()
 

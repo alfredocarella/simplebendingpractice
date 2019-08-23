@@ -10,12 +10,12 @@ def example_shear0():
     my_beam = Beam(6)
     my_beam.rolling_support = 0  # x-coordinate of the rolling support
     my_beam.pinned_support = 3    # x-coordinate of the pinned support
-    my_beam.add_loads([PointLoadV(10, 6)])  # 10kN pointing upwards, at x=6m
+    my_beam.add_loads([PointLoadV(10, 6)])  # 10 kN pointing upwards, at x=6 m
     fig = my_beam.plot_beam_diagram()
     ax = fig.gca()
     ax.text(0, -1.35, r'A', ha='center', va='top')
     ax.text(3, -1.35, r'B', ha='center', va='top')
-    ax.text(5.9, -1.2, r'$P_1=10kN$', ha='right', va='top', color='darkgreen')
+    ax.text(5.9, -1.2, r'$P_1=10$ kN', ha='right', va='top', color='darkgreen')
     ax.axvline(x=2, linestyle='--', color="k", alpha=0.5)
     ax.text(2, 0.5, r'Section 1-1', rotation=90, ha='right', va='bottom')
     ax.axvline(x=4, linestyle='--', color="k", alpha=0.5)

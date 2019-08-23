@@ -21,7 +21,7 @@ Normal forces are hence perpendicular to these planes, i.e. parallel to the beam
 The first introductory problem to consider will be a 6 meter long horizontal beam resting on two supports:
 
   * a roller support at :math:`x=0`
-  * a pinned support at :math:`x=3m`
+  * a pinned support at :math:`x=3\text{ m}`
 
 .. container:: toggle
 
@@ -43,13 +43,13 @@ The first introductory problem to consider will be a 6 meter long horizontal bea
    :alt: Beam on two supports with horizontal load
 
    The beam is held in place by a rolling support at *A* and a pinned support at *B*.
-   A normal (tensile) force :math:`F_{1} = 5\text{kN}` is acting at the right end of the beam.
+   A normal (tensile) force :math:`F_{1} = 5\text{ kN}` is acting at the right end of the beam.
 
 Let's find the reaction forces first, so we can proceed with our analysis.
 
 .. math::
 
-    \sum{F_x} = 0 \implies F_{Bx} + F_{1} = 0 \implies \underline{F_{Bx} = -5\text{kN}}\\
+    \sum{F_x} = 0 \implies F_{Bx} + F_{1} = 0 \implies \underline{F_{Bx} = -5\text{ kN}}\\
     \left.
       \begin{array}{ll}
         \sum{M_A} = 0\\
@@ -76,9 +76,9 @@ The other equilibrium equations are identically zero (no vertical forces or mome
 
 .. math::
 
-    \sum{F_x} = 0 \implies F_{1} - N = 0 \implies \underline{N|_{x=x_2} = 5\text{kN}}
+    \sum{F_x} = 0 \implies F_{1} - N = 0 \implies \underline{N|_{x=x_2} = 5\text{ kN}}
 
-Here we have found the internal normal force :math:`\mathbf{N}` to be equal to 5kN.
+Here we have found the internal normal force :math:`\mathbf{N}` to be equal to 5 kN.
 The positive sign corresponds to the standard convention.
 The normal force :math:`\mathbf{N}` is defined as positive when it points outwards.
 It follows from this that tensile forces are positive and compression forces negative.
@@ -110,7 +110,7 @@ In this simple case, we end up with the following piecewise function:
     N(x) = \left\{
       \begin{array}{cl}
          0 \ \ \ & \text{if} \ \  0 \leq x < x_B\\
-         5 \text{kN} \ \ \ & \text{if} \ \  < x_B \leq x < L
+         5 \text{ kN} \ \ \ & \text{if} \ \  < x_B \leq x < L
       \end{array}
     \right.
 
@@ -134,7 +134,7 @@ Shear force :math:`V(x)` and moment :math:`M(x)`
 ************************************************
 
 Let's do a similar analysis of the same beam for vertical forces.
-Instead of the horizontal force :math:`\mathbf{F_1}`, consider now a vertical force :math:`\mathbf{P_1} = 10\text{kN}` acting at the beam's right end (plane 3-3).
+Instead of the horizontal force :math:`\mathbf{F_1}`, consider now a vertical force :math:`\mathbf{P_1} = 10\text{ kN}` acting at the beam's right end (plane 3-3).
 
 .. container:: toggle
 
@@ -156,17 +156,17 @@ Instead of the horizontal force :math:`\mathbf{F_1}`, consider now a vertical fo
    :alt: Beam on two supports with vertical load
 
    The beam is held in place by a rolling support at *A* and a pinned support at *B*.
-   A force :math:`P_{1} = 10\text{kN}` directed upwards is acting at the right end of the beam.
+   A force :math:`P_{1} = 10\text{ kN}` directed upwards is acting at the right end of the beam.
 
 In the same way as before, we start by finding the reaction forces at the supports *A* and *B*.
 
 .. math::
 
     \sum{F_x} = 0 \implies \underline{F_{Bx} = 0}\\
-    \sum{M_A} = 0 \implies F_{Bz} = -\cfrac{\mathbf{P_1}L}{d} = -20 \text{kN}\\
-    \sum{F_z} = 0 \implies F_A = \cfrac{\mathbf{P_1}(L-d)}{d} = 10 \text{kN}
+    \sum{M_A} = 0 \implies F_{Bz} = -\cfrac{\mathbf{P_1}L}{d} = -20 \text{ kN}\\
+    \sum{F_z} = 0 \implies F_A = \cfrac{\mathbf{P_1}(L-d)}{d} = 10 \text{ kN}
 
-where :math:`L=6\text{m}` is the length of the beam, and :math:`d=3\text{m}` is the distance between supports *A* and *B*.
+where :math:`L=6\text{ m}` is the length of the beam, and :math:`d=3\text{ m}` is the distance between supports *A* and *B*.
 
 Next, we draw a free body diagram of the beam section comprised between planes 2-2 and 3-3, and do a balance of forces and moments once more.
 
@@ -181,15 +181,15 @@ Next, we draw a free body diagram of the beam section comprised between planes 2
 
 .. math::
 
-    \sum{F_z} = 0 \implies \mathbf{P_1} - V = 0 \implies V = 10 \text{kN}\\
+    \sum{F_z} = 0 \implies \mathbf{P_1} - V = 0 \implies V = 10 \text{ kN}\\
     \sum{M} = 0 \implies M(x) - \mathbf{P_1} (x-L) = 0 \implies M(x) = \mathbf{P_1} (x-L)
 
-The vertical plane 2-2, corresponds to :math:`x=4`, hence 
+The vertical plane 2-2, corresponds to :math:`x=4\text{ m}`, hence 
 
-   - :math:`V|_{2-2} = V(x)|_{x=4} = \underline{10 \text{kN}}`, and
-   - :math:`M|_{2-2} = M(x)|_{x=4} = \underline{-20 \text{kNm}}`.
+   - :math:`V|_{2-2} = V(x)|_{x=4\text{ m}} = \underline{10 \text{ kN}}`, and
+   - :math:`M|_{2-2} = M(x)|_{x=4\text{ m}} = \underline{-20 \text{ kN·m}}`.
 
-The negative value of :math:`M(x)|_{x=4}` means that the actual moment acting on the left side of that beam section is *opposite to the arrow drawn in the figure above* (i.e. clockwise instead of counterclockwise).
+The negative value of :math:`M(x)|_{x=4\text{ m}}` means that the actual moment acting on the left side of that beam section is *opposite to the arrow drawn in the figure above* (i.e. clockwise instead of counterclockwise).
 
 .. note::
    The sign convention we follow is shown in the figure below:
@@ -226,15 +226,15 @@ The equations for sum of forces and sum of moments become then:
 
     \begin{array}{rl}
       \mathbf{\sum{F_z}} = -V_{1-1} + F_{Bz} + V_{2-2} &= 0 \\ 
-       -V_{1-1} + (-20 \text{kN}) + 10 \text{kN} &= 0 \\ 
-       V_{1-1} &= \underline{-10 \text{kN}}
+       -V_{1-1} + (-20 \text{ kN}) + 10 \text{ kN} &= 0 \\ 
+       V_{1-1} &= \underline{-10 \text{ kN}}
     \end{array}\\
     \\
     \begin{array}{rrl}
-      & \mathbf{\sum{M}} = M_{1-1} + F_{Bz}(d-x) - V_{2-2}(4\text{m}-x) &= 0 \\ 
-      & M_{1-1} + 20\text{kN}(3\text{m}-x) - 10 \text{kN}(4\text{m}-x) &= 0\\ 
-      \text{since } x|_{1-1}=2\text{m} \implies & M_{1-1} + 20\text{kN}(3\text{m}-2\text{m}) - 10 \text{kN}(6\text{m}-2\text{m}) &= 0\\
-      & M_{1-1} &= \underline{-20 \text{kNm}}
+      & \mathbf{\sum{M}} = M_{1-1} + F_{Bz}(d-x) - V_{2-2}(4\text{ m}-x) &= 0 \\ 
+      & M_{1-1} + 20\text{ kN}(3\text{ m}-x) - 10 \text{ kN}(4\text{ m}-x) &= 0\\ 
+      \text{since } x|_{1-1}=2\text{ m} \implies & M_{1-1} + 20\text{ kN}(3\text{ m}-2\text{ m}) - 10 \text{ kN}(6\text{ m}-2\text{ m}) &= 0\\
+      & M_{1-1} &= \underline{-20 \text{ kN·m}}
     \end{array}
     
 .. tip::

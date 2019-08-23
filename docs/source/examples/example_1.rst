@@ -15,12 +15,12 @@ Try it in an online Jupyter notebook: |binder|
 
 Specifications
 --------------
-A beam resting on two supports at x=2 and x=7, with the following applied loads:
+A beam resting on two supports at x=2 m and x=7 m, with the following applied loads:
 
-* a downward force of 20kN at x=3;
-* a force of 10kN pointing right, also at x=3;
-* a downward distributed load of 20 kN/m on 0 <= x <= 2;
-* a downward distributed load of 10 kN/m on 3 <= x <= 9
+* a downward force of 20 kN at x=3 m;
+* a force of 10 kN pointing right, also at x=3 m;
+* a downward distributed load of 20 kN/m on 0 <= x <= 2 m;
+* a downward distributed load of 10 kN/m on 3 m <= x <= 9 m
 
 Results
 -------

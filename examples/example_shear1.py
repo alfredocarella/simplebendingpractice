@@ -11,7 +11,7 @@ def example_shear1():
     my_beam = Beam(6)
     my_beam.rolling_support = 0  # x-coordinate of the rolling support
     my_beam.pinned_support = 3    # x-coordinate of the pinned support
-    my_beam.add_loads([PointLoadV(10, 6)])  # 10kN pointing upwards, at x=6m
+    my_beam.add_loads([PointLoadV(10, 6)])  # 10 kN pointing upwards, at x=6 m
     fig = plt.figure()
     my_beam.plot_shear_force(fig.add_subplot(2, 1, 1))
     my_beam.plot_bending_moment(fig.add_subplot(2, 1, 2))

@@ -6,7 +6,7 @@ Example
 >>> my_beam = Beam(9)
 >>> my_beam.pinned_support = 2    # x-coordinate of the pinned support
 >>> my_beam.rolling_support = 7  # x-coordinate of the rolling support
->>> my_beam.add_loads([PointLoadV(-20, 3)])  # 20kN downwards, at x=3m
+>>> my_beam.add_loads([PointLoadV(-20, 3)])  # 20 kN downwards, at x=3 m
 >>> print("(F_Ax, F_Ay, F_By) =", my_beam.get_reaction_forces())
 (F_Ax, F_Ay, F_By) = (0.0, 16.0, 4.0)
 
@@ -30,7 +30,7 @@ class PointLoadV(namedtuple("PointLoadV", "force, coord")):
 
     Examples
     --------
-    >>> external_force = PointLoadV(-30, 3)  # 30kN downwards at x=3m
+    >>> external_force = PointLoadV(-30, 3)  # 30 kN downwards at x=3 m
     >>> external_force
     PointLoadV(force=-30, coord=3)
     """
@@ -41,7 +41,7 @@ class PointLoadH(namedtuple("PointLoadH", "force, coord")):
 
     Examples
     --------
-    >>> external_force = PointLoadH(10, 9)  # 10kN towards the right at x=9m
+    >>> external_force = PointLoadH(10, 9)  # 10 kN towards the right at x=9 m
     >>> external_force
     PointLoadH(force=10, coord=9)
     """
@@ -52,7 +52,7 @@ class DistributedLoadV(namedtuple("DistributedLoadV", "expr, span")):
 
     Examples
     --------
-    >>> snow_load = DistributedLoadV("10*x+5", (0, 2))  # Linearly growing load for 0<x<2
+    >>> snow_load = DistributedLoadV("10*x+5", (0, 2))  # Linearly growing load for 0<x<2 m
     
     """
 
@@ -78,8 +78,10 @@ class Beam:
 
     Notes
     -----
-    The Beam class currently supports only statically determined beams with
-    (exactly) one pinned and one roller support.
+    * The Beam class currently supports only statically determined beams with
+      (exactly) one pinned and one roller support.
+    * The default units package units for length, force and bending moment 
+      (torque) are respectively (m, kN, kN·m)
 
     """
     
@@ -265,7 +267,7 @@ class Beam:
     def plot_bending_moment(self, ax=None):
         """Returns a plot of the bending moment as a function of the x-coordinate.
         """
-        plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN \cdot m',
+        plot04_params = {'ylabel': "Bending moment", 'yunits': r'kN·m',
                          'xlabel': "Beam axis", 'xunits': "m",
                          'color': "y"}
         if ax is None:
@@ -284,7 +286,7 @@ class Beam:
         :param title: title to show above the plot, optional
         :param maxmin_hline: when set to False, the extreme values of the function are not displayed
         :param xunits: str, physical unit to be used for the x-axis. Example: "m"
-        :param yunits: str, physical unit to be used for the y-axis. Example: "m"
+        :param yunits: str, physical unit to be used for the y-axis. Example: "kN"
         :param xlabel: str, physical variable displayed on the x-axis. Example: "Length"
         :param ylabel: str, physical variable displayed on the y-axis. Example: "Shear force"
         :param color: color to be used for the shaded area of the plot. No shading if not provided
@@ -310,14 +312,14 @@ class Beam:
             if abs(max(y_vec)) > tol:
                 ax.axhline(y=max(y_vec), linestyle='--', color="g", alpha=0.5)
                 max_idx = y_vec.argmax()
-                plt.annotate('${:0.1f}'.format(y_vec[max_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
+                plt.annotate('${:0.1f}'.format(y_vec[max_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " $ {}".format(yunits),
                             xy=(x_vec[max_idx], y_vec[max_idx]), xytext=(8, 0), xycoords=('data', 'data'),
                             textcoords='offset points', size=12)
 
             if abs(min(y_vec)) > tol:
                 ax.axhline(y=min(y_vec), linestyle='--', color="g", alpha=0.5)
                 min_idx = y_vec.argmin()
-                plt.annotate('${:0.1f}'.format(y_vec[min_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " {}$".format(yunits),
+                plt.annotate('${:0.1f}'.format(y_vec[min_idx]*(1-2*inverted)).rstrip('0').rstrip('.') + " $ {}".format(yunits),
                             xy=(x_vec[min_idx], y_vec[min_idx]), xytext=(8, 0), xycoords=('data', 'data'),
                             textcoords='offset points', size=12)
 
@@ -330,10 +332,10 @@ class Beam:
             ax.set_title(title)
 
         if xlabel or xunits:
-            ax.set_xlabel('{} $[{}]$'.format(xlabel, xunits))
+            ax.set_xlabel('{} [{}]'.format(xlabel, xunits))
 
         if ylabel or yunits:
-            ax.set_ylabel("{} $[{}]$".format(ylabel, yunits))
+            ax.set_ylabel("{} [{}]".format(ylabel, yunits))
 
         return ax
 

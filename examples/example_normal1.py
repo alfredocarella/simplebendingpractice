@@ -10,7 +10,7 @@ def example_normal1():
     beam = Beam(6)
     beam.rolling_support = 0  # x-coordinate of the rolling support
     beam.pinned_support = 3    # x-coordinate of the pinned support
-    beam.add_loads([PointLoadH(5, 6)])  # 5kN pointing right, at x=6m
+    beam.add_loads([PointLoadH(5, 6)])  # 5 kN pointing right, at x=6 m
     fig = beam.plot_normal_force()
     
     # save the png and add it to the documentation

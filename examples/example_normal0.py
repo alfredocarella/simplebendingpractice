@@ -10,12 +10,12 @@ def example_normal0():
     beam = Beam(6)
     beam.rolling_support = 0  # x-coordinate of the rolling support
     beam.pinned_support = 3    # x-coordinate of the pinned support
-    beam.add_loads([PointLoadH(5, 6)])  # 5kN pointing right, at x=6m
+    beam.add_loads([PointLoadH(5, 6)])  # 5 kN pointing right, at x=6 m
     fig = beam.plot_beam_diagram()
     ax = fig.gca()
     ax.text(0, -1.35, r'A', ha='center', va='top')
     ax.text(3, -1.35, r'B', ha='center', va='top')
-    ax.text(6, -0.5, r'$F_1=5kN$', ha='right', va='top', color='darkgreen')
+    ax.text(6, -0.5, r'$F_1=5$ kN', ha='right', va='top', color='darkgreen')
     ax.axvline(x=2, linestyle='--', color="k", alpha=0.5)
     ax.text(2, 0.5, r'Section 1-1', rotation=90, ha='right', va='bottom')
     ax.axvline(x=4, linestyle='--', color="k", alpha=0.5)
