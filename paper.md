@@ -114,7 +114,7 @@ beam.add_loads((
 fig = beam.plot()
 ```
 
-![Output corresponding to the example code above](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1_62pct.png)
+![Output corresponding to the example code](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1_62pct.png)
 
 
 # Recent Uses
