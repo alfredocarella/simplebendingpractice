@@ -36,7 +36,7 @@ This means that Eq. :eq:`static` must be satisfied **for each** component in our
 
 Note that :math:`\mathbf{F_{1C}} = \mathbf{-F_{2C}}`, according to the *action and reaction principle*.
 If you are still not 100% comfortable with the action and reaction principle, you should review that before proceeding.
-As a self-test, the illustration in this `applet
+As a self-test, the concept presented in this `educational video
 <https://www.edumedia-sciences.com/en/media/80-action-reaction-principle>`_ should be completely obvious to you.
 
 So far, we have only thought about reaction forces as applied *externally* to one or more rigid bodies.
