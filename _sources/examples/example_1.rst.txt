@@ -34,7 +34,7 @@ The resulting diagrams are respectively:
 
 .. [#pointload] The x-coordinates of the point loads are marked with green arrows, but magnitudes are not displayed in the beam schematic in order to keep the figure clean and simple.
 
-.. figure:: /../../examples/example_1.png
+.. figure:: /../../examples/example_1.svg
 
 Code
 ----
