@@ -20,7 +20,7 @@ def example_1():
 
     # save the png and add it to the documentation
     mod_path = os.path.dirname(os.path.abspath(__file__))  # current module
-    save_name = os.path.basename(__file__).replace('.py', '.png')  # file name
+    save_name = os.path.basename(__file__).replace('.py', '.svg')  # file name
     save_path = os.path.join(mod_path, save_name)
     fig.savefig(save_path, transparent=True)
 
