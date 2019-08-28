@@ -16,7 +16,8 @@ setup(name='beambending',  # name of package on import
       long_description=open('README.md').read(),
       url='https://github.com/alfredocarella/simplebendingpractice',  # git repo url
       author='Alfredo Carella',  # author(s)
-      author_email='alfcar@oslomet.no',  # email
+      author_email='alfredocarella@gmail.com',  # email
+      download_url = 'https://github.com/alfredocarella/simplebendingpractice/archive/1.0.0.tar.gz',    # Link to package release
       packages=['beambending'],  # main package
       install_requires=[  # dependencies
         'matplotlib',  # for plotting
@@ -30,7 +31,6 @@ setup(name='beambending',  # name of package on import
       ],
     classifiers=[
       'Development Status :: 4 - Beta',         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package    
-      'License :: OSI Approved :: cc-by-4.0',   # Again, pick a license
       'Programming Language :: Python :: 3',    #Specify which pyhton versions that you want to support
     ],
       zip_safe=True  # package can be installed from zip file
