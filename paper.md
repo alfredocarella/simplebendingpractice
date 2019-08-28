@@ -127,12 +127,12 @@ beam.add_loads((
 fig = beam.plot()
 ```
 
-![Output corresponding to the example code](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1_62pct.png)
-
 
 # Recent Uses
 The `beambending` package was developed as a teaching aid for the *Statics* course in the Autumn 2019 semester at OsloMet - Oslo Metropolitan University.
 Beta versions were tried and commented by students during the Autumn 2018 semester, but the effectiveness of the tool has not been tested with large groups of students yet.
+
+![Output corresponding to the example code](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1_80pct.png)
 
 
 # References
