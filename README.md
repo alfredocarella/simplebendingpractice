@@ -95,7 +95,7 @@ For more sophisticated applications, like automatic problem generation, you shou
 If you want to install the `beambending` package, you run this one-liner:
 
 ```shell
-pip install --user git+https://github.com/alfredocarella/simplebendingpractice
+pip install --user beambending
 ```
 
 > **NOTE**: You need Python 3 to install this package (you may need to write `pip3` instead of `pip`).
