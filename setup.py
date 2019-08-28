@@ -14,6 +14,7 @@ setup(name='beambending',  # name of package on import
       description='Educational package for visualizing shear forces and bending moments on 1-D beams',  # brief description
       license='cc-by-4.0',  # licensing
       long_description=open('README.md').read(),
+      long_description_content_type="text/markdown",
       url='https://github.com/alfredocarella/simplebendingpractice',  # git repo url
       author='Alfredo Carella',  # author(s)
       author_email='alfredocarella@gmail.com',  # email
