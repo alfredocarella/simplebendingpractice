@@ -14,7 +14,7 @@ First steps
   * If you do not have a Python 3 interpreter on your machine, you can install the last version following the instructions in `this tutorial <https://realpython.com/installing-python/>`_.
   * Once you have Python 3, you can open a terminal and install the package with this one-liner::
 
-      python3 -m pip install --user git+https://github.com/alfredocarella/simplebendingpractice
+      python3 -m pip install --user beambending
 
     **NOTE**: You may need to replace ``python3`` above by the path to your Python 3 executable, or simply ``python`` if you are running Windows.
 
