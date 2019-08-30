@@ -16,6 +16,8 @@ affiliations:
   index: 1
 date: 8 July 2019
 bibliography: paper.bib
+nocite: | 
+  @beamguru, @structuralbeam, @skyciv, @mechanicalc, @engineersedge, @webstructural, @beamcalculatoronline, @steelbeamcalculator
 ---
 
 # Summary
@@ -48,7 +50,7 @@ This package/module aims to bridge this gap and simplify students' first contact
 * Explain the [background theory](https://alfredocarella.github.io/simplebendingpractice/background.html) from a simple example with focus on connecting the mathematical description with the physical beam model (`beambending` code snippets are interleaved to illustrate how the package works).
 * Provide a temporary scaffolding that helps to establish an immediate visual association between beam load states and internal stresses.
 
-Several online tools with similar functionality are currently available, such as @beamguru, @structuralbeam, @skyciv, @mechanicalc, @engineersedge, @webstructural, @beamcalculatoronline, and @steelbeamcalculator.
+Several online tools with similar functionality are currently available, such as Beam Guru (2019), Structural Beam Deflection and Stress Calculators (2019), SkyCiv Beam (2017), MechaniCalc (2019), Engineers Edge (2019), WebStructural (2019), Beam Calculator Online, and Steel Beam Calculator (2019).
 Most of them expose only a graphical user interface to the user, eliminating the need to write any code; roughly half of the surveyed tools are free while others charge monthly subscriptions, and only a few include a theoretical module or present to the user a detailed solution procedure for the problems.
 This feature comparison is presented in Table 1.
 
