@@ -19,13 +19,13 @@ bibliography: paper.bib
 ---
 
 # Summary
-BeamBending is _both_ an educational module _and_ a Python package, based mainly on [@Hunter:2007], [@oliphant2006guide] and [@10.7717/peerj-cs.103] It is intended to serve as a teaching aid during a first course in Statics.
+BeamBending is _both_ an educational module _and_ a Python package, based mainly on @Hunter2007, @oliphant2006guide and @sympy2017 It is intended to serve as a teaching aid during a first course in Statics.
 This module aims to enhance clarity and provide visual hands-on examples while introducing the concepts of:
 
 * stresses on slender _one-dimensional_ solids (i.e. beams)
 * normal force, shear force, and bending moment diagrams
 
-The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous enough) explanation of the background theory, inspired in [@Beer2017] and [@Bell2015].
+The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous enough) explanation of the background theory, inspired in @Beer2017 and @Bell2015.
 It is assumed that the students understand static equilibrium of flat rigid bodies, but a short recap is provided.
 Code snippets that reproduce the theory examples are presented next to each result.
 
@@ -40,7 +40,7 @@ The `beambending` package is ready for installation using `pip` or can be tested
 
 # Statement of Need
 Statics courses in undergraduate engineering programs are sometimes taught before the knowledge of the relevant mathematical tools (i.e. simple calculus and linear vector algebra) is fully mature.
-Introducing a topic that resembles the mindset of calculus and employs a little intuitive standard sign convention, on top of a wobbly mathematical foundation, makes it fairly common for students to get lost in the calculations.
+Introducing a topic that resembles the mindset of calculus and employs an unintuitive standard sign convention, on top of a wobbly mathematical foundation, makes it fairly common for students to get lost in the calculations.
 <!-- This becomes an additional challenge for students in their first encounter with the topic of shear forces and bending moments in beams. -->
 
 This package/module aims to bridge this gap and simplify students' first contact with this challenging new topic by working on two fronts simultaneously:
@@ -48,7 +48,7 @@ This package/module aims to bridge this gap and simplify students' first contact
 * Explain the [background theory](https://alfredocarella.github.io/simplebendingpractice/background.html) from a simple example with focus on connecting the mathematical description with the physical beam model (`beambending` code snippets are interleaved to illustrate how the package works).
 * Provide a temporary scaffolding that helps to establish an immediate visual association between beam load states and internal stresses.
 
-Several online tools with similar functionality are currently available, such as [@beamguru], [@structuralbeam], [@skyciv], [@mechanicalc], [@engineersedge], [@webstructural], [@beamcalculatoronline], and [@steelbeamcalculator].
+Several online tools with similar functionality are currently available, such as @beamguru, @structuralbeam, @skyciv, @mechanicalc, @engineersedge, @webstructural, @beamcalculatoronline, and @steelbeamcalculator.
 Most of them expose only a graphical user interface to the user, eliminating the need to write any code; roughly half of the surveyed tools are free while others charge monthly subscriptions, and only a few include a theoretical module or present to the user a detailed solution procedure for the problems.
 This feature comparison is presented in Table 1.
 
@@ -56,7 +56,7 @@ This feature comparison is presented in Table 1.
 
 There are three main differences between the ```beambending``` package and the rest of the reviewed tools:
 
-* Arbitrary distributed load functions are accepted (as long as sympy parse them), i.e. they are not restricted to constants or linear functions.
+* Arbitrary distributed load functions are accepted (as long as sympy can parse them), i.e. they are not restricted to constants or linear functions.
 * The package (and parts of it) can be called from regular Python code, which makes it easy to automatically generate problem sets with solutions.
 * It is not only free but also completely open-source.
 

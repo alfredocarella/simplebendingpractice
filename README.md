@@ -31,7 +31,7 @@ Carella, Alfredo R. (2019). Beam Bending. Journal of Open Source Education, Issu
 
 ## Statement of Need
 Statics courses in undergraduate engineering programs are sometimes taught before the knowledge of the relevant mathematical tools (i.e. simple calculus and linear vector algebra) is fully mature.
-Introducing a topic that resembles the mindset of calculus and employs a little intuitive standard sign convention, on top of a wobbly mathematical foundation, makes it fairly common for students to get lost in the calculations.
+Introducing a topic that resembles the mindset of calculus and employs an unintuitive standard sign convention, on top of a wobbly mathematical foundation, makes it fairly common for students to get lost in the calculations.
 
 This package/module aims to bridge this gap and simplify students' first contact with this challenging new topic by working on two fronts simultaneously:
 1. Explain the [background theory](https://alfredocarella.github.io/simplebendingpractice/background.html) from a simple example with focus on connecting the mathematical description with the physical beam model (`beambending` code snippets are interleaved in order to illustrate how the package works).
