@@ -19,5 +19,5 @@
   "keywords": "statics, mechanics, beam, bending moment diagram, shear force diagram, python",
   "license": "CC-BY 4.0",
   "title": "BeamBending: a teaching aid for 1-D shear-force and bending-moment diagrams",
-  "version": "v1.0.0"
+  "version": "v1.0.1"
 }
