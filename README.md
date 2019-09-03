@@ -1,11 +1,10 @@
 # BeamBending: a teaching aid for 1-D shear-force and bending-moment diagrams
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/alfredocarella/simplebendingpractice/archive/1.0.1.tar.gz)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/alfredocarella/simplebendingpractice/releases/tag/1.0.1)
 [![License](https://img.shields.io/badge/license-CC--BY%204.0-lightgrey.svg)](https://github.com/alfredocarella/simplebendingpractice/raw/master/LICENSE)
-[![status](http://jose.theoj.org/papers/8f3c2cbbcd7338364864a8c8e7155fa5/status.svg)](http://jose.theoj.org/papers/8f3c2cbbcd7338364864a8c8e7155fa5)
+[![DOI](https://jose.theoj.org/papers/10.21105/jose.00065/status.svg)](https://doi.org/10.21105/jose.00065)
 [![Build Status](https://travis-ci.com/alfredocarella/simplebendingpractice.svg?branch=master)](https://travis-ci.com/alfredocarella/simplebendingpractice)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb)
-<!-- [![status](https://jose.theoj.org/papers/MYPAPERNUMBER/status.svg)](http://jose.theoj.org/papers/MYPAPERNUMBER) -->
 
 BeamBending is _both_ an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
 The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of:
@@ -24,12 +23,13 @@ The package can be used by
 The materials are distributed publicly and openly under a Creative Commons Attribution license, [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 
 
-<!-- ## Cite as:
+## Cite as:
 
-Carella, Alfredo R. (2019). Beam Bending. Journal of Open Source Education, Issue, Number, DOI, LINK -->
+Carella, (2019). BeamBending: a teaching aid for 1-D shear force and bending moment diagrams. Journal of Open Source Education, 2(19), 65, https://doi.org/10.21105/jose.00065
 
 
 ## Statement of Need
+
 Statics courses in undergraduate engineering programs are sometimes taught before the knowledge of the relevant mathematical tools (i.e. simple calculus and linear vector algebra) is fully mature.
 Introducing a topic that resembles the mindset of calculus and employs an unintuitive standard sign convention, on top of a wobbly mathematical foundation, makes it fairly common for students to get lost in the calculations.
 
@@ -39,6 +39,7 @@ This package/module aims to bridge this gap and simplify students' first contact
 
 
 ## Functionality and Usage
+
 A typical use case of the `beambending` package always involves creating an instance of the `Beam` class. The class constructor takes an optional _length_ argument, which defaults to 10 in case no argument is provided.
 
 ```python
@@ -92,6 +93,7 @@ For more sophisticated applications, like automatic problem generation, you shou
 
 
 ## Installing the package
+
 If you want to install the `beambending` package, you run this one-liner:
 
 ```shell
