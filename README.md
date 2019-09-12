@@ -5,6 +5,7 @@
 [![DOI](https://jose.theoj.org/papers/10.21105/jose.00065/status.svg)](https://doi.org/10.21105/jose.00065)
 [![Build Status](https://travis-ci.com/alfredocarella/simplebendingpractice.svg?branch=master)](https://travis-ci.com/alfredocarella/simplebendingpractice)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb)
+[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alfredocarella/simplebendingpractice/blob/master/simple_demo.ipynb)
 
 BeamBending is _both_ an educational module _and_ a Python package, intended to serve as a teaching aid during a first course in _Statics_.
 The aim of this module is to enhance clarity and provide visual hands-on examples while introducing the concepts of:
@@ -86,7 +87,7 @@ The `plot` method is actually a wrapper that combines these four methods: `plot_
 The script above produces the following figure:
 ![Output corresponding to the example code above](https://github.com/alfredocarella/simplebendingpractice/raw/master/examples/example_1.png)
 
-You can read about this example in context in the [documentation](https://alfredocarella.github.io/simplebendingpractice/examples/example_1.html), or try it in a Jupyter notebook hosted online: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb)
+You can read about this example in context in the [documentation](https://alfredocarella.github.io/simplebendingpractice/examples/example_1.html), or try it in a Jupyter notebook hosted online: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb) [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alfredocarella/simplebendingpractice/blob/master/simple_demo.ipynb)
 
 For more sophisticated applications, like automatic problem generation, you should read the [package documentation](https://alfredocarella.github.io/simplebendingpractice/reference.html).
 
