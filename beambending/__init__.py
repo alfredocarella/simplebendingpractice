@@ -1,1 +1,1 @@
-from .beam import Beam, DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV, x
+from .beam import Beam, DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV, PointTorque, x

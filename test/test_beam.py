@@ -4,7 +4,7 @@ from numpy.testing import assert_allclose
 import pytest
 from sympy import lambdify
 
-from beambending import Beam, DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV, x
+from beambending import Beam, DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV, PointTorque, x
 
 
 def test_beam_is_correctly_created():
@@ -104,4 +104,13 @@ def test_beam_bending_moments_are_correct():
         expected = [0, -2.5, -10, -22.5, -40, -22, -4, 2.75, 7, 8.75, 8, 4.75, -1, -9.25, -20, -11.25, -5, -1.25, 0]
         np.testing.assert_allclose(bending_moment_sample, expected)
 
+
+def test_beam_point_moments_work_correctly():
+    with defined_canonical_beam() as (the_beam, x, x_vec):
+        the_beam._loads = []
+        the_beam.add_loads([PointTorque(30, 4)])
+        bending_moment_lambda = lambdify(x, sum(the_beam._bending_moments), "numpy")
+        bending_moment_sample = [bending_moment_lambda(t) for t in x_vec]
+        expected = [0, 0, 0, 0, 0, -3, -6, -9, 18, 15, 12, 9, 6, 3, 0, 0, 0, 0, 0]
+        assert_allclose(bending_moment_sample, expected)
 

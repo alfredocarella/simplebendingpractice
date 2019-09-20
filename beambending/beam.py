@@ -67,6 +67,16 @@ class DistributedLoadH(namedtuple("DistributedLoadH", "expr, span")):
     """
 
 
+class PointTorque(namedtuple("PointTorque", "torque, coord")):
+    """Point clockwise torque, described by a tuple of floats: (torque, coord).
+
+    Examples
+    --------
+    >>> motor_torque = PointTorque(30, 4)  # 30 kN·m (clockwise) torque at x=4 m
+    
+    """
+
+
 class Beam:
     """
     Represents a one-dimensional beam that can take axial and tangential loads.
@@ -157,7 +167,7 @@ class Beam:
 
         """
         for load in loads:
-            supported_load_types = (DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV)
+            supported_load_types = (DistributedLoadH, DistributedLoadV, PointLoadH, PointLoadV, PointTorque)
             if isinstance(load, supported_load_types):
                 self._loads.append(load)
             else:
@@ -186,7 +196,8 @@ class Beam:
         F_Ry = sum(integrate(load, (x, x0, x1)) for load in self._distributed_forces_y) + \
                sum(f.force for f in self._point_loads_y())
         M_R = sum(integrate(load * x, (x, x0, x1)) for load in self._distributed_forces_y) + \
-              sum(f.force * f.coord for f in self._point_loads_y())
+              sum(f.force * f.coord for f in self._point_loads_y()) + \
+              sum(-1 * f.torque for f in self._point_torques())
         A = np.array([[-1, 0, 0],
                       [0, -1, -xA],
                       [0, -1, -xB]]).T
@@ -398,6 +409,9 @@ class Beam:
                         xytext=(x1, y1), textcoords='data',
                         arrowprops=arrowprops
                         )
+        
+        # TODO: Draw a round arrow at point torques
+        pass
 
         ax.axes.get_yaxis().set_visible(False)
         ax.spines['right'].set_visible(False)
@@ -426,6 +440,7 @@ class Beam:
         self._shear_forces.append(self._effort_from_pointload(rolling_support_load))
 
         self._bending_moments = [integrate(load, (x, x0, x)) for load in self._shear_forces]
+        self._bending_moments.extend(self._effort_from_pointload(f) for f in self._point_torques())
 
     def _create_distributed_force(self, load: DistributedLoadH or DistributedLoadV, shift: bool=True):
         """
@@ -477,4 +492,9 @@ class Beam:
     def _distributed_loads_y(self):
         for f in self._loads:
             if isinstance(f, DistributedLoadV):
+                yield f
+
+    def _point_torques(self):
+        for f in self._loads:
+            if isinstance(f, PointTorque):
                 yield f
