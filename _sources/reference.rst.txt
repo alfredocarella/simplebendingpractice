@@ -16,6 +16,10 @@ Beam
 .. autofunction:: beam.Beam.plot_shear_force
 .. autofunction:: beam.Beam.plot_bending_moment
 
+PointTorque
+---------
+.. autoclass:: beam.PointTorque
+
 PointLoad
 ---------
 .. autoclass:: beam.PointLoadH

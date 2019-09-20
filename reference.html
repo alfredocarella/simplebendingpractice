@@ -100,6 +100,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Beambending Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#beam">Beam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pointtorque">PointTorque</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pointload">PointLoad</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#distributedload">DistributedLoad</a></li>
 </ul>
@@ -281,6 +282,19 @@ shear force diagram, and bending moment diagram.</p>
 <dt id="beam.Beam.plot_bending_moment">
 <code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_bending_moment</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_bending_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a plot of the bending moment as a function of the x-coordinate.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="pointtorque">
+<h2>PointTorque<a class="headerlink" href="#pointtorque" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="beam.PointTorque">
+<em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">PointTorque</code><a class="reference internal" href="_modules/beam.html#PointTorque"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointTorque" title="Permalink to this definition">¶</a></dt>
+<dd><p>Point clockwise torque, described by a tuple of floats: (torque, coord).</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">motor_torque</span> <span class="o">=</span> <span class="n">PointTorque</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 30 kN·m (clockwise) torque at x=4 m</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
