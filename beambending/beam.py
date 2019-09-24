@@ -15,7 +15,7 @@ Example
 from collections import namedtuple
 from contextlib import contextmanager
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon, Rectangle, Wedge
+from matplotlib.patches import Arc, Polygon, Rectangle, RegularPolygon, Wedge
 from matplotlib.collections import PatchCollection
 import numpy as np
 import os
@@ -410,8 +410,28 @@ class Beam:
                         arrowprops=arrowprops
                         )
         
-        # TODO: Draw a round arrow at point torques
-        pass
+        # Draw a round arrow at point torques
+        for load in self._point_torques():
+            xc = load[1]
+            yc = (beam_top + beam_bottom) / 2.0
+            width = yspan * 0.17
+            height = xspan * 0.05
+            arc_len= 180
+
+            if load[0] < 0:
+                start_angle = 90
+                endX = xc + (height/2)*np.cos(np.radians(arc_len + start_angle))
+                endY = yc + (width/2)*np.sin(np.radians(arc_len + start_angle))
+            else:
+                start_angle = 270
+                endX = xc + (height/2)*np.cos(np.radians(start_angle))
+                endY = yc + (width/2)*np.sin(np.radians(start_angle))
+
+            orientation = start_angle + arc_len
+            arc = Arc([xc, yc], width, height, angle=start_angle, theta2=arc_len, capstyle='round', linestyle='-', lw=2.5, color="darkgreen")
+            arrow_head = RegularPolygon((endX, endY), 3, height * 0.35, np.radians(orientation), color="darkgreen")
+            ax.add_patch(arc)
+            ax.add_patch(arrow_head)
 
         ax.axes.get_yaxis().set_visible(False)
         ax.spines['right'].set_visible(False)
