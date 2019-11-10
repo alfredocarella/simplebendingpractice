@@ -1,9 +1,10 @@
 # BeamBending: a teaching aid for 1-D shear-force and bending-moment diagrams
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/alfredocarella/simplebendingpractice/releases/tag/1.0.1)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/alfredocarella/simplebendingpractice/releases/tag/1.1.0)
 [![License](https://img.shields.io/badge/license-CC--BY%204.0-lightgrey.svg)](https://github.com/alfredocarella/simplebendingpractice/raw/master/LICENSE)
 [![DOI](https://jose.theoj.org/papers/10.21105/jose.00065/status.svg)](https://doi.org/10.21105/jose.00065)
 [![Build Status](https://travis-ci.com/alfredocarella/simplebendingpractice.svg?branch=master)](https://travis-ci.com/alfredocarella/simplebendingpractice)
+[![Documentation Status](https://readthedocs.org/projects/simplebendingpractice/badge/?version=latest)](https://simplebendingpractice.readthedocs.io/en/latest/?badge=latest)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb)
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alfredocarella/simplebendingpractice/blob/master/simple_demo.ipynb)
 
@@ -12,7 +13,7 @@ The aim of this module is to enhance clarity and provide visual hands-on example
 * stresses on slender _one-dimensional_ solids (i.e. beams)
 * normal force, shear force and bending moment diagrams
 
-The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simple (but still rigorous) explanation of the background theory, inspired in [@Beer2017] and [@Bell2015].
+The [package documentation](https://alfredocarella.github.io/simplebendingpractice/) includes a simplified (but still rigorous enough) explanation of the background theory, inspired in [@Beer2017] and [@Bell2015].
 It is assumed that the students understand static equilibrium of flat rigid bodies, but a short recap is provided.
 Code snippets that reproduce the theory examples are presented next to each result.
 
