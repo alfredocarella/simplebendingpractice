@@ -304,7 +304,7 @@ class Beam:
         :return: a matplotlib.Axes object representing the plotted data.
 
         """
-        x_vec = np.linspace(self._x0, self._x1, min(int((self.length) * 1000 + 1), 1e4))
+        x_vec = np.linspace(self._x0, self._x1, int(min(self.length * 1000 + 1, 1e4)))
         y_lam = lambdify(x, sym_func, "numpy")
         y_vec = np.array([y_lam(t) for t in x_vec])
 
