@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -174,15 +174,15 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="k">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">,</span> <span class="n">RegularPolygon</span><span class="p">,</span> <span class="n">Wedge</span>
-<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">PatchCollection</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">,</span> <span class="n">RegularPolygon</span><span class="p">,</span> <span class="n">Wedge</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">PatchCollection</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">sympy</span> <span class="k">import</span> <span class="n">integrate</span><span class="p">,</span> <span class="n">lambdify</span><span class="p">,</span> <span class="n">Piecewise</span><span class="p">,</span> <span class="n">sympify</span>
-<span class="kn">from</span> <span class="nn">sympy.abc</span> <span class="k">import</span> <span class="n">x</span>
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">integrate</span><span class="p">,</span> <span class="n">lambdify</span><span class="p">,</span> <span class="n">Piecewise</span><span class="p">,</span> <span class="n">sympify</span>
+<span class="kn">from</span> <span class="nn">sympy.abc</span> <span class="kn">import</span> <span class="n">x</span>
 
 <span class="c1"># plt.rc(&#39;text&#39;, usetex=True)  # This makes the plot text prettier... but SLOWER</span>
 
@@ -257,7 +257,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">span</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">span</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initializes a Beam object of a given length.</span>
 
 <span class="sd">        Parameters</span>
@@ -466,7 +466,7 @@
 <span class="sd">        :return: a matplotlib.Axes object representing the plotted data.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">1e4</span><span class="p">))</span>
+        <span class="n">x_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1e4</span><span class="p">)))</span>
         <span class="n">y_lam</span> <span class="o">=</span> <span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sym_func</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">)</span>
         <span class="n">y_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">y_lam</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x_vec</span><span class="p">])</span>
 

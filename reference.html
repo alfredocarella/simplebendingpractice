@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -175,7 +175,7 @@
 PointLoadV, DistributedLoadH, and DistributedLoadV.</p>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span> <span class="o">=</span> <span class="n">Beam</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">pinned_support</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># x-coordinate of the pinned support</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">rolling_support</span> <span class="o">=</span> <span class="mi">7</span>  <span class="c1"># x-coordinate of the rolling support</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_beam</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span><span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>  <span class="c1"># 20 kN downwards, at x=3 m</span>
@@ -186,9 +186,9 @@ PointLoadV, DistributedLoadH, and DistributedLoadV.</p>
 </div>
 <div class="section" id="beam">
 <h2>Beam<a class="headerlink" href="#beam" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="beam.Beam">
-<em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">Beam</code><span class="sig-paren">(</span><em class="sig-param">span: float = 10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/beam.html#Beam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.Beam" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">Beam</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">span</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/beam.html#Beam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.Beam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a one-dimensional beam that can take axial and tangential loads.</p>
 <p>Through the method <cite>add_loads</cite>, a Beam object can accept a list of:</p>
 <ul class="simple">
@@ -204,9 +204,9 @@ PointLoadV, DistributedLoadH, and DistributedLoadV.</p>
 </ul>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.add_loads">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">add_loads</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">loads: list</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.add_loads" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">add_loads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">loads</span><span class="p">:</span> <span class="n">list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.add_loads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply an arbitrary list of (point- or distributed) loads to the beam.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -220,9 +220,9 @@ be applied to the Beam object. Note that the load application point
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.get_reaction_forces">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">get_reaction_forces</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.get_reaction_forces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">get_reaction_forces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.get_reaction_forces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the reaction forces at the supports, given the applied loads.</p>
 <p>The first and second values correspond to the horizontal and vertical 
 forces of the pinned support. The third one is the vertical force at the
@@ -238,9 +238,9 @@ respectively.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.plot">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a single figure with 4 plots corresponding respectively to:</p>
 <ul class="simple">
 <li><p>a schematic of the loaded beam</p></li>
@@ -260,39 +260,39 @@ shear force diagram, and bending moment diagram.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.plot_beam_diagram">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_beam_diagram</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_beam_diagram" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_beam_diagram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_beam_diagram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a schematic of the beam and all the loads applied on it.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.plot_normal_force">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_normal_force</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_normal_force" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_normal_force</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_normal_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a plot of the normal force as a function of the x-coordinate.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.plot_shear_force">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_shear_force</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_shear_force" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_shear_force</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_shear_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a plot of the shear force as a function of the x-coordinate.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="beam.Beam.plot_bending_moment">
-<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_bending_moment</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_bending_moment" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">beam.Beam.</code><code class="sig-name descname">plot_bending_moment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#beam.Beam.plot_bending_moment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a plot of the bending moment as a function of the x-coordinate.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="pointtorque">
 <h2>PointTorque<a class="headerlink" href="#pointtorque" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="beam.PointTorque">
 <em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">PointTorque</code><a class="reference internal" href="_modules/beam.html#PointTorque"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointTorque" title="Permalink to this definition">¶</a></dt>
 <dd><p>Point clockwise torque, described by a tuple of floats: (torque, coord).</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">motor_torque</span> <span class="o">=</span> <span class="n">PointTorque</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 30 kN·m (clockwise) torque at x=4 m</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">motor_torque</span> <span class="o">=</span> <span class="n">PointTorque</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 30 kN·m (clockwise) torque at x=4 m</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -300,24 +300,24 @@ shear force diagram, and bending moment diagram.</p>
 </div>
 <div class="section" id="pointload">
 <h2>PointLoad<a class="headerlink" href="#pointload" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="beam.PointLoadH">
 <em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">PointLoadH</code><a class="reference internal" href="_modules/beam.html#PointLoadH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointLoadH" title="Permalink to this definition">¶</a></dt>
 <dd><p>Horizontal point load described by a tuple of floats: (force, coord).</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoadH</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>  <span class="c1"># 10 kN towards the right at x=9 m</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoadH</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>  <span class="c1"># 10 kN towards the right at x=9 m</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span>
 <span class="go">PointLoadH(force=10, coord=9)</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="beam.PointLoadV">
 <em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">PointLoadV</code><a class="reference internal" href="_modules/beam.html#PointLoadV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.PointLoadV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Vertical point load described by a tuple of floats: (force, coord).</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 30 kN downwards at x=3 m</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span> <span class="o">=</span> <span class="n">PointLoadV</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 30 kN downwards at x=3 m</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">external_force</span>
 <span class="go">PointLoadV(force=-30, coord=3)</span>
 </pre></div>
@@ -327,22 +327,22 @@ shear force diagram, and bending moment diagram.</p>
 </div>
 <div class="section" id="distributedload">
 <h2>DistributedLoad<a class="headerlink" href="#distributedload" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="beam.DistributedLoadH">
 <em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">DistributedLoadH</code><a class="reference internal" href="_modules/beam.html#DistributedLoadH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.DistributedLoadH" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributed horizontal load, described by its functional form and application interval.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wind_load</span> <span class="o">=</span> <span class="n">DistributedLoadH</span><span class="p">(</span><span class="s2">&quot;10*x**2+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Quadratically growing load for 1&lt;y&lt;3</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wind_load</span> <span class="o">=</span> <span class="n">DistributedLoadH</span><span class="p">(</span><span class="s2">&quot;10*x**2+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Quadratically growing load for 1&lt;y&lt;3</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="beam.DistributedLoadV">
 <em class="property">class </em><code class="sig-prename descclassname">beam.</code><code class="sig-name descname">DistributedLoadV</code><a class="reference internal" href="_modules/beam.html#DistributedLoadV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#beam.DistributedLoadV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributed vertical load, described by its functional form and application interval.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snow_load</span> <span class="o">=</span> <span class="n">DistributedLoadV</span><span class="p">(</span><span class="s2">&quot;10*x+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># Linearly growing load for 0&lt;x&lt;2 m</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snow_load</span> <span class="o">=</span> <span class="n">DistributedLoadV</span><span class="p">(</span><span class="s2">&quot;10*x+5&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># Linearly growing load for 0&lt;x&lt;2 m</span>
 </pre></div>
 </div>
 </dd></dl>
