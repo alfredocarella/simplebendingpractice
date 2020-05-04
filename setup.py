@@ -10,7 +10,7 @@ from setuptools import setup
 
 
 setup(name='beambending',  # name of package on import
-      version='1.1.0',  # package version
+      version='1.1.1',  # package version
       description='Educational package for visualizing shear forces and bending moments on 1-D beams',  # brief description
       license='cc-by-4.0',  # licensing
       long_description=open('README.md').read(),
@@ -18,7 +18,8 @@ setup(name='beambending',  # name of package on import
       url='https://github.com/alfredocarella/simplebendingpractice',  # git repo url
       author='Alfredo Carella',  # author(s)
       author_email='alfredocarella@gmail.com',  # email
-      download_url = 'https://github.com/alfredocarella/simplebendingpractice/archive/1.1.0.tar.gz',    # Link to package release
+      download_url =
+      'https://github.com/alfredocarella/simplebendingpractice/archive/1.1.1.tar.gz',    # Link to package release
       packages=['beambending'],  # main package
       install_requires=[  # dependencies
         'matplotlib',  # for plotting

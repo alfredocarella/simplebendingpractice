@@ -1,6 +1,6 @@
 # BeamBending: a teaching aid for 1-D shear-force and bending-moment diagrams
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/alfredocarella/simplebendingpractice/releases/tag/1.1.0)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/alfredocarella/simplebendingpractice/releases/tag/1.1.1)
 [![License](https://img.shields.io/badge/license-CC--BY%204.0-lightgrey.svg)](https://github.com/alfredocarella/simplebendingpractice/raw/master/LICENSE)
 [![DOI](https://jose.theoj.org/papers/10.21105/jose.00065/status.svg)](https://doi.org/10.21105/jose.00065)
 [![Build Status](https://travis-ci.com/alfredocarella/simplebendingpractice.svg?branch=master)](https://travis-ci.com/alfredocarella/simplebendingpractice)
