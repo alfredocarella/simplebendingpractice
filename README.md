@@ -77,7 +77,7 @@ beam.add_loads((
             ))
 ```
 
-After the problem is fully defined (beam length + placement of supports + loads), the `plot` method can me invoked to plot a sketch of the loaded beam together with its corresponding load diagrams (normal force, shear force and bending moment).
+After the problem is fully defined (beam length + placement of supports + loads), the `plot` method can be invoked to plot a sketch of the loaded beam together with its corresponding load diagrams (normal force, shear force and bending moment).
 
 ```python
 fig = beam.plot()
