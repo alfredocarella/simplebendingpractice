@@ -5,6 +5,8 @@
 [![DOI](https://jose.theoj.org/papers/10.21105/jose.00065/status.svg)](https://doi.org/10.21105/jose.00065)
 [![Build Status](https://travis-ci.com/alfredocarella/simplebendingpractice.svg?branch=master)](https://travis-ci.com/alfredocarella/simplebendingpractice)
 [![Documentation Status](https://readthedocs.org/projects/simplebendingpractice/badge/?version=latest)](https://simplebendingpractice.readthedocs.io/en/latest/?badge=latest)
+[![CodeFactor](https://www.codefactor.io/repository/github/alfredocarella/simplebendingpractice/badge)](https://www.codefactor.io/repository/github/alfredocarella/simplebendingpractice)
+[![Downloads](https://pepy.tech/badge/beambending)](https://pepy.tech/project/beambending)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alfredocarella/simplebendingpractice/master?filepath=simple_demo.ipynb)
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alfredocarella/simplebendingpractice/blob/master/simple_demo.ipynb)
 
